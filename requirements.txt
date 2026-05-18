@@ -1,0 +1,29 @@
+# GUI界面框架：用于构建智能婴儿床Demo的桌面可视化界面
+customtkinter>=5.2.0
+
+# Redis客户端：用于Agent之间的消息发布/订阅，实现事件总线
+redis>=5.0.0
+
+# 数值计算基础库：用于图像、传感器数据、数组等基础处理
+numpy>=1.24.0
+
+# 计算机视觉库：用于摄像头读取、图像处理、视频帧分析
+opencv-python>=4.8.0
+
+# 图像处理库：用于图片读取、缩放、格式转换和GUI图像显示
+Pillow>=10.0.0
+
+# HTTP请求库：用于调用视觉API、TTS接口、推送接口等外部服务
+requests>=2.31.0
+
+# 异步HTTP请求库：用于异步调用LLM、TTS、ASR等接口，提高并发能力
+aiohttp>=3.8.0
+
+# LangGraph状态编排框架：用于构建Agent流程、状态机和事件决策链路
+langgraph>=0.0.20
+
+# LangChain基础框架：为LangGraph和LLM调用提供基础组件支持
+langchain>=1.0.0
+
+# 日期时间处理库：用于解析雷达接口、事件日志、状态时间戳等时间数据
+python-dateutil>=2.9.0
