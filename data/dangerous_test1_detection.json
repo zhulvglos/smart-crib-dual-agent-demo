@@ -1,0 +1,5353 @@
+{
+  "video_info": {
+    "filename": "dangerous_test1.mp4",
+    "total_frames": 241,
+    "fps": 24.0,
+    "width": 1280,
+    "height": 720,
+    "duration": 10.04
+  },
+  "detection_config": {
+    "model": "yolo11n.pt",
+    "detect_every_n_frames": 1,
+    "warning_confirm_frames": 3,
+    "danger_confirm_frames": 5
+  },
+  "geometry": {
+    "safe_zone": [
+      230,
+      172,
+      589,
+      461
+    ],
+    "warning_zone": [
+      819,
+      172,
+      179,
+      461
+    ],
+    "danger_boundary_x": 998
+  },
+  "frames": [
+    {
+      "frame_index": 1,
+      "timestamp": 0.04,
+      "stage": "SAFE",
+      "raw_stage": "WARNING",
+      "warning_count": 1,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 686,
+          "y": 441
+        },
+        "bbox": {
+          "x": 502,
+          "y": 321,
+          "w": 368,
+          "h": 241
+        },
+        "confidence": 0.3994,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 2,
+      "timestamp": 0.08,
+      "stage": "SAFE",
+      "raw_stage": "WARNING",
+      "warning_count": 2,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 686,
+          "y": 441
+        },
+        "bbox": {
+          "x": 503,
+          "y": 321,
+          "w": 367,
+          "h": 241
+        },
+        "confidence": 0.3962,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 3,
+      "timestamp": 0.12,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 3,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 686,
+          "y": 441
+        },
+        "bbox": {
+          "x": 503,
+          "y": 321,
+          "w": 367,
+          "h": 241
+        },
+        "confidence": 0.3902,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 4,
+      "timestamp": 0.17,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 4,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 686,
+          "y": 442
+        },
+        "bbox": {
+          "x": 503,
+          "y": 322,
+          "w": 367,
+          "h": 240
+        },
+        "confidence": 0.3908,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 5,
+      "timestamp": 0.21,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 5,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 687,
+          "y": 442
+        },
+        "bbox": {
+          "x": 504,
+          "y": 321,
+          "w": 366,
+          "h": 242
+        },
+        "confidence": 0.3989,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 6,
+      "timestamp": 0.25,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 6,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 623,
+          "y": 433
+        },
+        "bbox": {
+          "x": 375,
+          "y": 307,
+          "w": 497,
+          "h": 252
+        },
+        "confidence": 0.3958,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 7,
+      "timestamp": 0.29,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 7,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 620,
+          "y": 433
+        },
+        "bbox": {
+          "x": 368,
+          "y": 306,
+          "w": 504,
+          "h": 254
+        },
+        "confidence": 0.4137,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 8,
+      "timestamp": 0.33,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 8,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 624,
+          "y": 434
+        },
+        "bbox": {
+          "x": 376,
+          "y": 310,
+          "w": 496,
+          "h": 249
+        },
+        "confidence": 0.3919,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 9,
+      "timestamp": 0.38,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 9,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 624,
+          "y": 435
+        },
+        "bbox": {
+          "x": 377,
+          "y": 311,
+          "w": 495,
+          "h": 248
+        },
+        "confidence": 0.3879,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 10,
+      "timestamp": 0.42,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 10,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 688,
+          "y": 444
+        },
+        "bbox": {
+          "x": 508,
+          "y": 325,
+          "w": 361,
+          "h": 238
+        },
+        "confidence": 0.3816,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 11,
+      "timestamp": 0.46,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 11,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 625,
+          "y": 424
+        },
+        "bbox": {
+          "x": 378,
+          "y": 289,
+          "w": 494,
+          "h": 270
+        },
+        "confidence": 0.3962,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 12,
+      "timestamp": 0.5,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 12,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 623,
+          "y": 434
+        },
+        "bbox": {
+          "x": 374,
+          "y": 309,
+          "w": 498,
+          "h": 250
+        },
+        "confidence": 0.4037,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 13,
+      "timestamp": 0.54,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 13,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 623,
+          "y": 433
+        },
+        "bbox": {
+          "x": 374,
+          "y": 308,
+          "w": 498,
+          "h": 251
+        },
+        "confidence": 0.399,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 14,
+      "timestamp": 0.58,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 14,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 623,
+          "y": 433
+        },
+        "bbox": {
+          "x": 375,
+          "y": 308,
+          "w": 497,
+          "h": 251
+        },
+        "confidence": 0.3906,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 15,
+      "timestamp": 0.62,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 15,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 696,
+          "y": 445
+        },
+        "bbox": {
+          "x": 524,
+          "y": 328,
+          "w": 345,
+          "h": 235
+        },
+        "confidence": 0.3859,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 16,
+      "timestamp": 0.67,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 16,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 626,
+          "y": 433
+        },
+        "bbox": {
+          "x": 381,
+          "y": 307,
+          "w": 491,
+          "h": 252
+        },
+        "confidence": 0.3776,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 17,
+      "timestamp": 0.71,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 17,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 629,
+          "y": 433
+        },
+        "bbox": {
+          "x": 387,
+          "y": 308,
+          "w": 485,
+          "h": 251
+        },
+        "confidence": 0.3566,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 18,
+      "timestamp": 0.75,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 18,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 628,
+          "y": 434
+        },
+        "bbox": {
+          "x": 385,
+          "y": 309,
+          "w": 487,
+          "h": 250
+        },
+        "confidence": 0.3671,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 19,
+      "timestamp": 0.79,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 19,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 626,
+          "y": 435
+        },
+        "bbox": {
+          "x": 381,
+          "y": 311,
+          "w": 491,
+          "h": 248
+        },
+        "confidence": 0.388,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 20,
+      "timestamp": 0.83,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 20,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 625,
+          "y": 434
+        },
+        "bbox": {
+          "x": 378,
+          "y": 309,
+          "w": 494,
+          "h": 250
+        },
+        "confidence": 0.3927,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 21,
+      "timestamp": 0.88,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 21,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 626,
+          "y": 435
+        },
+        "bbox": {
+          "x": 380,
+          "y": 311,
+          "w": 492,
+          "h": 248
+        },
+        "confidence": 0.3902,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 22,
+      "timestamp": 0.92,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 22,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 625,
+          "y": 434
+        },
+        "bbox": {
+          "x": 379,
+          "y": 310,
+          "w": 493,
+          "h": 249
+        },
+        "confidence": 0.3944,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 23,
+      "timestamp": 0.96,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 23,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 627,
+          "y": 435
+        },
+        "bbox": {
+          "x": 382,
+          "y": 311,
+          "w": 490,
+          "h": 248
+        },
+        "confidence": 0.3842,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 24,
+      "timestamp": 1.0,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 24,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 632,
+          "y": 436
+        },
+        "bbox": {
+          "x": 392,
+          "y": 313,
+          "w": 480,
+          "h": 246
+        },
+        "confidence": 0.3586,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 25,
+      "timestamp": 1.04,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 25,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 628,
+          "y": 435
+        },
+        "bbox": {
+          "x": 384,
+          "y": 312,
+          "w": 488,
+          "h": 247
+        },
+        "confidence": 0.374,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 26,
+      "timestamp": 1.08,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 26,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 626,
+          "y": 434
+        },
+        "bbox": {
+          "x": 381,
+          "y": 310,
+          "w": 491,
+          "h": 249
+        },
+        "confidence": 0.3752,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 27,
+      "timestamp": 1.12,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 27,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 626,
+          "y": 434
+        },
+        "bbox": {
+          "x": 380,
+          "y": 310,
+          "w": 492,
+          "h": 249
+        },
+        "confidence": 0.3765,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 28,
+      "timestamp": 1.17,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 28,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 626,
+          "y": 434
+        },
+        "bbox": {
+          "x": 381,
+          "y": 310,
+          "w": 491,
+          "h": 249
+        },
+        "confidence": 0.3728,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 29,
+      "timestamp": 1.21,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 29,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 626,
+          "y": 436
+        },
+        "bbox": {
+          "x": 381,
+          "y": 313,
+          "w": 491,
+          "h": 246
+        },
+        "confidence": 0.3809,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 30,
+      "timestamp": 1.25,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 30,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 626,
+          "y": 436
+        },
+        "bbox": {
+          "x": 381,
+          "y": 313,
+          "w": 491,
+          "h": 246
+        },
+        "confidence": 0.3811,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 31,
+      "timestamp": 1.29,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 31,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 626,
+          "y": 436
+        },
+        "bbox": {
+          "x": 381,
+          "y": 313,
+          "w": 491,
+          "h": 246
+        },
+        "confidence": 0.3812,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 32,
+      "timestamp": 1.33,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 32,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 625,
+          "y": 434
+        },
+        "bbox": {
+          "x": 378,
+          "y": 310,
+          "w": 494,
+          "h": 249
+        },
+        "confidence": 0.38,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 33,
+      "timestamp": 1.38,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 33,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 625,
+          "y": 434
+        },
+        "bbox": {
+          "x": 379,
+          "y": 310,
+          "w": 493,
+          "h": 249
+        },
+        "confidence": 0.3752,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 34,
+      "timestamp": 1.42,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 34,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 627,
+          "y": 435
+        },
+        "bbox": {
+          "x": 382,
+          "y": 311,
+          "w": 490,
+          "h": 248
+        },
+        "confidence": 0.3694,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 35,
+      "timestamp": 1.46,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 35,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 626,
+          "y": 435
+        },
+        "bbox": {
+          "x": 381,
+          "y": 312,
+          "w": 491,
+          "h": 247
+        },
+        "confidence": 0.371,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 36,
+      "timestamp": 1.5,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 36,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 626,
+          "y": 435
+        },
+        "bbox": {
+          "x": 380,
+          "y": 311,
+          "w": 492,
+          "h": 248
+        },
+        "confidence": 0.3768,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 37,
+      "timestamp": 1.54,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 37,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 695,
+          "y": 445
+        },
+        "bbox": {
+          "x": 521,
+          "y": 327,
+          "w": 348,
+          "h": 236
+        },
+        "confidence": 0.3906,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 38,
+      "timestamp": 1.58,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 38,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 694,
+          "y": 444
+        },
+        "bbox": {
+          "x": 520,
+          "y": 326,
+          "w": 349,
+          "h": 237
+        },
+        "confidence": 0.3877,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 39,
+      "timestamp": 1.62,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 39,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 695,
+          "y": 445
+        },
+        "bbox": {
+          "x": 521,
+          "y": 327,
+          "w": 348,
+          "h": 236
+        },
+        "confidence": 0.3907,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 40,
+      "timestamp": 1.67,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 40,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 627,
+          "y": 437
+        },
+        "bbox": {
+          "x": 383,
+          "y": 315,
+          "w": 489,
+          "h": 244
+        },
+        "confidence": 0.3862,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 41,
+      "timestamp": 1.71,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 41,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 694,
+          "y": 445
+        },
+        "bbox": {
+          "x": 520,
+          "y": 328,
+          "w": 349,
+          "h": 235
+        },
+        "confidence": 0.3921,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 42,
+      "timestamp": 1.75,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 42,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 695,
+          "y": 445
+        },
+        "bbox": {
+          "x": 521,
+          "y": 328,
+          "w": 348,
+          "h": 235
+        },
+        "confidence": 0.3894,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 43,
+      "timestamp": 1.79,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 43,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 695,
+          "y": 445
+        },
+        "bbox": {
+          "x": 521,
+          "y": 328,
+          "w": 348,
+          "h": 235
+        },
+        "confidence": 0.39,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 44,
+      "timestamp": 1.83,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 44,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 628,
+          "y": 438
+        },
+        "bbox": {
+          "x": 384,
+          "y": 317,
+          "w": 488,
+          "h": 242
+        },
+        "confidence": 0.3868,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 45,
+      "timestamp": 1.88,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 45,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 695,
+          "y": 446
+        },
+        "bbox": {
+          "x": 522,
+          "y": 329,
+          "w": 347,
+          "h": 234
+        },
+        "confidence": 0.398,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 46,
+      "timestamp": 1.92,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 46,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 695,
+          "y": 446
+        },
+        "bbox": {
+          "x": 521,
+          "y": 329,
+          "w": 348,
+          "h": 234
+        },
+        "confidence": 0.3998,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 47,
+      "timestamp": 1.96,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 47,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 695,
+          "y": 445
+        },
+        "bbox": {
+          "x": 521,
+          "y": 328,
+          "w": 348,
+          "h": 235
+        },
+        "confidence": 0.4037,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 48,
+      "timestamp": 2.0,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 48,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 694,
+          "y": 446
+        },
+        "bbox": {
+          "x": 520,
+          "y": 329,
+          "w": 349,
+          "h": 234
+        },
+        "confidence": 0.4061,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 49,
+      "timestamp": 2.04,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 49,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 695,
+          "y": 446
+        },
+        "bbox": {
+          "x": 521,
+          "y": 329,
+          "w": 348,
+          "h": 234
+        },
+        "confidence": 0.4019,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 50,
+      "timestamp": 2.08,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 50,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 696,
+          "y": 446
+        },
+        "bbox": {
+          "x": 523,
+          "y": 330,
+          "w": 346,
+          "h": 233
+        },
+        "confidence": 0.3968,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 51,
+      "timestamp": 2.12,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 51,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 695,
+          "y": 446
+        },
+        "bbox": {
+          "x": 522,
+          "y": 330,
+          "w": 347,
+          "h": 232
+        },
+        "confidence": 0.3957,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 52,
+      "timestamp": 2.17,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 52,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 696,
+          "y": 447
+        },
+        "bbox": {
+          "x": 523,
+          "y": 331,
+          "w": 346,
+          "h": 232
+        },
+        "confidence": 0.3921,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 53,
+      "timestamp": 2.21,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 53,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 628,
+          "y": 438
+        },
+        "bbox": {
+          "x": 385,
+          "y": 318,
+          "w": 487,
+          "h": 241
+        },
+        "confidence": 0.3855,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 54,
+      "timestamp": 2.25,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 54,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 696,
+          "y": 446
+        },
+        "bbox": {
+          "x": 524,
+          "y": 330,
+          "w": 345,
+          "h": 233
+        },
+        "confidence": 0.387,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 55,
+      "timestamp": 2.29,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 55,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 628,
+          "y": 437
+        },
+        "bbox": {
+          "x": 384,
+          "y": 316,
+          "w": 488,
+          "h": 243
+        },
+        "confidence": 0.3826,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 56,
+      "timestamp": 2.33,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 56,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 696,
+          "y": 445
+        },
+        "bbox": {
+          "x": 523,
+          "y": 329,
+          "w": 346,
+          "h": 233
+        },
+        "confidence": 0.3889,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 57,
+      "timestamp": 2.38,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 57,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 626,
+          "y": 437
+        },
+        "bbox": {
+          "x": 380,
+          "y": 315,
+          "w": 492,
+          "h": 244
+        },
+        "confidence": 0.3859,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 58,
+      "timestamp": 2.42,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 58,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 697,
+          "y": 446
+        },
+        "bbox": {
+          "x": 524,
+          "y": 330,
+          "w": 346,
+          "h": 232
+        },
+        "confidence": 0.3984,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 59,
+      "timestamp": 2.46,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 59,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 695,
+          "y": 445
+        },
+        "bbox": {
+          "x": 521,
+          "y": 328,
+          "w": 348,
+          "h": 234
+        },
+        "confidence": 0.3875,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 60,
+      "timestamp": 2.5,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 60,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 696,
+          "y": 446
+        },
+        "bbox": {
+          "x": 523,
+          "y": 330,
+          "w": 346,
+          "h": 233
+        },
+        "confidence": 0.4001,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 61,
+      "timestamp": 2.54,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 61,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 628,
+          "y": 421
+        },
+        "bbox": {
+          "x": 385,
+          "y": 283,
+          "w": 486,
+          "h": 276
+        },
+        "confidence": 0.3489,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 62,
+      "timestamp": 2.58,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 62,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 695,
+          "y": 446
+        },
+        "bbox": {
+          "x": 521,
+          "y": 328,
+          "w": 348,
+          "h": 236
+        },
+        "confidence": 0.4556,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 63,
+      "timestamp": 2.62,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 63,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 690,
+          "y": 445
+        },
+        "bbox": {
+          "x": 513,
+          "y": 325,
+          "w": 355,
+          "h": 240
+        },
+        "confidence": 0.478,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 64,
+      "timestamp": 2.67,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 64,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 675,
+          "y": 443
+        },
+        "bbox": {
+          "x": 483,
+          "y": 321,
+          "w": 384,
+          "h": 244
+        },
+        "confidence": 0.505,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 65,
+      "timestamp": 2.71,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 65,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 685,
+          "y": 444
+        },
+        "bbox": {
+          "x": 503,
+          "y": 321,
+          "w": 364,
+          "h": 246
+        },
+        "confidence": 0.4954,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 66,
+      "timestamp": 2.75,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 66,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 695,
+          "y": 445
+        },
+        "bbox": {
+          "x": 523,
+          "y": 323,
+          "w": 344,
+          "h": 244
+        },
+        "confidence": 0.468,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 67,
+      "timestamp": 2.79,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 67,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 679,
+          "y": 442
+        },
+        "bbox": {
+          "x": 492,
+          "y": 316,
+          "w": 375,
+          "h": 252
+        },
+        "confidence": 0.471,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 68,
+      "timestamp": 2.83,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 68,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 679,
+          "y": 445
+        },
+        "bbox": {
+          "x": 491,
+          "y": 321,
+          "w": 376,
+          "h": 248
+        },
+        "confidence": 0.4601,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 69,
+      "timestamp": 2.88,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 69,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 682,
+          "y": 445
+        },
+        "bbox": {
+          "x": 497,
+          "y": 322,
+          "w": 370,
+          "h": 247
+        },
+        "confidence": 0.4472,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 70,
+      "timestamp": 2.92,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 70,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 664,
+          "y": 460
+        },
+        "bbox": {
+          "x": 462,
+          "y": 327,
+          "w": 405,
+          "h": 267
+        },
+        "confidence": 0.4498,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 71,
+      "timestamp": 2.96,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 71,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 666,
+          "y": 463
+        },
+        "bbox": {
+          "x": 466,
+          "y": 328,
+          "w": 401,
+          "h": 271
+        },
+        "confidence": 0.4383,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 72,
+      "timestamp": 3.0,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 72,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 670,
+          "y": 466
+        },
+        "bbox": {
+          "x": 474,
+          "y": 329,
+          "w": 393,
+          "h": 275
+        },
+        "confidence": 0.3976,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 73,
+      "timestamp": 3.04,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 73,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 672,
+          "y": 470
+        },
+        "bbox": {
+          "x": 477,
+          "y": 333,
+          "w": 390,
+          "h": 274
+        },
+        "confidence": 0.423,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 74,
+      "timestamp": 3.08,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 74,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 663,
+          "y": 462
+        },
+        "bbox": {
+          "x": 462,
+          "y": 316,
+          "w": 403,
+          "h": 293
+        },
+        "confidence": 0.4132,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 75,
+      "timestamp": 3.12,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 75,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 664,
+          "y": 464
+        },
+        "bbox": {
+          "x": 464,
+          "y": 319,
+          "w": 401,
+          "h": 291
+        },
+        "confidence": 0.3978,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 76,
+      "timestamp": 3.17,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 76,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 674,
+          "y": 465
+        },
+        "bbox": {
+          "x": 484,
+          "y": 321,
+          "w": 381,
+          "h": 289
+        },
+        "confidence": 0.3645,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 77,
+      "timestamp": 3.21,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 77,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 675,
+          "y": 469
+        },
+        "bbox": {
+          "x": 487,
+          "y": 327,
+          "w": 377,
+          "h": 284
+        },
+        "confidence": 0.3328,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 78,
+      "timestamp": 3.25,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 78,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 675,
+          "y": 470
+        },
+        "bbox": {
+          "x": 488,
+          "y": 331,
+          "w": 375,
+          "h": 279
+        },
+        "confidence": 0.3012,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 79,
+      "timestamp": 3.29,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 79,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 669,
+          "y": 471
+        },
+        "bbox": {
+          "x": 476,
+          "y": 333,
+          "w": 386,
+          "h": 277
+        },
+        "confidence": 0.3991,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 80,
+      "timestamp": 3.33,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 80,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 675,
+          "y": 478
+        },
+        "bbox": {
+          "x": 490,
+          "y": 347,
+          "w": 370,
+          "h": 263
+        },
+        "confidence": 0.3888,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 81,
+      "timestamp": 3.38,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 81,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 691,
+          "y": 473
+        },
+        "bbox": {
+          "x": 524,
+          "y": 335,
+          "w": 334,
+          "h": 276
+        },
+        "confidence": 0.3004,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 82,
+      "timestamp": 3.42,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 82,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 686,
+          "y": 460
+        },
+        "bbox": {
+          "x": 516,
+          "y": 310,
+          "w": 340,
+          "h": 301
+        },
+        "confidence": 0.327,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 83,
+      "timestamp": 3.46,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 83,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 671,
+          "y": 446
+        },
+        "bbox": {
+          "x": 490,
+          "y": 281,
+          "w": 363,
+          "h": 330
+        },
+        "confidence": 0.2697,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 84,
+      "timestamp": 3.5,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 84,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 655,
+          "y": 445
+        },
+        "bbox": {
+          "x": 458,
+          "y": 279,
+          "w": 395,
+          "h": 333
+        },
+        "confidence": 0.257,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 85,
+      "timestamp": 3.54,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 85,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 648,
+          "y": 449
+        },
+        "bbox": {
+          "x": 450,
+          "y": 288,
+          "w": 396,
+          "h": 323
+        },
+        "confidence": 0.4566,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 86,
+      "timestamp": 3.58,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 86,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 648,
+          "y": 457
+        },
+        "bbox": {
+          "x": 455,
+          "y": 304,
+          "w": 387,
+          "h": 307
+        },
+        "confidence": 0.4615,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 87,
+      "timestamp": 3.62,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 87,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 686,
+          "y": 467
+        },
+        "bbox": {
+          "x": 540,
+          "y": 325,
+          "w": 293,
+          "h": 285
+        },
+        "confidence": 0.4403,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 88,
+      "timestamp": 3.67,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 88,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 691,
+          "y": 468
+        },
+        "bbox": {
+          "x": 549,
+          "y": 327,
+          "w": 284,
+          "h": 283
+        },
+        "confidence": 0.4407,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 89,
+      "timestamp": 3.71,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 89,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 689,
+          "y": 469
+        },
+        "bbox": {
+          "x": 555,
+          "y": 329,
+          "w": 268,
+          "h": 281
+        },
+        "confidence": 0.4437,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 90,
+      "timestamp": 3.75,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 90,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 685,
+          "y": 470
+        },
+        "bbox": {
+          "x": 548,
+          "y": 330,
+          "w": 274,
+          "h": 280
+        },
+        "confidence": 0.4667,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 91,
+      "timestamp": 3.79,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 91,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 666,
+          "y": 467
+        },
+        "bbox": {
+          "x": 513,
+          "y": 324,
+          "w": 306,
+          "h": 286
+        },
+        "confidence": 0.541,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 92,
+      "timestamp": 3.83,
+      "stage": "SAFE",
+      "raw_stage": "SAFE",
+      "warning_count": 0,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 612,
+          "y": 466
+        },
+        "bbox": {
+          "x": 411,
+          "y": 320,
+          "w": 403,
+          "h": 293
+        },
+        "confidence": 0.5214,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 93,
+      "timestamp": 3.88,
+      "stage": "SAFE",
+      "raw_stage": "SAFE",
+      "warning_count": 0,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 620,
+          "y": 466
+        },
+        "bbox": {
+          "x": 430,
+          "y": 320,
+          "w": 380,
+          "h": 292
+        },
+        "confidence": 0.47,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 94,
+      "timestamp": 3.92,
+      "stage": "SAFE",
+      "raw_stage": "SAFE",
+      "warning_count": 0,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 611,
+          "y": 463
+        },
+        "bbox": {
+          "x": 414,
+          "y": 313,
+          "w": 395,
+          "h": 300
+        },
+        "confidence": 0.4967,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 95,
+      "timestamp": 3.96,
+      "stage": "SAFE",
+      "raw_stage": "SAFE",
+      "warning_count": 0,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 695,
+          "y": 468
+        },
+        "bbox": {
+          "x": 581,
+          "y": 326,
+          "w": 229,
+          "h": 284
+        },
+        "confidence": 0.4406,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 96,
+      "timestamp": 4.0,
+      "stage": "SAFE",
+      "raw_stage": "SAFE",
+      "warning_count": 0,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 689,
+          "y": 466
+        },
+        "bbox": {
+          "x": 568,
+          "y": 323,
+          "w": 243,
+          "h": 287
+        },
+        "confidence": 0.4964,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 97,
+      "timestamp": 4.04,
+      "stage": "SAFE",
+      "raw_stage": "SAFE",
+      "warning_count": 0,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 705,
+          "y": 470
+        },
+        "bbox": {
+          "x": 596,
+          "y": 329,
+          "w": 218,
+          "h": 283
+        },
+        "confidence": 0.5655,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 98,
+      "timestamp": 4.08,
+      "stage": "SAFE",
+      "raw_stage": "SAFE",
+      "warning_count": 0,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 707,
+          "y": 470
+        },
+        "bbox": {
+          "x": 602,
+          "y": 328,
+          "w": 210,
+          "h": 284
+        },
+        "confidence": 0.6273,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 99,
+      "timestamp": 4.12,
+      "stage": "SAFE",
+      "raw_stage": "WARNING",
+      "warning_count": 1,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 709,
+          "y": 469
+        },
+        "bbox": {
+          "x": 599,
+          "y": 326,
+          "w": 220,
+          "h": 286
+        },
+        "confidence": 0.4546,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 100,
+      "timestamp": 4.17,
+      "stage": "SAFE",
+      "raw_stage": "SAFE",
+      "warning_count": 0,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 708,
+          "y": 469
+        },
+        "bbox": {
+          "x": 599,
+          "y": 326,
+          "w": 218,
+          "h": 286
+        },
+        "confidence": 0.5373,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 101,
+      "timestamp": 4.21,
+      "stage": "SAFE",
+      "raw_stage": "SAFE",
+      "warning_count": 0,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 708,
+          "y": 468
+        },
+        "bbox": {
+          "x": 598,
+          "y": 324,
+          "w": 220,
+          "h": 288
+        },
+        "confidence": 0.4807,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 102,
+      "timestamp": 4.25,
+      "stage": "SAFE",
+      "raw_stage": "SAFE",
+      "warning_count": 0,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 703,
+          "y": 466
+        },
+        "bbox": {
+          "x": 589,
+          "y": 321,
+          "w": 229,
+          "h": 290
+        },
+        "confidence": 0.4891,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 103,
+      "timestamp": 4.29,
+      "stage": "SAFE",
+      "raw_stage": "WARNING",
+      "warning_count": 1,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 721,
+          "y": 465
+        },
+        "bbox": {
+          "x": 601,
+          "y": 321,
+          "w": 241,
+          "h": 289
+        },
+        "confidence": 0.5859,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 104,
+      "timestamp": 4.33,
+      "stage": "SAFE",
+      "raw_stage": "WARNING",
+      "warning_count": 2,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 713,
+          "y": 464
+        },
+        "bbox": {
+          "x": 602,
+          "y": 318,
+          "w": 223,
+          "h": 293
+        },
+        "confidence": 0.6735,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 105,
+      "timestamp": 4.38,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 3,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 713,
+          "y": 465
+        },
+        "bbox": {
+          "x": 602,
+          "y": 319,
+          "w": 223,
+          "h": 292
+        },
+        "confidence": 0.6864,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 106,
+      "timestamp": 4.42,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 4,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 715,
+          "y": 464
+        },
+        "bbox": {
+          "x": 602,
+          "y": 318,
+          "w": 227,
+          "h": 293
+        },
+        "confidence": 0.6749,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 107,
+      "timestamp": 4.46,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 5,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 719,
+          "y": 465
+        },
+        "bbox": {
+          "x": 603,
+          "y": 319,
+          "w": 232,
+          "h": 292
+        },
+        "confidence": 0.805,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 108,
+      "timestamp": 4.5,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 6,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 711,
+          "y": 466
+        },
+        "bbox": {
+          "x": 595,
+          "y": 319,
+          "w": 233,
+          "h": 294
+        },
+        "confidence": 0.7024,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 109,
+      "timestamp": 4.54,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 7,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 710,
+          "y": 464
+        },
+        "bbox": {
+          "x": 594,
+          "y": 321,
+          "w": 232,
+          "h": 286
+        },
+        "confidence": 0.7485,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 110,
+      "timestamp": 4.58,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 8,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 711,
+          "y": 464
+        },
+        "bbox": {
+          "x": 596,
+          "y": 321,
+          "w": 230,
+          "h": 286
+        },
+        "confidence": 0.752,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 111,
+      "timestamp": 4.62,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 9,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 711,
+          "y": 464
+        },
+        "bbox": {
+          "x": 597,
+          "y": 323,
+          "w": 229,
+          "h": 283
+        },
+        "confidence": 0.7611,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 112,
+      "timestamp": 4.67,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 10,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 711,
+          "y": 459
+        },
+        "bbox": {
+          "x": 597,
+          "y": 324,
+          "w": 229,
+          "h": 270
+        },
+        "confidence": 0.7867,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 113,
+      "timestamp": 4.71,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 11,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 710,
+          "y": 456
+        },
+        "bbox": {
+          "x": 595,
+          "y": 322,
+          "w": 230,
+          "h": 269
+        },
+        "confidence": 0.7969,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 114,
+      "timestamp": 4.75,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 12,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 709,
+          "y": 458
+        },
+        "bbox": {
+          "x": 593,
+          "y": 323,
+          "w": 233,
+          "h": 271
+        },
+        "confidence": 0.7722,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 115,
+      "timestamp": 4.79,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 13,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 708,
+          "y": 457
+        },
+        "bbox": {
+          "x": 591,
+          "y": 323,
+          "w": 235,
+          "h": 269
+        },
+        "confidence": 0.763,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 116,
+      "timestamp": 4.83,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 14,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 703,
+          "y": 455
+        },
+        "bbox": {
+          "x": 581,
+          "y": 321,
+          "w": 245,
+          "h": 268
+        },
+        "confidence": 0.7715,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 117,
+      "timestamp": 4.88,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 15,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 700,
+          "y": 454
+        },
+        "bbox": {
+          "x": 574,
+          "y": 322,
+          "w": 253,
+          "h": 265
+        },
+        "confidence": 0.5836,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 118,
+      "timestamp": 4.92,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 16,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 699,
+          "y": 452
+        },
+        "bbox": {
+          "x": 572,
+          "y": 321,
+          "w": 254,
+          "h": 262
+        },
+        "confidence": 0.5924,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 119,
+      "timestamp": 4.96,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 17,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 698,
+          "y": 452
+        },
+        "bbox": {
+          "x": 571,
+          "y": 321,
+          "w": 254,
+          "h": 263
+        },
+        "confidence": 0.6845,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 120,
+      "timestamp": 5.0,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 18,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 700,
+          "y": 453
+        },
+        "bbox": {
+          "x": 575,
+          "y": 319,
+          "w": 250,
+          "h": 268
+        },
+        "confidence": 0.5323,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 121,
+      "timestamp": 5.04,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 19,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 695,
+          "y": 454
+        },
+        "bbox": {
+          "x": 566,
+          "y": 316,
+          "w": 258,
+          "h": 277
+        },
+        "confidence": 0.4718,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 122,
+      "timestamp": 5.08,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 20,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 631,
+          "y": 452
+        },
+        "bbox": {
+          "x": 438,
+          "y": 310,
+          "w": 386,
+          "h": 285
+        },
+        "confidence": 0.5247,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 123,
+      "timestamp": 5.12,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 21,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 631,
+          "y": 453
+        },
+        "bbox": {
+          "x": 438,
+          "y": 304,
+          "w": 386,
+          "h": 298
+        },
+        "confidence": 0.5934,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 124,
+      "timestamp": 5.17,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 22,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 634,
+          "y": 453
+        },
+        "bbox": {
+          "x": 446,
+          "y": 303,
+          "w": 377,
+          "h": 301
+        },
+        "confidence": 0.5742,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 125,
+      "timestamp": 5.21,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 23,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 689,
+          "y": 453
+        },
+        "bbox": {
+          "x": 555,
+          "y": 304,
+          "w": 268,
+          "h": 298
+        },
+        "confidence": 0.4807,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 126,
+      "timestamp": 5.25,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 24,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 692,
+          "y": 453
+        },
+        "bbox": {
+          "x": 561,
+          "y": 303,
+          "w": 263,
+          "h": 301
+        },
+        "confidence": 0.5022,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 127,
+      "timestamp": 5.29,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 25,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 698,
+          "y": 452
+        },
+        "bbox": {
+          "x": 574,
+          "y": 301,
+          "w": 249,
+          "h": 302
+        },
+        "confidence": 0.5902,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 128,
+      "timestamp": 5.33,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 26,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 695,
+          "y": 450
+        },
+        "bbox": {
+          "x": 568,
+          "y": 296,
+          "w": 255,
+          "h": 308
+        },
+        "confidence": 0.4741,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 129,
+      "timestamp": 5.38,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 27,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 693,
+          "y": 449
+        },
+        "bbox": {
+          "x": 564,
+          "y": 296,
+          "w": 258,
+          "h": 307
+        },
+        "confidence": 0.4587,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 130,
+      "timestamp": 5.42,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 28,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 696,
+          "y": 450
+        },
+        "bbox": {
+          "x": 571,
+          "y": 299,
+          "w": 251,
+          "h": 303
+        },
+        "confidence": 0.7301,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 131,
+      "timestamp": 5.46,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 29,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 698,
+          "y": 450
+        },
+        "bbox": {
+          "x": 576,
+          "y": 295,
+          "w": 245,
+          "h": 311
+        },
+        "confidence": 0.8322,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 132,
+      "timestamp": 5.5,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 30,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 701,
+          "y": 449
+        },
+        "bbox": {
+          "x": 581,
+          "y": 294,
+          "w": 240,
+          "h": 311
+        },
+        "confidence": 0.7723,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 133,
+      "timestamp": 5.54,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 31,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 705,
+          "y": 450
+        },
+        "bbox": {
+          "x": 590,
+          "y": 295,
+          "w": 231,
+          "h": 310
+        },
+        "confidence": 0.7291,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 134,
+      "timestamp": 5.58,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 32,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 706,
+          "y": 446
+        },
+        "bbox": {
+          "x": 590,
+          "y": 291,
+          "w": 233,
+          "h": 310
+        },
+        "confidence": 0.7263,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 135,
+      "timestamp": 5.62,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 33,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 602,
+          "y": 440
+        },
+        "bbox": {
+          "x": 384,
+          "y": 284,
+          "w": 437,
+          "h": 312
+        },
+        "confidence": 0.6591,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 136,
+      "timestamp": 5.67,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 34,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 604,
+          "y": 439
+        },
+        "bbox": {
+          "x": 386,
+          "y": 285,
+          "w": 437,
+          "h": 308
+        },
+        "confidence": 0.7548,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 137,
+      "timestamp": 5.71,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 35,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 605,
+          "y": 439
+        },
+        "bbox": {
+          "x": 382,
+          "y": 284,
+          "w": 446,
+          "h": 310
+        },
+        "confidence": 0.7268,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 138,
+      "timestamp": 5.75,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 36,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 606,
+          "y": 438
+        },
+        "bbox": {
+          "x": 376,
+          "y": 282,
+          "w": 461,
+          "h": 313
+        },
+        "confidence": 0.7593,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 139,
+      "timestamp": 5.79,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 37,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 620,
+          "y": 438
+        },
+        "bbox": {
+          "x": 388,
+          "y": 283,
+          "w": 464,
+          "h": 311
+        },
+        "confidence": 0.7217,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 140,
+      "timestamp": 5.83,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 38,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 619,
+          "y": 437
+        },
+        "bbox": {
+          "x": 378,
+          "y": 280,
+          "w": 482,
+          "h": 314
+        },
+        "confidence": 0.7214,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 141,
+      "timestamp": 5.88,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 39,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 618,
+          "y": 438
+        },
+        "bbox": {
+          "x": 372,
+          "y": 281,
+          "w": 492,
+          "h": 315
+        },
+        "confidence": 0.7081,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 142,
+      "timestamp": 5.92,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 40,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 605,
+          "y": 433
+        },
+        "bbox": {
+          "x": 334,
+          "y": 277,
+          "w": 543,
+          "h": 312
+        },
+        "confidence": 0.6698,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 143,
+      "timestamp": 5.96,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 41,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 604,
+          "y": 433
+        },
+        "bbox": {
+          "x": 332,
+          "y": 277,
+          "w": 545,
+          "h": 312
+        },
+        "confidence": 0.674,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 144,
+      "timestamp": 6.0,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 42,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 600,
+          "y": 434
+        },
+        "bbox": {
+          "x": 320,
+          "y": 277,
+          "w": 561,
+          "h": 314
+        },
+        "confidence": 0.6349,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 145,
+      "timestamp": 6.04,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 43,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 598,
+          "y": 433
+        },
+        "bbox": {
+          "x": 313,
+          "y": 276,
+          "w": 571,
+          "h": 315
+        },
+        "confidence": 0.6029,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 146,
+      "timestamp": 6.08,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 44,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 600,
+          "y": 434
+        },
+        "bbox": {
+          "x": 312,
+          "y": 277,
+          "w": 577,
+          "h": 314
+        },
+        "confidence": 0.5786,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 147,
+      "timestamp": 6.12,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 45,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 600,
+          "y": 433
+        },
+        "bbox": {
+          "x": 308,
+          "y": 274,
+          "w": 585,
+          "h": 319
+        },
+        "confidence": 0.5133,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 148,
+      "timestamp": 6.17,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 46,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 601,
+          "y": 433
+        },
+        "bbox": {
+          "x": 310,
+          "y": 274,
+          "w": 583,
+          "h": 319
+        },
+        "confidence": 0.5103,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 149,
+      "timestamp": 6.21,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 47,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 604,
+          "y": 434
+        },
+        "bbox": {
+          "x": 311,
+          "y": 274,
+          "w": 586,
+          "h": 320
+        },
+        "confidence": 0.4653,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 150,
+      "timestamp": 6.25,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 48,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 613,
+          "y": 431
+        },
+        "bbox": {
+          "x": 321,
+          "y": 272,
+          "w": 584,
+          "h": 319
+        },
+        "confidence": 0.4655,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 151,
+      "timestamp": 6.29,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 49,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 631,
+          "y": 437
+        },
+        "bbox": {
+          "x": 352,
+          "y": 271,
+          "w": 559,
+          "h": 333
+        },
+        "confidence": 0.5669,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 152,
+      "timestamp": 6.33,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 50,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 641,
+          "y": 436
+        },
+        "bbox": {
+          "x": 375,
+          "y": 270,
+          "w": 532,
+          "h": 332
+        },
+        "confidence": 0.6128,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 153,
+      "timestamp": 6.38,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 51,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 642,
+          "y": 436
+        },
+        "bbox": {
+          "x": 378,
+          "y": 270,
+          "w": 529,
+          "h": 333
+        },
+        "confidence": 0.6129,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 154,
+      "timestamp": 6.42,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 52,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 659,
+          "y": 439
+        },
+        "bbox": {
+          "x": 417,
+          "y": 265,
+          "w": 484,
+          "h": 349
+        },
+        "confidence": 0.6761,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 155,
+      "timestamp": 6.46,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 53,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 658,
+          "y": 438
+        },
+        "bbox": {
+          "x": 420,
+          "y": 262,
+          "w": 477,
+          "h": 352
+        },
+        "confidence": 0.7185,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 156,
+      "timestamp": 6.5,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 54,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 654,
+          "y": 436
+        },
+        "bbox": {
+          "x": 415,
+          "y": 260,
+          "w": 478,
+          "h": 353
+        },
+        "confidence": 0.7412,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 157,
+      "timestamp": 6.54,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 55,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 655,
+          "y": 436
+        },
+        "bbox": {
+          "x": 414,
+          "y": 259,
+          "w": 483,
+          "h": 355
+        },
+        "confidence": 0.6905,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 158,
+      "timestamp": 6.58,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 56,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 651,
+          "y": 434
+        },
+        "bbox": {
+          "x": 402,
+          "y": 254,
+          "w": 498,
+          "h": 361
+        },
+        "confidence": 0.7197,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 159,
+      "timestamp": 6.62,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 57,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 647,
+          "y": 433
+        },
+        "bbox": {
+          "x": 391,
+          "y": 252,
+          "w": 513,
+          "h": 363
+        },
+        "confidence": 0.6706,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 160,
+      "timestamp": 6.67,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 58,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 636,
+          "y": 427
+        },
+        "bbox": {
+          "x": 361,
+          "y": 252,
+          "w": 550,
+          "h": 351
+        },
+        "confidence": 0.6029,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 161,
+      "timestamp": 6.71,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 59,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 624,
+          "y": 426
+        },
+        "bbox": {
+          "x": 335,
+          "y": 251,
+          "w": 578,
+          "h": 350
+        },
+        "confidence": 0.5507,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 162,
+      "timestamp": 6.75,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 60,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 630,
+          "y": 429
+        },
+        "bbox": {
+          "x": 347,
+          "y": 254,
+          "w": 567,
+          "h": 350
+        },
+        "confidence": 0.5996,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 163,
+      "timestamp": 6.79,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 61,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 640,
+          "y": 430
+        },
+        "bbox": {
+          "x": 362,
+          "y": 256,
+          "w": 556,
+          "h": 348
+        },
+        "confidence": 0.5977,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 164,
+      "timestamp": 6.83,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 62,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 651,
+          "y": 431
+        },
+        "bbox": {
+          "x": 379,
+          "y": 255,
+          "w": 545,
+          "h": 353
+        },
+        "confidence": 0.5624,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 165,
+      "timestamp": 6.88,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 63,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 660,
+          "y": 433
+        },
+        "bbox": {
+          "x": 392,
+          "y": 256,
+          "w": 537,
+          "h": 354
+        },
+        "confidence": 0.5503,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 166,
+      "timestamp": 6.92,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 64,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 665,
+          "y": 435
+        },
+        "bbox": {
+          "x": 397,
+          "y": 260,
+          "w": 536,
+          "h": 351
+        },
+        "confidence": 0.5405,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 167,
+      "timestamp": 6.96,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 65,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 666,
+          "y": 435
+        },
+        "bbox": {
+          "x": 399,
+          "y": 260,
+          "w": 534,
+          "h": 350
+        },
+        "confidence": 0.5432,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 168,
+      "timestamp": 7.0,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 66,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 651,
+          "y": 428
+        },
+        "bbox": {
+          "x": 366,
+          "y": 257,
+          "w": 571,
+          "h": 343
+        },
+        "confidence": 0.5582,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 169,
+      "timestamp": 7.04,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 67,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 651,
+          "y": 430
+        },
+        "bbox": {
+          "x": 362,
+          "y": 262,
+          "w": 578,
+          "h": 336
+        },
+        "confidence": 0.5768,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 170,
+      "timestamp": 7.08,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 68,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 661,
+          "y": 428
+        },
+        "bbox": {
+          "x": 380,
+          "y": 263,
+          "w": 562,
+          "h": 330
+        },
+        "confidence": 0.5977,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 171,
+      "timestamp": 7.12,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 69,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 652,
+          "y": 430
+        },
+        "bbox": {
+          "x": 358,
+          "y": 267,
+          "w": 588,
+          "h": 326
+        },
+        "confidence": 0.6034,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 172,
+      "timestamp": 7.17,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 70,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 649,
+          "y": 430
+        },
+        "bbox": {
+          "x": 353,
+          "y": 267,
+          "w": 593,
+          "h": 327
+        },
+        "confidence": 0.5852,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 173,
+      "timestamp": 7.21,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 71,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 638,
+          "y": 434
+        },
+        "bbox": {
+          "x": 330,
+          "y": 269,
+          "w": 617,
+          "h": 330
+        },
+        "confidence": 0.5609,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 174,
+      "timestamp": 7.25,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 72,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 655,
+          "y": 441
+        },
+        "bbox": {
+          "x": 359,
+          "y": 276,
+          "w": 593,
+          "h": 330
+        },
+        "confidence": 0.5358,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 175,
+      "timestamp": 7.29,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 73,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 664,
+          "y": 443
+        },
+        "bbox": {
+          "x": 373,
+          "y": 280,
+          "w": 583,
+          "h": 327
+        },
+        "confidence": 0.5656,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 176,
+      "timestamp": 7.33,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 74,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 673,
+          "y": 447
+        },
+        "bbox": {
+          "x": 389,
+          "y": 283,
+          "w": 569,
+          "h": 328
+        },
+        "confidence": 0.5935,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 177,
+      "timestamp": 7.38,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 75,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 659,
+          "y": 442
+        },
+        "bbox": {
+          "x": 362,
+          "y": 281,
+          "w": 595,
+          "h": 322
+        },
+        "confidence": 0.538,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 178,
+      "timestamp": 7.42,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 76,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 658,
+          "y": 441
+        },
+        "bbox": {
+          "x": 358,
+          "y": 280,
+          "w": 601,
+          "h": 323
+        },
+        "confidence": 0.5079,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 179,
+      "timestamp": 7.46,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 77,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 656,
+          "y": 440
+        },
+        "bbox": {
+          "x": 350,
+          "y": 277,
+          "w": 612,
+          "h": 326
+        },
+        "confidence": 0.4464,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 180,
+      "timestamp": 7.5,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 78,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 693,
+          "y": 454
+        },
+        "bbox": {
+          "x": 419,
+          "y": 300,
+          "w": 548,
+          "h": 309
+        },
+        "confidence": 0.5458,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 181,
+      "timestamp": 7.54,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 79,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 694,
+          "y": 454
+        },
+        "bbox": {
+          "x": 420,
+          "y": 300,
+          "w": 548,
+          "h": 309
+        },
+        "confidence": 0.5058,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 182,
+      "timestamp": 7.58,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 80,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 690,
+          "y": 452
+        },
+        "bbox": {
+          "x": 411,
+          "y": 297,
+          "w": 559,
+          "h": 310
+        },
+        "confidence": 0.5503,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 183,
+      "timestamp": 7.62,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 81,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 697,
+          "y": 453
+        },
+        "bbox": {
+          "x": 423,
+          "y": 299,
+          "w": 549,
+          "h": 309
+        },
+        "confidence": 0.6323,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 184,
+      "timestamp": 7.67,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 82,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 693,
+          "y": 449
+        },
+        "bbox": {
+          "x": 410,
+          "y": 293,
+          "w": 566,
+          "h": 312
+        },
+        "confidence": 0.5899,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 185,
+      "timestamp": 7.71,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 83,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 694,
+          "y": 449
+        },
+        "bbox": {
+          "x": 408,
+          "y": 292,
+          "w": 573,
+          "h": 314
+        },
+        "confidence": 0.5859,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 186,
+      "timestamp": 7.75,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 84,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 693,
+          "y": 451
+        },
+        "bbox": {
+          "x": 405,
+          "y": 295,
+          "w": 576,
+          "h": 312
+        },
+        "confidence": 0.5397,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 187,
+      "timestamp": 7.79,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 85,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 694,
+          "y": 453
+        },
+        "bbox": {
+          "x": 406,
+          "y": 295,
+          "w": 577,
+          "h": 316
+        },
+        "confidence": 0.5224,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 188,
+      "timestamp": 7.83,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 86,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 696,
+          "y": 452
+        },
+        "bbox": {
+          "x": 404,
+          "y": 294,
+          "w": 584,
+          "h": 317
+        },
+        "confidence": 0.5803,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 189,
+      "timestamp": 7.88,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 87,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 698,
+          "y": 454
+        },
+        "bbox": {
+          "x": 407,
+          "y": 294,
+          "w": 582,
+          "h": 320
+        },
+        "confidence": 0.62,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 190,
+      "timestamp": 7.92,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 88,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 699,
+          "y": 454
+        },
+        "bbox": {
+          "x": 409,
+          "y": 293,
+          "w": 581,
+          "h": 322
+        },
+        "confidence": 0.6657,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 191,
+      "timestamp": 7.96,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 89,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 696,
+          "y": 453
+        },
+        "bbox": {
+          "x": 402,
+          "y": 292,
+          "w": 589,
+          "h": 323
+        },
+        "confidence": 0.6657,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 192,
+      "timestamp": 8.0,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 90,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 696,
+          "y": 453
+        },
+        "bbox": {
+          "x": 399,
+          "y": 293,
+          "w": 594,
+          "h": 321
+        },
+        "confidence": 0.6308,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 193,
+      "timestamp": 8.04,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 91,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 696,
+          "y": 449
+        },
+        "bbox": {
+          "x": 401,
+          "y": 292,
+          "w": 591,
+          "h": 314
+        },
+        "confidence": 0.5556,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 194,
+      "timestamp": 8.08,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 92,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 679,
+          "y": 436
+        },
+        "bbox": {
+          "x": 367,
+          "y": 282,
+          "w": 625,
+          "h": 309
+        },
+        "confidence": 0.5235,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 195,
+      "timestamp": 8.12,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 93,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 674,
+          "y": 436
+        },
+        "bbox": {
+          "x": 356,
+          "y": 281,
+          "w": 636,
+          "h": 310
+        },
+        "confidence": 0.5182,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 196,
+      "timestamp": 8.17,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 94,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 672,
+          "y": 436
+        },
+        "bbox": {
+          "x": 353,
+          "y": 279,
+          "w": 639,
+          "h": 314
+        },
+        "confidence": 0.5518,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 197,
+      "timestamp": 8.21,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 95,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 672,
+          "y": 435
+        },
+        "bbox": {
+          "x": 351,
+          "y": 279,
+          "w": 642,
+          "h": 313
+        },
+        "confidence": 0.505,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 198,
+      "timestamp": 8.25,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 96,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 667,
+          "y": 433
+        },
+        "bbox": {
+          "x": 341,
+          "y": 277,
+          "w": 652,
+          "h": 312
+        },
+        "confidence": 0.5249,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 199,
+      "timestamp": 8.29,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 97,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 658,
+          "y": 434
+        },
+        "bbox": {
+          "x": 323,
+          "y": 275,
+          "w": 670,
+          "h": 318
+        },
+        "confidence": 0.4614,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 200,
+      "timestamp": 8.33,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 98,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 660,
+          "y": 434
+        },
+        "bbox": {
+          "x": 327,
+          "y": 276,
+          "w": 666,
+          "h": 316
+        },
+        "confidence": 0.488,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 201,
+      "timestamp": 8.38,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 99,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 660,
+          "y": 434
+        },
+        "bbox": {
+          "x": 327,
+          "y": 276,
+          "w": 666,
+          "h": 316
+        },
+        "confidence": 0.4891,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 202,
+      "timestamp": 8.42,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 100,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 643,
+          "y": 433
+        },
+        "bbox": {
+          "x": 294,
+          "y": 274,
+          "w": 699,
+          "h": 318
+        },
+        "confidence": 0.4243,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 203,
+      "timestamp": 8.46,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 101,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 630,
+          "y": 433
+        },
+        "bbox": {
+          "x": 266,
+          "y": 275,
+          "w": 728,
+          "h": 317
+        },
+        "confidence": 0.458,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 204,
+      "timestamp": 8.5,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 102,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 633,
+          "y": 437
+        },
+        "bbox": {
+          "x": 272,
+          "y": 282,
+          "w": 723,
+          "h": 310
+        },
+        "confidence": 0.4844,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 205,
+      "timestamp": 8.54,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 103,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 649,
+          "y": 438
+        },
+        "bbox": {
+          "x": 303,
+          "y": 283,
+          "w": 693,
+          "h": 311
+        },
+        "confidence": 0.5213,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 206,
+      "timestamp": 8.58,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 104,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 653,
+          "y": 438
+        },
+        "bbox": {
+          "x": 312,
+          "y": 283,
+          "w": 683,
+          "h": 311
+        },
+        "confidence": 0.5298,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 207,
+      "timestamp": 8.62,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 105,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 625,
+          "y": 443
+        },
+        "bbox": {
+          "x": 257,
+          "y": 273,
+          "w": 737,
+          "h": 340
+        },
+        "confidence": 0.4013,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 208,
+      "timestamp": 8.67,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 106,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 643,
+          "y": 444
+        },
+        "bbox": {
+          "x": 293,
+          "y": 273,
+          "w": 700,
+          "h": 343
+        },
+        "confidence": 0.4733,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 209,
+      "timestamp": 8.71,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 107,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 670,
+          "y": 454
+        },
+        "bbox": {
+          "x": 349,
+          "y": 294,
+          "w": 642,
+          "h": 321
+        },
+        "confidence": 0.5294,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 210,
+      "timestamp": 8.75,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 108,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 676,
+          "y": 455
+        },
+        "bbox": {
+          "x": 361,
+          "y": 295,
+          "w": 630,
+          "h": 320
+        },
+        "confidence": 0.5578,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 211,
+      "timestamp": 8.79,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 109,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 583,
+          "y": 443
+        },
+        "bbox": {
+          "x": 176,
+          "y": 270,
+          "w": 814,
+          "h": 346
+        },
+        "confidence": 0.5489,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 212,
+      "timestamp": 8.83,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 110,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 601,
+          "y": 447
+        },
+        "bbox": {
+          "x": 212,
+          "y": 277,
+          "w": 778,
+          "h": 340
+        },
+        "confidence": 0.5274,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 213,
+      "timestamp": 8.88,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 111,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 610,
+          "y": 447
+        },
+        "bbox": {
+          "x": 228,
+          "y": 278,
+          "w": 764,
+          "h": 339
+        },
+        "confidence": 0.4934,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 214,
+      "timestamp": 8.92,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 112,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 663,
+          "y": 458
+        },
+        "bbox": {
+          "x": 333,
+          "y": 300,
+          "w": 660,
+          "h": 316
+        },
+        "confidence": 0.4629,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 215,
+      "timestamp": 8.96,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 113,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 618,
+          "y": 440
+        },
+        "bbox": {
+          "x": 243,
+          "y": 275,
+          "w": 750,
+          "h": 331
+        },
+        "confidence": 0.416,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 216,
+      "timestamp": 9.0,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 114,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 608,
+          "y": 435
+        },
+        "bbox": {
+          "x": 225,
+          "y": 274,
+          "w": 767,
+          "h": 322
+        },
+        "confidence": 0.4377,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 217,
+      "timestamp": 9.04,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 115,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 609,
+          "y": 434
+        },
+        "bbox": {
+          "x": 228,
+          "y": 275,
+          "w": 763,
+          "h": 319
+        },
+        "confidence": 0.4815,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 218,
+      "timestamp": 9.08,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 116,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 625,
+          "y": 446
+        },
+        "bbox": {
+          "x": 260,
+          "y": 281,
+          "w": 731,
+          "h": 330
+        },
+        "confidence": 0.4458,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 219,
+      "timestamp": 9.12,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 117,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 704,
+          "y": 498
+        },
+        "bbox": {
+          "x": 419,
+          "y": 304,
+          "w": 570,
+          "h": 388
+        },
+        "confidence": 0.3559,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 220,
+      "timestamp": 9.17,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 118,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 706,
+          "y": 498
+        },
+        "bbox": {
+          "x": 424,
+          "y": 304,
+          "w": 565,
+          "h": 388
+        },
+        "confidence": 0.3727,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 221,
+      "timestamp": 9.21,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 119,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 717,
+          "y": 493
+        },
+        "bbox": {
+          "x": 445,
+          "y": 306,
+          "w": 544,
+          "h": 374
+        },
+        "confidence": 0.5101,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 222,
+      "timestamp": 9.25,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 120,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 715,
+          "y": 492
+        },
+        "bbox": {
+          "x": 442,
+          "y": 305,
+          "w": 547,
+          "h": 374
+        },
+        "confidence": 0.5533,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 223,
+      "timestamp": 9.29,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 121,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 719,
+          "y": 491
+        },
+        "bbox": {
+          "x": 447,
+          "y": 302,
+          "w": 544,
+          "h": 378
+        },
+        "confidence": 0.4304,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 224,
+      "timestamp": 9.33,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 122,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 709,
+          "y": 488
+        },
+        "bbox": {
+          "x": 428,
+          "y": 297,
+          "w": 562,
+          "h": 382
+        },
+        "confidence": 0.4096,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 225,
+      "timestamp": 9.38,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 123,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 721,
+          "y": 487
+        },
+        "bbox": {
+          "x": 451,
+          "y": 295,
+          "w": 540,
+          "h": 384
+        },
+        "confidence": 0.4543,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 226,
+      "timestamp": 9.42,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 124,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 711,
+          "y": 483
+        },
+        "bbox": {
+          "x": 428,
+          "y": 288,
+          "w": 566,
+          "h": 390
+        },
+        "confidence": 0.432,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 227,
+      "timestamp": 9.46,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 125,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 699,
+          "y": 474
+        },
+        "bbox": {
+          "x": 404,
+          "y": 280,
+          "w": 591,
+          "h": 388
+        },
+        "confidence": 0.5352,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 228,
+      "timestamp": 9.5,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 126,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 712,
+          "y": 467
+        },
+        "bbox": {
+          "x": 427,
+          "y": 271,
+          "w": 570,
+          "h": 392
+        },
+        "confidence": 0.6036,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 229,
+      "timestamp": 9.54,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 127,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 723,
+          "y": 468
+        },
+        "bbox": {
+          "x": 452,
+          "y": 274,
+          "w": 543,
+          "h": 389
+        },
+        "confidence": 0.6164,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 230,
+      "timestamp": 9.58,
+      "stage": "WARNING",
+      "raw_stage": "WARNING",
+      "warning_count": 128,
+      "danger_count": 0,
+      "target": {
+        "center": {
+          "x": 672,
+          "y": 458
+        },
+        "bbox": {
+          "x": 348,
+          "y": 255,
+          "w": 649,
+          "h": 407
+        },
+        "confidence": 0.5919,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 231,
+      "timestamp": 9.62,
+      "stage": "WARNING",
+      "raw_stage": "DANGEROUS_ACTION",
+      "warning_count": 0,
+      "danger_count": 1,
+      "target": {
+        "center": {
+          "x": 647,
+          "y": 453
+        },
+        "bbox": {
+          "x": 295,
+          "y": 246,
+          "w": 704,
+          "h": 414
+        },
+        "confidence": 0.563,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 232,
+      "timestamp": 9.67,
+      "stage": "WARNING",
+      "raw_stage": "DANGEROUS_ACTION",
+      "warning_count": 0,
+      "danger_count": 2,
+      "target": {
+        "center": {
+          "x": 666,
+          "y": 451
+        },
+        "bbox": {
+          "x": 329,
+          "y": 242,
+          "w": 674,
+          "h": 418
+        },
+        "confidence": 0.6263,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 233,
+      "timestamp": 9.71,
+      "stage": "WARNING",
+      "raw_stage": "DANGEROUS_ACTION",
+      "warning_count": 0,
+      "danger_count": 3,
+      "target": {
+        "center": {
+          "x": 668,
+          "y": 449
+        },
+        "bbox": {
+          "x": 330,
+          "y": 238,
+          "w": 676,
+          "h": 422
+        },
+        "confidence": 0.6292,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 234,
+      "timestamp": 9.75,
+      "stage": "WARNING",
+      "raw_stage": "DANGEROUS_ACTION",
+      "warning_count": 0,
+      "danger_count": 4,
+      "target": {
+        "center": {
+          "x": 680,
+          "y": 446
+        },
+        "bbox": {
+          "x": 351,
+          "y": 233,
+          "w": 658,
+          "h": 427
+        },
+        "confidence": 0.6488,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 235,
+      "timestamp": 9.79,
+      "stage": "DANGEROUS_ACTION",
+      "raw_stage": "DANGEROUS_ACTION",
+      "warning_count": 0,
+      "danger_count": 5,
+      "target": {
+        "center": {
+          "x": 650,
+          "y": 443
+        },
+        "bbox": {
+          "x": 290,
+          "y": 229,
+          "w": 720,
+          "h": 428
+        },
+        "confidence": 0.5626,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 236,
+      "timestamp": 9.83,
+      "stage": "DANGEROUS_ACTION",
+      "raw_stage": "DANGEROUS_ACTION",
+      "warning_count": 0,
+      "danger_count": 6,
+      "target": {
+        "center": {
+          "x": 649,
+          "y": 441
+        },
+        "bbox": {
+          "x": 289,
+          "y": 226,
+          "w": 721,
+          "h": 431
+        },
+        "confidence": 0.5631,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 237,
+      "timestamp": 9.88,
+      "stage": "DANGEROUS_ACTION",
+      "raw_stage": "DANGEROUS_ACTION",
+      "warning_count": 0,
+      "danger_count": 7,
+      "target": {
+        "center": {
+          "x": 653,
+          "y": 440
+        },
+        "bbox": {
+          "x": 296,
+          "y": 225,
+          "w": 715,
+          "h": 431
+        },
+        "confidence": 0.5763,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 238,
+      "timestamp": 9.92,
+      "stage": "DANGEROUS_ACTION",
+      "raw_stage": "DANGEROUS_ACTION",
+      "warning_count": 0,
+      "danger_count": 8,
+      "target": {
+        "center": {
+          "x": 661,
+          "y": 436
+        },
+        "bbox": {
+          "x": 310,
+          "y": 220,
+          "w": 703,
+          "h": 433
+        },
+        "confidence": 0.6217,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 239,
+      "timestamp": 9.96,
+      "stage": "DANGEROUS_ACTION",
+      "raw_stage": "DANGEROUS_ACTION",
+      "warning_count": 0,
+      "danger_count": 9,
+      "target": {
+        "center": {
+          "x": 660,
+          "y": 435
+        },
+        "bbox": {
+          "x": 307,
+          "y": 216,
+          "w": 707,
+          "h": 438
+        },
+        "confidence": 0.6077,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 240,
+      "timestamp": 10.0,
+      "stage": "DANGEROUS_ACTION",
+      "raw_stage": "DANGEROUS_ACTION",
+      "warning_count": 0,
+      "danger_count": 10,
+      "target": {
+        "center": {
+          "x": 663,
+          "y": 432
+        },
+        "bbox": {
+          "x": 311,
+          "y": 211,
+          "w": 704,
+          "h": 443
+        },
+        "confidence": 0.6184,
+        "class_name": "person"
+      }
+    },
+    {
+      "frame_index": 241,
+      "timestamp": 10.04,
+      "stage": "DANGEROUS_ACTION",
+      "raw_stage": "DANGEROUS_ACTION",
+      "warning_count": 0,
+      "danger_count": 11,
+      "target": {
+        "center": {
+          "x": 657,
+          "y": 428
+        },
+        "bbox": {
+          "x": 299,
+          "y": 203,
+          "w": 717,
+          "h": 450
+        },
+        "confidence": 0.6374,
+        "class_name": "person"
+      }
+    }
+  ],
+  "events": [
+    {
+      "frame_index": 235,
+      "timestamp": 9.79,
+      "stage": "DANGEROUS_ACTION",
+      "target_center": {
+        "x": 650,
+        "y": 443
+      },
+      "target_bbox": {
+        "x": 290,
+        "y": 229,
+        "w": 720,
+        "h": 428
+      },
+      "confidence": 0.5626
+    }
+  ]
+}
