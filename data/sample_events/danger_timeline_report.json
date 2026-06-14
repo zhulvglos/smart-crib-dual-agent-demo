@@ -1,0 +1,112 @@
+{
+  "video": "data\\dangerous_test5.mp4",
+  "total_frames": 362,
+  "fps": 24.0,
+  "duration_s": 15.08,
+  "stage_distribution": {
+    "熟睡": 117,
+    "哭闹1级": 80,
+    "苏醒": 29,
+    "哭闹2级": 88,
+    "危险动作④": 47
+  },
+  "danger_summary": {
+    "total_danger_frames": 47,
+    "percentage": 12.98,
+    "by_type": {
+      "危险动作④": 47
+    }
+  },
+  "danger_timeline": [
+    {
+      "type": "危险动作④",
+      "total_frames": 47,
+      "segments": [
+        {
+          "f_start": 314,
+          "f_end": 360,
+          "t_start_s": 13.1,
+          "t_end_s": 15.0
+        }
+      ]
+    }
+  ],
+  "stage_transitions": [
+    {
+      "frame": 0,
+      "t_s": 0.0,
+      "stage": "熟睡"
+    },
+    {
+      "frame": 67,
+      "t_s": 2.8,
+      "stage": "哭闹1级"
+    },
+    {
+      "frame": 69,
+      "t_s": 2.9,
+      "stage": "熟睡"
+    },
+    {
+      "frame": 70,
+      "t_s": 2.9,
+      "stage": "哭闹1级"
+    },
+    {
+      "frame": 74,
+      "t_s": 3.1,
+      "stage": "熟睡"
+    },
+    {
+      "frame": 76,
+      "t_s": 3.2,
+      "stage": "哭闹1级"
+    },
+    {
+      "frame": 91,
+      "t_s": 3.8,
+      "stage": "熟睡"
+    },
+    {
+      "frame": 133,
+      "t_s": 5.5,
+      "stage": "哭闹1级"
+    },
+    {
+      "frame": 155,
+      "t_s": 6.5,
+      "stage": "熟睡"
+    },
+    {
+      "frame": 157,
+      "t_s": 6.5,
+      "stage": "苏醒"
+    },
+    {
+      "frame": 170,
+      "t_s": 7.1,
+      "stage": "熟睡"
+    },
+    {
+      "frame": 173,
+      "t_s": 7.2,
+      "stage": "苏醒"
+    },
+    {
+      "frame": 189,
+      "t_s": 7.9,
+      "stage": "哭闹1级"
+    },
+    {
+      "frame": 226,
+      "t_s": 9.4,
+      "stage": "哭闹2级"
+    },
+    {
+      "frame": 314,
+      "t_s": 13.1,
+      "stage": "危险动作④"
+    }
+  ],
+  "saved_screenshots": 3
+}

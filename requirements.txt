@@ -27,3 +27,6 @@ langchain>=1.0.0
 
 # 日期时间处理库：用于解析雷达接口、事件日志、状态时间戳等时间数据
 python-dateutil>=2.9.0
+
+# YOLO目标检测框架：用于人体检测、姿态估计、实例分割（crib_detector / detector）
+ultralytics>=8.0.0

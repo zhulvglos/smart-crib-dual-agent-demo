@@ -1,0 +1,95 @@
+{
+  "video_path": "data/dangerous_test1.mp4",
+  "model": {
+    "path": "yolo11n.pt",
+    "task": "detect",
+    "target_class_names": [
+      "person"
+    ],
+    "confidence_threshold": 0.25,
+    "iou_threshold": 0.45,
+    "image_size": 640,
+    "device": "cpu",
+    "detect_every_n_frames": 1
+  },
+  "target_selection": {
+    "strategy": "largest_person",
+    "min_box_area_ratio": 0.01,
+    "max_center_jump_ratio": 0.35,
+    "lost_keep_frames": 8
+  },
+  "crib_zone": {
+    "enabled": true,
+    "calibrated_for": "data\\dangerous_test1.mp4",
+    "corners_ratio": [
+      {
+        "x": 0.246875,
+        "y": 0.14305555555555555
+      },
+      {
+        "x": 0.79921875,
+        "y": 0.16805555555555557
+      },
+      {
+        "x": 0.675,
+        "y": 0.925
+      },
+      {
+        "x": 0.0015625,
+        "y": 0.3958333333333333
+      }
+    ],
+    "corner_order": "top_left, top_right, bottom_right, bottom_left",
+    "warning_start_ratio": 0.78,
+    "danger_boundary_ratio": 0.9,
+    "trigger_point": "bbox_right"
+  },
+  "safe_zone": {
+    "x1_ratio": 0.16953125,
+    "y1_ratio": 0.4125,
+    "x2_ratio": 0.77421875,
+    "y2_ratio": 0.8583333333333333
+  },
+  "warning_zone": {
+    "x1_ratio": 0.040625,
+    "y1_ratio": 0.31805555555555554,
+    "x2_ratio": 0.90234375,
+    "y2_ratio": 0.9513888888888888
+  },
+  "danger_boundary": {
+    "x_ratio": 0.928125,
+    "trigger_point": "bbox_right"
+  },
+  "debounce": {
+    "warning_confirm_frames": 3,
+    "danger_confirm_frames": 5
+  },
+  "display": {
+    "show_overlay": true,
+    "show_debug_text": true,
+    "playback_speed": 1.0
+  },
+  "auto_crib": {
+    "enabled": true,
+    "video_path": "data\\dangerous_test5.mp4",
+    "corners_ratio": [
+      {
+        "x": 0.040625,
+        "y": 0.37222222222222223
+      },
+      {
+        "x": 0.84453125,
+        "y": 0.31805555555555554
+      },
+      {
+        "x": 0.90234375,
+        "y": 0.9513888888888888
+      },
+      {
+        "x": 0.040625,
+        "y": 0.9513888888888888
+      }
+    ],
+    "corner_order": "top_left,top_right,bottom_right,bottom_left"
+  }
+}

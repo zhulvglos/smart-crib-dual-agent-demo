@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import cv2
+import numpy as np
 
 from demo_danger_action import (
     EVENT_LOG_FILE,
@@ -29,6 +30,12 @@ from demo_danger_action import (
     create_mock_danger_event,
 )
 
+from crib_detector import (
+    CribDetector,
+    CribGeometry,
+    save_crib_config,
+    load_crib_config,
+)
 
 CONFIG_PATH = Path("config/demo_detector_config.json")
 DEFAULT_VIDEO_PATH = Path("data/dangerous_test1.mp4")
@@ -50,6 +57,7 @@ class Detection:
     bbox: Rect
     class_name: str
     confidence: float
+    keypoints: Optional[np.ndarray] = None  # YOLO-pose 关键点 [N, 3] (x, y, conf)
 
     @property
     def center(self) -> Point:
@@ -65,6 +73,50 @@ class Detection:
     def area(self) -> int:
         _, _, w, h = self.bbox
         return w * h
+
+    def get_body_key_points(self) -> List[Point]:
+        """提取身体关键部位坐标，用于更精确的安全判断。"""
+        points: List[Point] = []
+
+        # COCO keypoint indices for pose model
+        # 0: nose, 1: left_eye, 2: right_eye, 3: left_ear, 4: right_ear
+        # 5: left_shoulder, 6: right_shoulder, 7: left_elbow, 8: right_elbow
+        # 9: left_wrist, 10: right_wrist, 11: left_hip, 12: right_hip
+        # 13: left_knee, 14: right_knee, 15: left_ankle, 16: right_ankle
+        if self.keypoints is not None and len(self.keypoints) > 0:
+            kpts = self.keypoints
+            # 头部中心（鼻子或双眼中心）
+            if kpts[0][2] > 0.3:
+                points.append((int(kpts[0][0]), int(kpts[0][1])))
+
+            # 肩膀中心
+            if kpts[5][2] > 0.3 and kpts[6][2] > 0.3:
+                shoulder_x = int((kpts[5][0] + kpts[6][0]) / 2)
+                shoulder_y = int((kpts[5][1] + kpts[6][1]) / 2)
+                points.append((shoulder_x, shoulder_y))
+            elif kpts[5][2] > 0.3:
+                points.append((int(kpts[5][0]), int(kpts[5][1])))
+            elif kpts[6][2] > 0.3:
+                points.append((int(kpts[6][0]), int(kpts[6][1])))
+
+            # 臀部中心
+            if kpts[11][2] > 0.3 and kpts[12][2] > 0.3:
+                hip_x = int((kpts[11][0] + kpts[12][0]) / 2)
+                hip_y = int((kpts[11][1] + kpts[12][1]) / 2)
+                points.append((hip_x, hip_y))
+
+            # 脚踝（最低的位置，最能反映是否爬出床）
+            ankle_candidates = []
+            if kpts[15][2] > 0.3:
+                ankle_candidates.append((int(kpts[15][0]), int(kpts[15][1])))
+            if kpts[16][2] > 0.3:
+                ankle_candidates.append((int(kpts[16][0]), int(kpts[16][1])))
+            if ankle_candidates:
+                # 取 y 值最大的（最靠下的）脚踝
+                lowest_ankle = max(ankle_candidates, key=lambda p: p[1])
+                points.append(lowest_ankle)
+
+        return points
 
 
 def load_config(path: Path) -> Dict[str, Any]:
@@ -90,6 +142,12 @@ def point_in_rect(point: Point, rect: Rect) -> bool:
     return rx <= x <= rx + rw and ry <= y <= ry + rh
 
 
+def point_in_polygon(point: Point, polygon: np.ndarray) -> bool:
+    """判断点是否在多边形内"""
+    result = cv2.pointPolygonTest(polygon, (float(point[0]), float(point[1])), False)
+    return result >= 0
+
+
 def bbox_iou(a: Rect, b: Rect) -> float:
     ax, ay, aw, ah = a
     bx, by, bw, bh = b
@@ -108,6 +166,22 @@ def resolve_geometry(config: Dict[str, Any], width: int, height: int) -> Dict[st
         "safe_zone": ratio_rect_to_pixels(config["safe_zone"], width, height),
         "warning_zone": ratio_rect_to_pixels(config["warning_zone"], width, height),
         "danger_boundary_x": int(config["danger_boundary"]["x_ratio"] * width),
+    }
+
+
+def resolve_geometry_from_crib(
+    crib_geometry: CribGeometry,
+    width: int,
+    height: int
+) -> Dict[str, Any]:
+    """从 CribGeometry 创建几何配置（向后兼容）"""
+    safe_zone = cv2.boundingRect(crib_geometry.safe_contour)
+    warning_zone = cv2.boundingRect(crib_geometry.warning_contour)
+    
+    return {
+        "safe_zone": safe_zone,
+        "warning_zone": warning_zone,
+        "crib_geometry": crib_geometry,
     }
 
 
@@ -143,19 +217,37 @@ def run_detector(model, frame, config: Dict[str, Any]) -> List[Detection]:
     if not results:
         return detections
 
-    names = results[0].names
-    boxes = results[0].boxes
+    result = results[0]
+    names = result.names
+    boxes = result.boxes
     if boxes is None:
         return detections
 
-    for box in boxes:
-        class_id = int(box.cls[0].item())
+    # 检查是否有姿态关键点（YOLO-pose）
+    has_keypoints = hasattr(result, "keypoints") and result.keypoints is not None
+
+    for i, box in enumerate(boxes):
+        class_id = int(box.cls[0])
         class_name = str(names.get(class_id, class_id)).lower()
-        confidence = float(box.conf[0].item())
+        confidence = float(box.conf[0])
         if class_name not in target_names or confidence < min_conf:
             continue
         x1, y1, x2, y2 = [int(v) for v in box.xyxy[0].tolist()]
-        detections.append(Detection((x1, y1, max(1, x2 - x1), max(1, y2 - y1)), class_name, confidence))
+
+        kpts = None
+        if has_keypoints and i < len(result.keypoints):
+            kpt_data = result.keypoints[i].data.cpu().numpy()
+            if kpt_data.shape[0] > 0:
+                kpts = kpt_data[0]  # [N, 3]
+
+        detections.append(
+            Detection(
+                (x1, y1, max(1, x2 - x1), max(1, y2 - y1)),
+                class_name,
+                confidence,
+                keypoints=kpts,
+            )
+        )
 
     return detections
 
@@ -199,22 +291,90 @@ def get_trigger_x(det: Detection, trigger_point: str) -> int:
     return det.center[0]
 
 
-def classify_stage(det: Optional[Detection], geometry: Dict[str, Any], config: Dict[str, Any]) -> str:
+def is_near_crib_edge(
+    point: Point,
+    crib_contour: np.ndarray,
+    threshold: float = 0.15,
+) -> bool:
+    """判断点是否接近床的边缘"""
+    # 计算点到轮廓的距离
+    distance = cv2.pointPolygonTest(crib_contour, (float(point[0]), float(point[1])), True)
+    
+    # 如果距离为负，说明点在轮廓外（危险）
+    if distance < 0:
+        return True
+    
+    # 如果距离很小，说明接近边缘
+    x, y, w, h = cv2.boundingRect(crib_contour)
+    max_dim = max(w, h)
+    if distance < max_dim * threshold:
+        return True
+    
+    return False
+
+
+def classify_stage(
+    det: Optional[Detection],
+    geometry: Dict[str, Any],
+    config: Dict[str, Any],
+) -> str:
+    """
+    分类当前帧的安全状态。
+
+    三区逻辑（使用 polygon-based crib 检测时）：
+    - Safe Zone（绿框内）: 所有关键检查点都在 safe_contour 内部 → SAFE
+    - Warning Zone（绿框与黄框之间）: 所有关键检查点在 crib_contour 内部，
+      但至少有一个不在 safe_contour 内部 → WARNING
+    - Danger Zone（黄框外）: 任一关键检查点在 crib_contour 外部 → DANGEROUS_ACTION
+    """
     if det is None:
         return "SAFE"
 
     trigger_point = config.get("danger_boundary", {}).get("trigger_point", "bbox_right")
     trigger_x = get_trigger_x(det, trigger_point)
+    trigger_point_coords = (trigger_x, det.center[1])
     center = det.center
-    warning_x = geometry["warning_zone"][0]
 
-    if trigger_x >= geometry["danger_boundary_x"]:
-        return "DANGEROUS_ACTION"
-    if trigger_x >= warning_x or point_in_rect(center, geometry["warning_zone"]):
-        return "WARNING"
-    if point_in_rect(center, geometry["safe_zone"]):
+    if "crib_geometry" in geometry:
+        crib_geometry = geometry["crib_geometry"]
+
+        # 收集多个关键检查点进行综合判断
+        # 1. 边界触发点（如 bbox_right / bbox_left）
+        # 2. 检测框中心
+        # 3. 底部中心（婴儿的脚 / 身体下部，最容易越界）
+        bx, by, bw, bh = det.bbox
+        bottom_center = (int(bx + bw / 2), by + bh)
+
+        check_points: List[Point] = [trigger_point_coords, center, bottom_center]
+
+        # 如果有关键点（YOLO-pose），使用更精确的身体部位
+        pose_points = det.get_body_key_points()
+        if pose_points:
+            # 将关键点加入检查列表（优先级更高）
+            check_points.extend(pose_points)
+
+        # DANGEROUS: 任一关键检查点在 crib_contour（黄框 / 床边界）外部
+        for pt in check_points:
+            if not point_in_polygon(pt, crib_geometry.crib_contour):
+                return "DANGEROUS_ACTION"
+
+        # WARNING: 任一关键检查点不在 safe_contour（绿框）内部，但在 crib_contour 内部
+        for pt in check_points:
+            if not point_in_polygon(pt, crib_geometry.safe_contour):
+                return "WARNING"
+
+        # SAFE: 所有关键检查点都在 safe_contour 内部
         return "SAFE"
-    return "WARNING"
+    else:
+        # 降级到旧版矩形区域逻辑
+        warning_x = geometry["warning_zone"][0]
+        if trigger_x >= geometry["danger_boundary_x"]:
+            return "DANGEROUS_ACTION"
+        if trigger_x >= warning_x or point_in_rect(center, geometry["warning_zone"]):
+            return "WARNING"
+        if point_in_rect(center, geometry["safe_zone"]):
+            return "SAFE"
+        return "WARNING"
 
 
 def apply_debounce(
@@ -252,7 +412,7 @@ def draw_text(frame, text: str, origin: Point, color=(245, 245, 245), scale=0.56
     cv2.putText(frame, text, (x, y), cv2.FONT_HERSHEY_SIMPLEX, scale, color, thickness, cv2.LINE_AA)
 
 
-def draw_header(frame, stage: str, triggered: bool, det: Optional[Detection], raw_stage: str, model_name: str) -> None:
+def draw_header(frame, stage: str, triggered: bool, det: Optional[Detection], raw_stage: str, model_name: str, detection_method: str = "") -> None:
     height, width = frame.shape[:2]
     color = STAGE_COLORS[stage]
     header_h = max(120, int(height * 0.16))
@@ -268,7 +428,10 @@ def draw_header(frame, stage: str, triggered: bool, det: Optional[Detection], ra
 
     draw_text(frame, "AI Crib Safety Demo", (24, 34), (255, 255, 255), 0.82, 2)
     draw_text(frame, "Mode: YOLO Person Detection Assisted Demo", (24, 68), (210, 220, 230), 0.55, 1)
-    draw_text(frame, "Pretrained detector + rule-based danger boundary", (24, header_h - 16), (180, 195, 210), 0.46, 1)
+    if detection_method:
+        draw_text(frame, f"Crib Detection: {detection_method}", (24, header_h - 16), (180, 195, 210), 0.46, 1)
+    else:
+        draw_text(frame, "Pretrained detector + rule-based danger boundary", (24, header_h - 16), (180, 195, 210), 0.46, 1)
 
     right_x = max(24, int(width * 0.48))
     draw_text(frame, f"Stage: {stage}", (right_x, 34), color, 0.72, 2)
@@ -278,28 +441,39 @@ def draw_header(frame, stage: str, triggered: bool, det: Optional[Detection], ra
 
 
 def draw_zones(frame, geometry: Dict[str, Any]) -> None:
-    safe_zone = geometry["safe_zone"]
-    warning_zone = geometry["warning_zone"]
-    danger_x = geometry["danger_boundary_x"]
     height, width = frame.shape[:2]
     green = STAGE_COLORS["SAFE"]
     yellow = STAGE_COLORS["WARNING"]
     red = STAGE_COLORS["DANGEROUS_ACTION"]
 
-    sx, sy, sw, sh = safe_zone
-    wx, wy, ww, wh = warning_zone
-    cv2.rectangle(frame, (sx, sy), (sx + sw, sy + sh), green, 2)
-    draw_text(frame, "Green Box: Safe Zone", (sx + 8, sy + 24), green, 0.50, 1)
+    if "crib_geometry" in geometry:
+        crib_geometry = geometry["crib_geometry"]
+        cv2.polylines(frame, [crib_geometry.crib_contour], True, red, 3)
+        cv2.polylines(frame, [crib_geometry.safe_contour], True, green, 2)
+        cv2.polylines(frame, [crib_geometry.warning_contour], True, yellow, 2)
+        
+        draw_text(frame, "Green Box: Safe Zone", (20, height - 60), green, 0.5, 1)
+        draw_text(frame, "Yellow/Red: Crib Boundary (Danger if outside)", (20, height - 40), yellow, 0.5, 1)
+        draw_text(frame, "Between Green & Boundary: Warning Zone", (20, height - 20), yellow, 0.5, 1)
+    else:
+        safe_zone = geometry["safe_zone"]
+        warning_zone = geometry["warning_zone"]
+        danger_x = geometry["danger_boundary_x"]
+        
+        sx, sy, sw, sh = safe_zone
+        wx, wy, ww, wh = warning_zone
+        cv2.rectangle(frame, (sx, sy), (sx + sw, sy + sh), green, 2)
+        draw_text(frame, "Green Box: Safe Zone", (sx + 8, sy + 24), green, 0.50, 1)
 
-    warning_overlay = frame.copy()
-    cv2.rectangle(warning_overlay, (wx, wy), (wx + ww, wy + wh), yellow, -1)
-    cv2.addWeighted(warning_overlay, 0.14, frame, 0.86, 0, frame)
-    cv2.rectangle(frame, (wx, wy), (wx + ww, wy + wh), yellow, 2)
-    draw_text(frame, "Yellow Area: Warning Zone", (wx + 8, wy + 52), yellow, 0.50, 1)
+        warning_overlay = frame.copy()
+        cv2.rectangle(warning_overlay, (wx, wy), (wx + ww, wy + wh), yellow, -1)
+        cv2.addWeighted(warning_overlay, 0.14, frame, 0.86, 0, frame)
+        cv2.rectangle(frame, (wx, wy), (wx + ww, wy + wh), yellow, 2)
+        draw_text(frame, "Yellow Area: Warning Zone", (wx + 8, wy + 52), yellow, 0.50, 1)
 
-    cv2.line(frame, (danger_x, sy), (danger_x, min(height - 1, sy + sh)), red, 4)
-    label_x = max(16, min(width - 290, danger_x - 190))
-    draw_text(frame, "Red Line: Danger Boundary", (label_x, min(height - 54, sy + sh + 30)), red, 0.50, 1)
+        cv2.line(frame, (danger_x, sy), (danger_x, min(height - 1, sy + sh)), red, 4)
+        label_x = max(16, min(width - 290, danger_x - 190))
+        draw_text(frame, "Red Line: Danger Boundary", (label_x, min(height - 54, sy + sh + 30)), red, 0.50, 1)
 
 
 def draw_detection(frame, det: Optional[Detection], stage: str, trigger_point: str) -> None:
@@ -315,7 +489,20 @@ def draw_detection(frame, det: Optional[Detection], stage: str, trigger_point: s
     cv2.circle(frame, (cx, cy), 7, color, -1)
     cv2.circle(frame, (cx, cy), 16, color, 2)
     cv2.line(frame, (trigger_x, y), (trigger_x, y + h), color, 2)
-    draw_text(frame, f"YOLO Target Box: {det.class_name} {det.confidence:.2f}", (x, max(22, y - 10)), color, 0.50, 1)
+
+    # 如果有关键点，绘制用于安全判断的身体关键部位
+    if det.keypoints is not None and len(det.keypoints) > 0:
+        # 绘制关键检查点
+        pose_points = det.get_body_key_points()
+        for i, pt in enumerate(pose_points):
+            pt_color = (0, 255, 255) if i == 0 else (255, 200, 0)  # 头部黄色，其他橙色
+            cv2.circle(frame, pt, 5, pt_color, -1)
+            cv2.circle(frame, pt, 10, pt_color, 1)
+
+    label = f"YOLO Target Box: {det.class_name} {det.confidence:.2f}"
+    if det.keypoints is not None:
+        label += " [pose]"
+    draw_text(frame, label, (x, max(22, y - 10)), color, 0.50, 1)
 
 
 def draw_banner(frame, stage: str, triggered: bool) -> None:
@@ -338,8 +525,9 @@ def draw_overlay(
     config: Dict[str, Any],
     warning_count: int,
     danger_count: int,
+    detection_method: str = "",
 ) -> None:
-    draw_header(frame, stage, triggered, det, raw_stage, config["model"].get("path", "yolo11n.pt"))
+    draw_header(frame, stage, triggered, det, raw_stage, config["model"].get("path", "yolo11n.pt"), detection_method)
     draw_zones(frame, geometry)
     draw_detection(frame, det, stage, config.get("danger_boundary", {}).get("trigger_point", "bbox_right"))
     draw_banner(frame, stage, triggered)
@@ -351,7 +539,6 @@ def trigger_danger_closed_loop(
     video_path: Path,
     frame_index: int,
     det: Detection,
-    danger_boundary_x: int,
     model_name: str,
 ) -> Dict[str, Any]:
     print("\n" + "=" * 84)
@@ -372,7 +559,6 @@ def trigger_danger_closed_loop(
             "frame_index": frame_index,
             "target_center": {"x": det.center[0], "y": det.center[1]},
             "target_bbox": {"x": x, "y": y, "w": w, "h": h},
-            "danger_boundary_x": int(danger_boundary_x),
             "detector_model": model_name,
             "detection_class": det.class_name,
             "detection_confidence": round(det.confidence, 4),
@@ -422,6 +608,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", default=None, help="Override YOLO model path, e.g. yolo11n.pt or yolo11n-pose.pt.")
     parser.add_argument("--speed", type=float, default=None, help="Playback speed multiplier.")
     parser.add_argument("--imgsz", type=int, default=None, help="YOLO inference image size.")
+    parser.add_argument("--auto-detect-crib", action="store_true", default=True, help="Auto-detect crib area (default: True)")
+    parser.add_argument("--no-auto-detect", action="store_false", dest="auto_detect_crib", help="Disable auto-detect crib area")
+    parser.add_argument("--safe-ratio", type=float, default=0.15, help="Safe zone shrink ratio")
     return parser.parse_args()
 
 
@@ -452,7 +641,47 @@ def main() -> None:
         return
 
     height, width = first_frame.shape[:2]
-    geometry = resolve_geometry(config, width, height)
+    detection_method = ""
+    
+    if args.auto_detect_crib:
+        print("[INFO] Attempting to auto-detect crib area...")
+        try:
+            saved_crib_geometry = load_crib_config(
+                Path(args.config),
+                str(video_path),
+                width,
+                height
+            )
+            if saved_crib_geometry is not None:
+                print("[INFO] Using saved crib configuration")
+                geometry = resolve_geometry_from_crib(saved_crib_geometry, width, height)
+                detection_method = "saved"
+            else:
+                crib_detector = CribDetector()
+                result = crib_detector.detect_crib(first_frame, safe_ratio=args.safe_ratio)
+                
+                if result.success and result.geometry is not None:
+                    print(f"[INFO] Successfully detected crib using {result.method} method (confidence: {result.confidence:.2f})")
+                    geometry = resolve_geometry_from_crib(result.geometry, width, height)
+                    detection_method = result.method
+                    
+                    save_crib_config(
+                        Path(args.config),
+                        str(video_path),
+                        result.geometry,
+                        width,
+                        height
+                    )
+                    print(f"[INFO] Saved crib configuration to {args.config}")
+                else:
+                    print(f"[WARN] Crib detection failed: {result.message}, falling back to config")
+                    geometry = resolve_geometry(config, width, height)
+        except Exception as e:
+            print(f"[WARN] Error during crib detection: {e}, falling back to config")
+            geometry = resolve_geometry(config, width, height)
+    else:
+        geometry = resolve_geometry(config, width, height)
+    
     model_name = config["model"].get("path", "yolo11n.pt")
     model = load_yolo_model(model_name)
 
@@ -465,7 +694,10 @@ def main() -> None:
     lost_keep_frames = int(config.get("target_selection", {}).get("lost_keep_frames", 8))
 
     print_intro(config, video_path, total_frames, fps)
-    print(f"[GEOMETRY] danger_boundary_x={geometry['danger_boundary_x']}")
+    if "crib_geometry" in geometry:
+        print("[GEOMETRY] Using polygon-based danger boundary")
+    else:
+        print(f"[GEOMETRY] danger_boundary_x={geometry['danger_boundary_x']}")
     print(f"[PLAYBACK] speed={playback_speed:.2f}x delay_ms={delay}")
 
     cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
@@ -533,7 +765,6 @@ def main() -> None:
                 video_path,
                 frame_index,
                 current_target,
-                geometry["danger_boundary_x"],
                 model_name,
             )
 
@@ -548,6 +779,7 @@ def main() -> None:
                 config,
                 warning_count,
                 danger_count,
+                detection_method,
             )
 
         cv2.imshow(WINDOW_NAME, frame)

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI婴儿床监护系统 - YOLO危险动作检测Demo</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部标题 -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">👶</span>
+                <h1>AI婴儿床监护系统</h1>
+            </div>
+            <div class="subtitle">YOLO危险动作检测 + AI智能预警 Demo</div>
+        </header>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 左侧：视频播放区 -->
+            <div class="video-section">
+                <div class="video-container">
+                    <video id="videoPlayer" class="video-player" controls>
+                        <source src="" type="video/mp4">
+                        您的浏览器不支持视频播放
+                    </video>
+                    <canvas id="overlayCanvas" class="overlay-canvas"></canvas>
+                    
+                    <!-- 状态覆盖层 -->
+                    <div id="statusOverlay" class="status-overlay safe">
+                        <div class="status-badge" id="statusBadge">SAFE</div>
+                    </div>
+                    
+                    <!-- 危险警告覆盖层 -->
+                    <div id="dangerOverlay" class="danger-overlay hidden">
+                        <div class="danger-content">
+                            <div class="danger-icon">⚠️</div>
+                            <div class="danger-text">危险动作检测</div>
+                            <div class="danger-subtext">AI闭环已激活</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 视频控制栏 -->
+                <div class="video-controls">
+                    <button id="playBtn" class="control-btn">
+                        <span class="icon">▶️</span>
+                    </button>
+                    <button id="pauseBtn" class="control-btn">
+                        <span class="icon">⏸️</span>
+                    </button>
+                    <div class="progress-container">
+                        <input type="range" id="progressBar" class="progress-bar" min="0" max="100" value="0">
+                        <div class="time-display">
+                            <span id="currentTime">00:00</span> / <span id="totalTime">00:00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 视频选择器 -->
+                <div class="video-selector">
+                    <label>选择演示视频：</label>
+                    <select id="videoSelect" class="video-select">
+                        <option value="dangerous_test1">危险动作测试1</option>
+                        <option value="dangerous_test2">危险动作测试2</option>
+                        <option value="dangerous_test3">危险动作测试3</option>
+                    </select>
+                    <button id="loadVideoBtn" class="load-btn">加载视频</button>
+                </div>
+            </div>
+
+            <!-- 右侧：信息面板 -->
+            <div class="info-section">
+                <!-- 实时状态卡片 -->
+                <div class="info-card status-card">
+                    <h3>🎯 实时检测状态</h3>
+                    <div class="status-display">
+                        <div class="status-item">
+                            <span class="label">当前状态：</span>
+                            <span id="currentStage" class="value stage-safe">SAFE</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="label">原始检测：</span>
+                            <span id="rawStage" class="value">SAFE</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="label">目标置信度：</span>
+                            <span id="confidence" class="value">--</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="label">目标位置：</span>
+                            <span id="targetPos" class="value">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 检测统计 -->
+                <div class="info-card stats-card">
+                    <h3>📊 检测统计</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="warningCount">0</div>
+                            <div class="stat-label">警告帧数</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="dangerCount">0</div>
+                            <div class="stat-label">危险帧数</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="eventCount">0</div>
+                            <div class="stat-label">触发事件</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 事件日志 -->
+                <div class="info-card events-card">
+                    <h3>📋 事件日志</h3>
+                    <div id="eventsList" class="events-list">
+                        <div class="event-item empty">暂无事件</div>
+                    </div>
+                </div>
+
+                <!-- 技术说明 -->
+                <div class="info-card tech-card">
+                    <h3>🔧 技术架构</h3>
+                    <div class="tech-flow">
+                        <div class="tech-step">
+                            <div class="step-num">1</div>
+                            <div class="step-text">YOLO目标检测</div>
+                        </div>
+                        <div class="tech-arrow">→</div>
+                        <div class="tech-step">
+                            <div class="step-num">2</div>
+                            <div class="step-text">危险边界判断</div>
+                        </div>
+                        <div class="tech-arrow">→</div>
+                        <div class="tech-step">
+                            <div class="step-num">3</div>
+                            <div class="step-text">LangGraph决策</div>
+                        </div>
+                        <div class="tech-arrow">→</div>
+                        <div class="tech-step">
+                            <div class="step-num">4</div>
+                            <div class="step-text">语音+推送告警</div>
+                        </div>
+                    </div>
+                    <div class="tech-details">
+                        <p><strong>检测模型：</strong>YOLO11n预训练模型</p>
+                        <p><strong>危险判断：</strong>基于边界规则的区域检测</p>
+                        <p><strong>防抖机制：</strong>多帧确认策略</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 底部说明 -->
+        <footer class="footer">
+            <p>💡 本Demo用于技术展示，基于YOLO目标检测 + 规则边界判断实现危险动作预警</p>
+            <p>实际产品需结合姿态识别、时序分析等技术进一步提升准确性</p>
+        </footer>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

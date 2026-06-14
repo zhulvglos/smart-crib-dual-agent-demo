@@ -1,0 +1,37 @@
+{
+  "video_path": "data/dangerous_test_video.mp4",
+  "safe_zone": {
+    "x1_ratio": 0.18,
+    "y1_ratio": 0.24,
+    "x2_ratio": 0.64,
+    "y2_ratio": 0.88
+  },
+  "warning_zone": {
+    "x1_ratio": 0.64,
+    "y1_ratio": 0.24,
+    "x2_ratio": 0.675,
+    "y2_ratio": 0.88
+  },
+  "danger_boundary": {
+    "x_ratio": 0.675
+  },
+  "tracking": {
+    "method": "template_matching",
+    "initial_roi_ratio": {
+      "x1_ratio": 0.52,
+      "y1_ratio": 0.42,
+      "x2_ratio": 0.72,
+      "y2_ratio": 0.62
+    },
+    "template_search_radius_ratio": 1.8,
+    "template_update_rate": 0.08,
+    "template_min_score": 0.35,
+    "danger_confirm_frames": 8,
+    "warning_confirm_frames": 5
+  },
+  "display": {
+    "show_overlay": true,
+    "show_debug_text": true,
+    "playback_speed": 1.0
+  }
+}
