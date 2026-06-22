@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI婴儿床监护系统 - YOLO危险动作检测Demo</title>
+    <title>AI婴儿床监护系统 - 双Agent智能Demo</title>
+    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -14,7 +15,10 @@
                 <span class="logo-icon">👶</span>
                 <h1>AI婴儿床监护系统</h1>
             </div>
-            <div class="subtitle">YOLO危险动作检测 + AI智能预警 Demo</div>
+            <div class="subtitle">YOLO姿态辅助风险检测 + AI智能预警 + 成长记忆分析 Demo</div>
+            <div class="agent-chain-info">
+                Safety Agent <span class="chain-arrow">→</span> JSONL 事件日志 <span class="chain-arrow">→</span> Growth Memory Agent
+            </div>
         </header>
 
         <!-- 主内容区 -->
@@ -30,15 +34,15 @@
                     
                     <!-- 状态覆盖层 -->
                     <div id="statusOverlay" class="status-overlay safe">
-                        <div class="status-badge" id="statusBadge">SAFE</div>
+                        <div class="status-badge" id="statusBadge">安全 SAFE</div>
                     </div>
                     
                     <!-- 危险警告覆盖层 -->
                     <div id="dangerOverlay" class="danger-overlay hidden">
                         <div class="danger-content">
                             <div class="danger-icon">⚠️</div>
-                            <div class="danger-text">危险动作检测</div>
-                            <div class="danger-subtext">AI闭环已激活</div>
+                            <div class="danger-text">危险行为预警 RISK ALERT</div>
+                            <div class="danger-subtext">AI 安全闭环已激活</div>
                         </div>
                     </div>
                 </div>
@@ -63,11 +67,18 @@
                 <div class="video-selector">
                     <label>选择演示视频：</label>
                     <select id="videoSelect" class="video-select">
-                        <option value="dangerous_test1">危险动作测试1</option>
-                        <option value="dangerous_test2">危险动作测试2</option>
+                        <option value="dangerous_test1">床沿行为测试1（关注样例）</option>
+                        <option value="dangerous_test2">床沿行为测试2（观察样例）</option>
                         <option value="dangerous_test3">危险动作测试3</option>
+                        <option value="dangerous_test4">危险动作测试4</option>
+                        <option value="dangerous_test5">危险动作测试5</option>
+                        <option value="dangerous_test6" selected>危险动作测试6（AI合成场景）</option>
                     </select>
                     <button id="loadVideoBtn" class="load-btn">加载视频</button>
+                </div>
+                <div id="videoDisclosure" class="source-disclosure">
+                    <span class="disclosure-badge synthetic">AI 合成场景素材</span>
+                    <span>检测框、姿态关键点与状态数据由 YOLO11n-pose 离线推理生成，不代表真实环境准确率。</span>
                 </div>
             </div>
 
@@ -79,11 +90,11 @@
                     <div class="status-display">
                         <div class="status-item">
                             <span class="label">当前状态：</span>
-                            <span id="currentStage" class="value stage-safe">SAFE</span>
+                            <span id="currentStage" class="value stage-safe">安全 SAFE</span>
                         </div>
                         <div class="status-item">
                             <span class="label">原始检测：</span>
-                            <span id="rawStage" class="value">SAFE</span>
+                            <span id="rawStage" class="value stage-safe">安全 SAFE</span>
                         </div>
                         <div class="status-item">
                             <span class="label">目标置信度：</span>
@@ -92,6 +103,22 @@
                         <div class="status-item">
                             <span class="label">目标位置：</span>
                             <span id="targetPos" class="value">--</span>
+                        </div>
+                    </div>
+                    <div class="pose-evidence">
+                        <div class="pose-evidence-header">
+                            <span>🦴 姿态依据 POSE EVIDENCE</span>
+                            <span id="poseMode" class="pose-mode">等待检测</span>
+                        </div>
+                        <div class="pose-summary">
+                            <span>可见关键点 <strong id="visibleKeypoints">--/17</strong></span>
+                            <span>姿态风险分 <strong id="poseRiskScore">--/10</strong></span>
+                        </div>
+                        <div class="pose-evidence-grid">
+                            <span id="evidenceWrists" class="evidence-chip">双手近护栏 --</span>
+                            <span id="evidenceShoulders" class="evidence-chip">肩部靠边 --</span>
+                            <span id="evidenceLean" class="evidence-chip">上身前倾 --</span>
+                            <span id="evidenceOutside" class="evidence-chip">关键点越界 --</span>
                         </div>
                     </div>
                 </div>
@@ -123,43 +150,184 @@
                     </div>
                 </div>
 
-                <!-- 技术说明 -->
-                <div class="info-card tech-card">
-                    <h3>🔧 技术架构</h3>
-                    <div class="tech-flow">
-                        <div class="tech-step">
-                            <div class="step-num">1</div>
-                            <div class="step-text">YOLO目标检测</div>
-                        </div>
-                        <div class="tech-arrow">→</div>
-                        <div class="tech-step">
-                            <div class="step-num">2</div>
-                            <div class="step-text">危险边界判断</div>
-                        </div>
-                        <div class="tech-arrow">→</div>
-                        <div class="tech-step">
-                            <div class="step-num">3</div>
-                            <div class="step-text">LangGraph决策</div>
-                        </div>
-                        <div class="tech-arrow">→</div>
-                        <div class="tech-step">
-                            <div class="step-num">4</div>
-                            <div class="step-text">语音+推送告警</div>
-                        </div>
-                    </div>
-                    <div class="tech-details">
-                        <p><strong>检测模型：</strong>YOLO11n预训练模型</p>
-                        <p><strong>危险判断：</strong>基于边界规则的区域检测</p>
-                        <p><strong>防抖机制：</strong>多帧确认策略</p>
-                    </div>
-                </div>
             </div>
         </main>
 
+        <section class="growth-memory-card showcase-section">
+            <div class="section-heading">
+                <div>
+                    <h2>🧠 Growth Memory Agent｜成长记忆分析</h2>
+                    <p>读取 Safety Agent 事件日志，聚合频率、时段与位置分布，再生成面向家长的摘要。</p>
+                </div>
+                <div class="data-badges">
+                    <span class="data-badge">演示历史数据</span>
+                    <span id="llmBadge" class="data-badge">AI 生成摘要</span>
+                    <span class="data-badge caution">非医疗建议</span>
+                </div>
+            </div>
+
+            <div class="growth-overview-grid">
+                <div class="growth-column">
+                    <div class="safety-score-section">
+                        <div class="safety-score-ring">
+                            <svg width="100" height="100" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="42" stroke="rgba(255,255,255,0.1)" stroke-width="8" fill="none" />
+                                <circle id="scoreCircle" cx="50" cy="50" r="42" stroke="#4ade80" stroke-width="8" fill="none"
+                                    stroke-dasharray="263.9" stroke-dashoffset="263.9" stroke-linecap="round" />
+                            </svg>
+                            <div class="score-text" id="safetyScoreText">--</div>
+                        </div>
+                        <div class="safety-score-meta">
+                            <div class="score-label">PoC 风险趋势指数</div>
+                            <div class="score-details" id="scoreDetails"></div>
+                            <p class="score-note">由演示规则根据每日高风险事件频率换算，仅用于趋势展示，不是专业安全评级。</p>
+                        </div>
+                    </div>
+
+                    <div id="memoryCardsContainer" class="memory-cards-grid">
+                        <div class="gm-empty">加载中...</div>
+                    </div>
+                </div>
+
+                <div class="growth-column">
+                    <div class="trend-section">
+                        <h3>📊 每日风险趋势</h3>
+                        <div id="trendBars" class="trend-bars"></div>
+                    </div>
+
+                    <div class="suggestions-section">
+                        <h3>💡 家长建议</h3>
+                        <div id="suggestionsList" class="suggestions-list"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="info-card tech-card showcase-section">
+            <div class="section-heading">
+                <div>
+                    <h2>🔗 双 Agent 数据流</h2>
+                    <p>Safety Agent 负责实时风险闭环，Growth Memory Agent 通过 JSONL 事件契约完成长期分析。</p>
+                </div>
+            </div>
+            <div class="agent-flow">
+                <div class="agent-lane safety-lane">
+                    <div class="agent-lane-label">
+                        <span class="lane-kicker">实时链路 REAL-TIME</span>
+                        <strong>Safety Agent｜安全决策 Agent</strong>
+                        <span>逐帧感知、风险确认、告警决策与事件去重</span>
+                    </div>
+                    <div class="agent-lane-nodes">
+                        <div class="flow-node input-node">
+                            <span class="flow-icon">🎥</span>
+                            <strong>监控视频</strong>
+                            <small>Video Input</small>
+                            <div class="flow-tags">
+                                <span>frame</span><span>timestamp</span>
+                            </div>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-node perception-node">
+                            <span class="flow-icon">🦴</span>
+                            <strong>YOLO 姿态感知</strong>
+                            <small>Pose Perception</small>
+                            <div class="flow-tags">
+                                <span>bbox</span><span>17 keypoints</span><span>confidence</span>
+                            </div>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-node rule-node">
+                            <span class="flow-icon">📐</span>
+                            <strong>姿态风险判断</strong>
+                            <small>Pose Risk Scoring</small>
+                            <div class="flow-tags">
+                                <span>床体区域</span><span>风险分</span><span>多帧确认</span>
+                            </div>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-node agent-node safety-agent-node">
+                            <span class="flow-icon">🛡️</span>
+                            <strong>Safety Agent</strong>
+                            <small>LangGraph Decision</small>
+                            <div class="flow-tags">
+                                <span>告警策略</span><span>事件去重</span><span>TTS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="event-bus">
+                    <div class="event-bus-line"></div>
+                    <div class="event-node">
+                        <span class="flow-icon">📄</span>
+                        <div>
+                            <strong>JSONL 事件日志</strong>
+                            <small>Agent Interface / Event Contract</small>
+                        </div>
+                        <div class="flow-tags">
+                            <span>timestamp</span><span>risk</span><span>position</span><span>trigger</span>
+                        </div>
+                    </div>
+                    <div class="event-bus-line"></div>
+                </div>
+
+                <div class="agent-lane memory-lane">
+                    <div class="agent-lane-label">
+                        <span class="lane-kicker">长期链路 LONG-TERM</span>
+                        <strong>Growth Memory Agent｜成长记忆 Agent</strong>
+                        <span>读取历史事件，聚合行为趋势并生成可解释摘要</span>
+                    </div>
+                    <div class="agent-lane-nodes memory-nodes">
+                        <div class="flow-node memory-input-node">
+                            <span class="flow-icon">🗂️</span>
+                            <strong>事件读取与清洗</strong>
+                            <small>Load & Normalize</small>
+                            <div class="flow-tags">
+                                <span>JSONL</span><span>日期范围</span><span>风险来源</span>
+                            </div>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-node analysis-node">
+                            <span class="flow-icon">📊</span>
+                            <strong>趋势聚合分析</strong>
+                            <small>Trend Aggregation</small>
+                            <div class="flow-tags">
+                                <span>频率</span><span>高发时段</span><span>位置分布</span>
+                            </div>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-node agent-node memory-agent-node">
+                            <span class="flow-icon">🧠</span>
+                            <strong>Growth Memory Agent</strong>
+                            <small>LLM Insight Generation</small>
+                            <div class="flow-tags">
+                                <span>结构化摘要</span><span>边界约束</span>
+                            </div>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-node output-node">
+                            <span class="flow-icon">📝</span>
+                            <strong>成长分析输出</strong>
+                            <small>Memory Output</small>
+                            <div class="flow-tags">
+                                <span>趋势图</span><span>记忆卡片</span><span>家长建议</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tech-details">
+                <p><strong>检测模型：</strong>YOLO11n-pose 通用人体姿态模型</p>
+                <p><strong>危险判断：</strong>检测框、床体区域、姿态关键点与多帧确认联合判断</p>
+                <p><strong>当前能力：</strong>已完成 17 点姿态提取、姿态风险评分与关键点缺失降级机制</p>
+                <p><strong>当前边界：</strong>尚未进行婴儿专用数据微调、真实硬件接入及大规模真实场景验证</p>
+            </div>
+        </section>
+
         <!-- 底部说明 -->
         <footer class="footer">
-            <p>💡 本Demo用于技术展示，基于YOLO目标检测 + 规则边界判断实现危险动作预警</p>
-            <p>实际产品需结合姿态识别、时序分析等技术进一步提升准确性</p>
+            <p>💡 本Demo用于技术展示：Safety Agent（YOLO-pose感知 + LangGraph决策）生成事件日志，Growth Memory Agent 分析趋势并生成成长记忆</p>
+            <p>当前为 PoC 阶段，TTS / 推送通知 / 真实硬件均为模拟实现</p>
         </footer>
     </div>
 

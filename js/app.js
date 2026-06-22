@@ -21,6 +21,13 @@ class BabyMonitorDemo {
         this.rawStageEl = document.getElementById('rawStage');
         this.confidenceEl = document.getElementById('confidence');
         this.targetPosEl = document.getElementById('targetPos');
+        this.poseModeEl = document.getElementById('poseMode');
+        this.visibleKeypointsEl = document.getElementById('visibleKeypoints');
+        this.poseRiskScoreEl = document.getElementById('poseRiskScore');
+        this.evidenceWristsEl = document.getElementById('evidenceWrists');
+        this.evidenceShouldersEl = document.getElementById('evidenceShoulders');
+        this.evidenceLeanEl = document.getElementById('evidenceLean');
+        this.evidenceOutsideEl = document.getElementById('evidenceOutside');
 
         // 统计元素
         this.warningCountEl = document.getElementById('warningCount');
@@ -44,7 +51,7 @@ class BabyMonitorDemo {
         this.framesByIndex = null;  // 按帧索引索引的Map，加速查找
         this.videoInfo = null;      // 视频信息（分辨率、fps等）
         this.geometry = null;       // 几何配置（安全区、警告区、危险边界）
-        this.currentVideo = 'dangerous_test1';
+        this.currentVideo = 'dangerous_test6';
         this.events = [];
         this.triggeredEventKeys = new Set();
 
@@ -55,6 +62,14 @@ class BabyMonitorDemo {
         this.setupEventListeners();
         this.resizeCanvas();
         window.addEventListener('resize', () => this.resizeCanvas());
+        this.loadGrowthMemory();
+        this.videoSelect.value = this.currentVideo;
+        this.loadVideo(this.currentVideo);
+        // 预加载语音列表（部分浏览器异步加载）
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.getVoices();
+            window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+        }
     }
 
     setupEventListeners() {
@@ -123,9 +138,12 @@ class BabyMonitorDemo {
         this.updateStats(0, 0, 0);
         this.dangerOverlay.classList.add('hidden');
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.updatePoseEvidence(null);
+        this.updateVideoDisclosure(videoName);
 
         // 加载视频
         this.videoPlayer.src = `data/${videoName}.mp4`;
+        this.videoPlayer.load();
 
         // 加载预计算的YOLO检测数据
         try {
@@ -165,6 +183,23 @@ class BabyMonitorDemo {
 
     showNoDataMessage() {
         this.eventsList.innerHTML = '<div class="event-item empty">未找到预计算的检测数据，请先运行 generate_web_demo_data.py</div>';
+    }
+
+    updateVideoDisclosure(videoName) {
+        const disclosure = document.getElementById('videoDisclosure');
+        if (!disclosure) return;
+
+        if (videoName === 'dangerous_test6') {
+            disclosure.innerHTML = `
+                <span class="disclosure-badge synthetic">AI 合成场景素材</span>
+                <span>检测框、姿态关键点与状态数据由 YOLO11n-pose 离线推理生成，不代表真实环境准确率。</span>
+            `;
+        } else {
+            disclosure.innerHTML = `
+                <span class="disclosure-badge">本地测试素材</span>
+                <span>检测框与姿态关键点由 YOLO11n-pose 预计算，用于稳定复现风险判断链路。</span>
+            `;
+        }
     }
 
     onLoadedMetadata() {
@@ -222,22 +257,44 @@ class BabyMonitorDemo {
 
     /**
      * 绘制安全区、警告区、危险边界
-     * 坐标从视频原始分辨率映射到Canvas显示尺寸
+     * 支持多边形模式（crib_contour/safe_contour）和矩形模式（兼容旧数据）
      */
     drawZones(scaleX, scaleY) {
         const geo = this.geometry;
         if (!geo) return;
 
+        // ── 多边形模式 ──
+        if (geo.crib_contour && geo.safe_contour) {
+            // 婴儿床边界（= warning zone，红色多边形）
+            this._drawPolygon(geo.crib_contour, scaleX, scaleY,
+                'rgba(248, 113, 113, 0.7)', 'rgba(248, 113, 113, 0.06)', 3);
+            this.ctx.fillStyle = 'rgba(248, 113, 113, 0.9)';
+            this.ctx.font = `bold ${Math.max(12, 14 * scaleX)}px sans-serif`;
+            const cp0 = geo.crib_contour[0];
+            this.ctx.fillText('婴儿床边界 CRIB BOUNDARY', cp0[0] * scaleX + 8, cp0[1] * scaleY + 18);
+
+            // 安全区（绿色缩小多边形）
+            this._drawPolygon(geo.safe_contour, scaleX, scaleY,
+                'rgba(74, 222, 128, 0.8)', 'rgba(74, 222, 128, 0.08)', 2);
+            this.ctx.fillStyle = 'rgba(74, 222, 128, 0.9)';
+            this.ctx.font = `${Math.max(12, 14 * scaleX)}px sans-serif`;
+            const sp0 = geo.safe_contour[0];
+            this.ctx.fillText('安全区域 SAFE ZONE', sp0[0] * scaleX + 8, sp0[1] * scaleY + 18);
+
+            return;
+        }
+
+        // ── 矩形模式（兼容旧数据）──
+        if (!geo.safe_zone || !geo.warning_zone) return;
+
         const [sx, sy, sw, sh] = geo.safe_zone;
         const [wx, wy, ww, wh] = geo.warning_zone;
         const dangerX = geo.danger_boundary_x;
 
-        // 映射到Canvas坐标
         const safeX = sx * scaleX, safeY = sy * scaleY, safeW = sw * scaleX, safeH = sh * scaleY;
         const warnX = wx * scaleX, warnY = wy * scaleY, warnW = ww * scaleX, warnH = wh * scaleY;
-        const dangerXCanvas = dangerX * scaleX;
 
-        // 安全区（绿色半透明）
+        // 安全区
         this.ctx.strokeStyle = 'rgba(74, 222, 128, 0.8)';
         this.ctx.lineWidth = 2;
         this.ctx.setLineDash([8, 4]);
@@ -245,13 +302,11 @@ class BabyMonitorDemo {
         this.ctx.setLineDash([]);
         this.ctx.fillStyle = 'rgba(74, 222, 128, 0.08)';
         this.ctx.fillRect(safeX, safeY, safeW, safeH);
-
-        // 安全区标签
         this.ctx.fillStyle = 'rgba(74, 222, 128, 0.9)';
         this.ctx.font = `${Math.max(12, 14 * scaleX)}px sans-serif`;
-        this.ctx.fillText('SAFE ZONE', safeX + 8, safeY + 20 * scaleY);
+        this.ctx.fillText('安全区域 SAFE ZONE', safeX + 8, safeY + 20 * scaleY);
 
-        // 警告区（黄色半透明）
+        // 警告区
         this.ctx.strokeStyle = 'rgba(251, 191, 36, 0.8)';
         this.ctx.lineWidth = 2;
         this.ctx.setLineDash([8, 4]);
@@ -259,25 +314,46 @@ class BabyMonitorDemo {
         this.ctx.setLineDash([]);
         this.ctx.fillStyle = 'rgba(251, 191, 36, 0.08)';
         this.ctx.fillRect(warnX, warnY, warnW, warnH);
-
-        // 警告区标签
         this.ctx.fillStyle = 'rgba(251, 191, 36, 0.9)';
-        this.ctx.fillText('WARNING', warnX + 8, warnY + 20 * scaleY);
+        this.ctx.fillText('关注区域 WARNING ZONE', warnX + 8, warnY + 20 * scaleY);
 
-        // 危险边界线（红色虚线）
-        this.ctx.strokeStyle = 'rgba(248, 113, 113, 0.9)';
-        this.ctx.lineWidth = 3;
-        this.ctx.setLineDash([10, 5]);
-        this.ctx.beginPath();
-        this.ctx.moveTo(dangerXCanvas, 0);
-        this.ctx.lineTo(dangerXCanvas, this.canvas.height);
-        this.ctx.stroke();
-        this.ctx.setLineDash([]);
+        // 危险边界线
+        if (dangerX) {
+            const dangerXCanvas = dangerX * scaleX;
+            this.ctx.strokeStyle = 'rgba(248, 113, 113, 0.9)';
+            this.ctx.lineWidth = 3;
+            this.ctx.setLineDash([10, 5]);
+            this.ctx.beginPath();
+            this.ctx.moveTo(dangerXCanvas, 0);
+            this.ctx.lineTo(dangerXCanvas, this.canvas.height);
+            this.ctx.stroke();
+            this.ctx.setLineDash([]);
+            this.ctx.fillStyle = 'rgba(248, 113, 113, 0.9)';
+            this.ctx.font = `bold ${Math.max(12, 14 * scaleX)}px sans-serif`;
+            this.ctx.fillText('危险边界 DANGER BOUNDARY', dangerXCanvas - 150 * scaleX, 25 * scaleY);
+        }
+    }
 
-        // 危险边界标签
-        this.ctx.fillStyle = 'rgba(248, 113, 113, 0.9)';
-        this.ctx.font = `bold ${Math.max(12, 14 * scaleX)}px sans-serif`;
-        this.ctx.fillText('DANGER BOUNDARY', dangerXCanvas - 100 * scaleX, 25 * scaleY);
+    /**
+     * 绘制多边形轮廓（用于婴儿床不规则边界）
+     * points 格式: [[x1,y1], [x2,y2], ...]
+     */
+    _drawPolygon(points, scaleX, scaleY, strokeColor, fillColor, lineWidth) {
+        if (!points || points.length < 3) return;
+        const ctx = this.ctx;
+        ctx.beginPath();
+        ctx.moveTo(points[0][0] * scaleX, points[0][1] * scaleY);
+        for (let i = 1; i < points.length; i++) {
+            ctx.lineTo(points[i][0] * scaleX, points[i][1] * scaleY);
+        }
+        ctx.closePath();
+        ctx.fillStyle = fillColor;
+        ctx.fill();
+        ctx.strokeStyle = strokeColor;
+        ctx.lineWidth = lineWidth;
+        ctx.setLineDash([8, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
     }
 
     /**
@@ -309,6 +385,8 @@ class BabyMonitorDemo {
         // 检测框背景填充
         this.ctx.fillStyle = bgColor;
         this.ctx.fillRect(bx, by, bw, bh);
+
+        this.drawPoseSkeleton(target, scaleX, scaleY);
 
         // 检测框边框
         this.ctx.strokeStyle = color;
@@ -349,7 +427,10 @@ class BabyMonitorDemo {
         this.ctx.stroke();
 
         // 标签背景
-        const label = `${target.class_name || 'person'}  ${(target.confidence * 100).toFixed(1)}%`;
+        const targetLabel = target.class_name === 'person'
+            ? '人体目标 PERSON'
+            : String(target.class_name || 'TARGET').toUpperCase();
+        const label = `${targetLabel}  ${(target.confidence * 100).toFixed(1)}%`;
         this.ctx.font = `bold ${Math.max(12, 14 * scaleX)}px monospace`;
         const textWidth = this.ctx.measureText(label).width;
         const labelX = bx;
@@ -374,11 +455,127 @@ class BabyMonitorDemo {
             this.ctx.stroke();
             this.ctx.setLineDash([]);
 
-            // bbox_right 标签
+            // 目标框右边界标签
             this.ctx.fillStyle = color;
             this.ctx.font = `${Math.max(10, 11 * scaleX)}px sans-serif`;
-            this.ctx.fillText(`bbox_right=${Math.round(x + w)}`, bboxRight + 5, by + bh / 2);
+            this.ctx.fillText(`目标右边界 BBOX RIGHT=${Math.round(x + w)}`, bboxRight + 5, by + bh / 2);
         }
+    }
+
+    drawPoseSkeleton(target, scaleX, scaleY) {
+        const points = target.keypoints;
+        if (!Array.isArray(points) || points.length < 17) return;
+
+        const minConfidence = 0.3;
+        const connections = [
+            [5, 6],
+            [5, 7], [7, 9],
+            [6, 8], [8, 10],
+            [5, 11], [6, 12],
+            [11, 12],
+            [11, 13], [13, 15],
+            [12, 14], [14, 16],
+        ];
+        const visible = index => points[index] && points[index].confidence >= minConfidence;
+
+        this.ctx.save();
+        this.ctx.lineWidth = 2;
+        this.ctx.strokeStyle = 'rgba(226, 232, 240, 0.58)';
+        for (const [from, to] of connections) {
+            if (!visible(from) || !visible(to)) continue;
+            this.ctx.beginPath();
+            this.ctx.moveTo(points[from].x * scaleX, points[from].y * scaleY);
+            this.ctx.lineTo(points[to].x * scaleX, points[to].y * scaleY);
+            this.ctx.stroke();
+        }
+
+        points.forEach((point, index) => {
+            if (!visible(index)) return;
+            let fill = 'rgba(226, 232, 240, 0.75)';
+            if ([9, 10].includes(index)) fill = '#facc15';
+            else if ([5, 6].includes(index)) fill = '#fb923c';
+            else if ([11, 12].includes(index)) fill = '#60a5fa';
+
+            const radius = [5, 6, 9, 10, 11, 12].includes(index) ? 5 : 3;
+            this.ctx.fillStyle = fill;
+            this.ctx.beginPath();
+            this.ctx.arc(point.x * scaleX, point.y * scaleY, radius, 0, Math.PI * 2);
+            this.ctx.fill();
+        });
+        this.ctx.restore();
+    }
+
+    getStageLabel(stage) {
+        const labels = {
+            SAFE: '安全 SAFE',
+            WARNING: '关注 WARNING',
+            DANGEROUS_ACTION: '危险 DANGEROUS',
+        };
+        return labels[stage] || stage || '--';
+    }
+
+    setStageClass(element, stage) {
+        element.className = 'value';
+        if (stage === 'SAFE') element.classList.add('stage-safe');
+        else if (stage === 'WARNING') element.classList.add('stage-warning');
+        else if (stage === 'DANGEROUS_ACTION') element.classList.add('stage-danger');
+    }
+
+    setEvidenceChip(element, label, active, detail = '') {
+        element.textContent = `${label} ${active ? '是 YES' : '否 NO'}${detail}`;
+        element.classList.toggle('active', Boolean(active));
+    }
+
+    updatePoseEvidence(analysis) {
+        if (!analysis) {
+            this.poseModeEl.textContent = '等待检测';
+            this.poseModeEl.className = 'pose-mode';
+            this.visibleKeypointsEl.textContent = '--/17';
+            this.poseRiskScoreEl.textContent = '--/10';
+            for (const [element, label] of [
+                [this.evidenceWristsEl, '双手近护栏'],
+                [this.evidenceShouldersEl, '肩部靠边'],
+                [this.evidenceLeanEl, '上身前倾'],
+                [this.evidenceOutsideEl, '关键点越界'],
+            ]) {
+                element.textContent = `${label} --`;
+                element.classList.remove('active');
+            }
+            return;
+        }
+
+        const modeLabels = {
+            pose_assisted: '姿态辅助 POSE',
+            bbox_fallback: '框选降级 BBOX',
+            no_target: '未检测目标',
+        };
+        this.poseModeEl.textContent = modeLabels[analysis.mode] || analysis.mode;
+        this.poseModeEl.className = `pose-mode ${analysis.mode === 'pose_assisted' ? 'active' : 'fallback'}`;
+        this.visibleKeypointsEl.textContent = `${analysis.visible_keypoints || 0}/17`;
+        this.poseRiskScoreEl.textContent = `${analysis.score || 0}/10`;
+
+        const evidence = analysis.evidence || {};
+        this.setEvidenceChip(
+            this.evidenceWristsEl,
+            '双手近护栏',
+            evidence.both_wrists_near_rail
+        );
+        this.setEvidenceChip(
+            this.evidenceShouldersEl,
+            '肩部靠边',
+            evidence.shoulders_near_edge
+        );
+        this.setEvidenceChip(
+            this.evidenceLeanEl,
+            '上身前倾',
+            evidence.upper_body_leaning_out
+        );
+        this.setEvidenceChip(
+            this.evidenceOutsideEl,
+            '关键点越界',
+            Number(evidence.pose_points_outside || 0) > 0,
+            ` (${Number(evidence.pose_points_outside || 0)})`
+        );
     }
 
     /**
@@ -393,23 +590,23 @@ class BabyMonitorDemo {
         if (stage === 'SAFE') {
             this.statusOverlay.classList.add('safe');
             this.dangerOverlay.classList.add('hidden');
+            this.videoPlayer.parentElement.classList.remove('danger-state');
         } else if (stage === 'WARNING') {
             this.statusOverlay.classList.add('warning');
             this.dangerOverlay.classList.add('hidden');
+            this.videoPlayer.parentElement.classList.remove('danger-state');
         } else if (stage === 'DANGEROUS_ACTION') {
             this.statusOverlay.classList.add('danger');
             this.dangerOverlay.classList.remove('hidden');
+            this.videoPlayer.parentElement.classList.add('danger-state');
         }
-        this.statusBadge.textContent = stage;
+        this.statusBadge.textContent = this.getStageLabel(stage);
 
         // 更新右侧面板
-        this.currentStageEl.textContent = stage;
-        this.currentStageEl.className = 'value';
-        if (stage === 'SAFE') this.currentStageEl.classList.add('stage-safe');
-        else if (stage === 'WARNING') this.currentStageEl.classList.add('stage-warning');
-        else if (stage === 'DANGEROUS_ACTION') this.currentStageEl.classList.add('stage-danger');
-
-        this.rawStageEl.textContent = rawStage;
+        this.currentStageEl.textContent = this.getStageLabel(stage);
+        this.setStageClass(this.currentStageEl, stage);
+        this.rawStageEl.textContent = this.getStageLabel(rawStage);
+        this.setStageClass(this.rawStageEl, rawStage);
 
         if (frameData.target) {
             this.confidenceEl.textContent = frameData.target.confidence.toFixed(4);
@@ -418,6 +615,7 @@ class BabyMonitorDemo {
             this.confidenceEl.textContent = '--';
             this.targetPosEl.textContent = '--';
         }
+        this.updatePoseEvidence(frameData.pose_analysis || null);
 
         this.updateStats(
             frameData.warning_count || 0,
@@ -431,28 +629,43 @@ class BabyMonitorDemo {
      */
     checkEvents(frameData) {
         if (frameData.stage === 'DANGEROUS_ACTION' && frameData.target) {
-            // 使用事件数据中的帧索引作为key（和预计算脚本一致）
-            const eventKey = String(frameData.frame_index);
+            const matchedEvent = [...this.detectionData.events]
+                .reverse()
+                .find(e => e.frame_index <= frameData.frame_index);
 
-            if (!this.triggeredEventKeys.has(eventKey)) {
-                // 检查预计算事件列表中是否有匹配的事件
-                const matchedEvent = this.detectionData.events.find(
-                    e => Math.abs(e.frame_index - frameData.frame_index) < 5
-                );
-
-                if (matchedEvent && !this.triggeredEventKeys.has('evt_' + matchedEvent.frame_index)) {
-                    this.triggeredEventKeys.add('evt_' + matchedEvent.frame_index);
-                    this.events.push({
-                        timestamp: matchedEvent.timestamp,
-                        stage: 'DANGEROUS_ACTION',
-                        confidence: matchedEvent.confidence,
-                        position: matchedEvent.target_center,
-                        bbox: matchedEvent.target_bbox,
-                    });
-                    this.updateEventsList();
-                }
+            if (matchedEvent && !this.triggeredEventKeys.has('evt_' + matchedEvent.frame_index)) {
+                this.triggeredEventKeys.add('evt_' + matchedEvent.frame_index);
+                this.events.push({
+                    timestamp: matchedEvent.timestamp,
+                    stage: 'DANGEROUS_ACTION',
+                    confidence: matchedEvent.confidence,
+                    position: matchedEvent.target_center,
+                    bbox: matchedEvent.target_bbox,
+                });
+                this.updateEventsList();
+                this.eventCountEl.textContent = this.events.length;
+                this.speakWarning();
             }
         }
+    }
+
+    /**
+     * Web Speech API 语音播报（真实执行，非模拟）
+     */
+    speakWarning() {
+        if (!('speechSynthesis' in window)) return;
+        // 避免重复播报
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance('宝贝小心，请往中间来');
+        utterance.lang = 'zh-CN';
+        utterance.rate = 1.0;
+        utterance.pitch = 1.1;
+        utterance.volume = 0.9;
+        // 优先选择中文语音
+        const voices = window.speechSynthesis.getVoices();
+        const zhVoice = voices.find(v => v.lang.startsWith('zh'));
+        if (zhVoice) utterance.voice = zhVoice;
+        window.speechSynthesis.speak(utterance);
     }
 
     updateStats(warningCount, dangerCount, eventCount) {
@@ -471,7 +684,7 @@ class BabyMonitorDemo {
             <div class="event-item">
                 <div class="event-time">${this.formatTime(event.timestamp)}</div>
                 <div class="event-desc">
-                    危险动作触发 | 置信度: ${(event.confidence * 100).toFixed(1)}% |
+                    危险事件 RISK EVENT | 置信度: ${(event.confidence * 100).toFixed(1)}% |
                     位置: (${Math.round(event.position.x)}, ${Math.round(event.position.y)})
                 </div>
             </div>
@@ -483,6 +696,131 @@ class BabyMonitorDemo {
         const mins = Math.floor(seconds / 60);
         const secs = Math.floor(seconds % 60);
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // ── Growth Memory Agent ──────────────────────────────────
+
+    async loadGrowthMemory() {
+        const container = document.getElementById('memoryCardsContainer');
+        try {
+            const response = await fetch('data/growth_memory.json');
+            if (!response.ok) {
+                container.innerHTML = '<div class="gm-empty">No memory data yet. Run <code>python generate_growth_memory_web_data.py</code> first.</div>';
+                return;
+            }
+            const data = await response.json();
+            this.growthMemoryData = data;
+            const llmBadge = document.getElementById('llmBadge');
+            if (llmBadge) {
+                llmBadge.textContent = data.llm_used ? 'LLM 生成摘要' : '规则模板摘要';
+            }
+
+            this.renderSafetyScore(data.summary_stats);
+            this.renderMemoryCards(data.memory_cards);
+            this.renderTrendChart(data.trend_data);
+            this.renderSuggestions(data.parent_suggestions);
+        } catch (err) {
+            console.error('Failed to load growth memory:', err);
+            container.innerHTML = '<div class="gm-empty">No memory data yet. Run <code>python generate_growth_memory_web_data.py</code> first.</div>';
+        }
+    }
+
+    renderSafetyScore(stats) {
+        if (!stats) return;
+
+        const score = stats.safety_score || 0;
+        const scoreText = document.getElementById('safetyScoreText');
+        const scoreCircle = document.getElementById('scoreCircle');
+        const detailsEl = document.getElementById('scoreDetails');
+
+        scoreText.textContent = score;
+
+        // SVG circle: circumference = 2 * PI * 42 ≈ 263.9
+        const circumference = 2 * Math.PI * 42;
+        const offset = circumference * (1 - score / 100);
+
+        let color = '#4ade80';
+        if (score < 60) color = '#fbbf24';
+        if (score < 40) color = '#f87171';
+
+        scoreCircle.style.transition = 'stroke-dashoffset 1.5s ease, stroke 0.5s ease';
+        scoreCircle.setAttribute('stroke', color);
+        scoreCircle.setAttribute('stroke-dashoffset', String(offset));
+
+        detailsEl.innerHTML = `
+            <span class="score-detail-chip">覆盖 ${stats.days_covered} 天</span>
+            <span class="score-detail-chip">${stats.total_events} 条事件</span>
+            <span class="score-detail-chip">高风险 ${stats.high_risk_count} 次</span>
+        `;
+    }
+
+    renderMemoryCards(cards) {
+        const container = document.getElementById('memoryCardsContainer');
+        if (!cards || cards.length === 0) {
+            container.innerHTML = '<div class="gm-empty">暂无成长记忆</div>';
+            return;
+        }
+
+        const iconMap = {
+            exploration: '🔍',
+            risk: '⚠️',
+            tech: '🤖',
+            empty: '📝',
+        };
+
+        container.innerHTML = cards.map(card => `
+            <div class="memory-card-item severity-${card.severity || 'info'}">
+                <div class="card-header">
+                    <span class="card-title">${iconMap[card.icon] || '📝'} ${card.title}</span>
+                    <span class="card-date">${card.date || ''}</span>
+                </div>
+                <div class="card-body">${card.body}</div>
+            </div>
+        `).join('');
+    }
+
+    renderTrendChart(trendData) {
+        const container = document.getElementById('trendBars');
+        if (!trendData || !trendData.daily_frequency) {
+            container.innerHTML = '<div class="gm-empty">暂无趋势数据</div>';
+            return;
+        }
+
+        const daily = trendData.daily_frequency;
+        const entries = Object.entries(daily);
+        if (entries.length === 0) {
+            container.innerHTML = '<div class="gm-empty">暂无趋势数据</div>';
+            return;
+        }
+
+        const maxVal = Math.max(...entries.map(([, v]) => v), 1);
+
+        container.innerHTML = entries.map(([day, count]) => {
+            const height = Math.max(4, (count / maxVal) * 70);
+            const shortDay = day.slice(5); // "05-18"
+            return `
+                <div class="trend-bar-wrapper">
+                    <span class="trend-bar-value">${count}</span>
+                    <div class="trend-bar" style="height:${height}px"></div>
+                    <span class="trend-bar-label">${shortDay}</span>
+                </div>
+            `;
+        }).join('');
+    }
+
+    renderSuggestions(suggestions) {
+        const container = document.getElementById('suggestionsList');
+        if (!suggestions || suggestions.length === 0) {
+            container.innerHTML = '<div class="gm-empty">暂无建议</div>';
+            return;
+        }
+
+        container.innerHTML = suggestions.map(s => `
+            <div class="suggestion-item priority-${s.priority || 'low'}">
+                <div class="suggestion-title">${s.title}</div>
+                <div class="suggestion-body">${s.body}</div>
+            </div>
+        `).join('');
     }
 }
 
