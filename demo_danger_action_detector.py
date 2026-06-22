@@ -51,6 +51,26 @@ STAGE_COLORS = {
 Rect = Tuple[int, int, int, int]
 Point = Tuple[int, int]
 
+COCO_KEYPOINT_NAMES = [
+    "nose",
+    "left_eye",
+    "right_eye",
+    "left_ear",
+    "right_ear",
+    "left_shoulder",
+    "right_shoulder",
+    "left_elbow",
+    "right_elbow",
+    "left_wrist",
+    "right_wrist",
+    "left_hip",
+    "right_hip",
+    "left_knee",
+    "right_knee",
+    "left_ankle",
+    "right_ankle",
+]
+
 
 @dataclass
 class Detection:
@@ -117,6 +137,20 @@ class Detection:
                 points.append(lowest_ankle)
 
         return points
+
+    def get_named_keypoints(self, min_confidence: float = 0.3) -> Dict[str, Tuple[int, int, float]]:
+        """Return visible COCO keypoints keyed by semantic name."""
+        if self.keypoints is None or len(self.keypoints) == 0:
+            return {}
+
+        result: Dict[str, Tuple[int, int, float]] = {}
+        for index, name in enumerate(COCO_KEYPOINT_NAMES):
+            if index >= len(self.keypoints):
+                break
+            x, y, confidence = self.keypoints[index]
+            if confidence >= min_confidence:
+                result[name] = (int(x), int(y), float(confidence))
+        return result
 
 
 def load_config(path: Path) -> Dict[str, Any]:
@@ -313,6 +347,208 @@ def is_near_crib_edge(
     return False
 
 
+def _average_named_point(
+    points: Dict[str, Tuple[int, int, float]],
+    names: Tuple[str, str],
+) -> Optional[Point]:
+    available = [points[name] for name in names if name in points]
+    if not available:
+        return None
+    return (
+        int(sum(point[0] for point in available) / len(available)),
+        int(sum(point[1] for point in available) / len(available)),
+    )
+
+
+def _signed_distance_to_contour(point: Point, contour: np.ndarray) -> float:
+    return float(cv2.pointPolygonTest(contour, (float(point[0]), float(point[1])), True))
+
+
+def analyze_pose_risk(
+    det: Optional[Detection],
+    geometry: Dict[str, Any],
+    config: Dict[str, Any],
+) -> Dict[str, Any]:
+    """Build an explainable pose-assisted crib-edge risk assessment."""
+    if det is None:
+        return {
+            "mode": "no_target",
+            "stage": "SAFE",
+            "score": 0,
+            "visible_keypoints": 0,
+            "evidence": {},
+        }
+
+    pose_cfg = config.get("pose_risk", {})
+    min_keypoint_conf = float(pose_cfg.get("min_keypoint_confidence", 0.3))
+    min_visible = int(pose_cfg.get("min_visible_keypoints", 6))
+    warning_score = int(pose_cfg.get("warning_score", 3))
+    danger_score = int(pose_cfg.get("danger_score", 6))
+    edge_ratio = float(pose_cfg.get("edge_distance_ratio", 0.08))
+    lean_ratio = float(pose_cfg.get("lean_distance_ratio", 0.025))
+
+    named = det.get_named_keypoints(min_keypoint_conf)
+    visible_count = len(named)
+    pose_available = visible_count >= min_visible
+
+    trigger_point = config.get("danger_boundary", {}).get("trigger_point", "bbox_right")
+    trigger_x = get_trigger_x(det, trigger_point)
+    bbox_trigger = (trigger_x, det.center[1])
+
+    evidence: Dict[str, Any] = {
+        "bbox_near_edge": False,
+        "bbox_outside": False,
+        "one_wrist_near_rail": False,
+        "both_wrists_near_rail": False,
+        "shoulders_near_edge": False,
+        "hips_near_edge": False,
+        "head_near_edge": False,
+        "upper_body_leaning_out": False,
+        "pose_points_outside": 0,
+    }
+
+    if "crib_geometry" not in geometry:
+        warning_x = geometry["warning_zone"][0]
+        danger_x = geometry["danger_boundary_x"]
+        evidence["bbox_near_edge"] = (
+            trigger_x >= warning_x or point_in_rect(det.center, geometry["warning_zone"])
+        )
+        evidence["bbox_outside"] = trigger_x >= danger_x
+        if evidence["bbox_outside"]:
+            stage = "DANGEROUS_ACTION"
+            score = danger_score
+        elif evidence["bbox_near_edge"]:
+            stage = "WARNING"
+            score = warning_score
+        else:
+            stage = "SAFE"
+            score = 0
+        return {
+            "mode": "bbox_fallback",
+            "stage": stage,
+            "score": min(10, score),
+            "visible_keypoints": visible_count,
+            "evidence": evidence,
+        }
+
+    crib_geometry = geometry["crib_geometry"]
+    crib_contour = crib_geometry.crib_contour
+    safe_contour = crib_geometry.safe_contour
+    _, _, crib_w, crib_h = cv2.boundingRect(crib_contour)
+    edge_distance = max(crib_w, crib_h) * edge_ratio
+    lean_margin = max(crib_w, crib_h) * lean_ratio
+
+    def is_pose_point_near_edge(point: Point) -> bool:
+        return (
+            not point_in_polygon(point, safe_contour)
+            or _signed_distance_to_contour(point, crib_contour) <= edge_distance
+        )
+
+    trigger_crib_distance = _signed_distance_to_contour(bbox_trigger, crib_contour)
+    evidence["bbox_near_edge"] = not point_in_polygon(bbox_trigger, safe_contour)
+    evidence["bbox_outside"] = trigger_crib_distance < 0
+
+    score = 0
+    if evidence["bbox_near_edge"]:
+        score += 1
+    if evidence["bbox_outside"]:
+        score += 2
+
+    if pose_available:
+        wrists = [
+            (point[0], point[1])
+            for name, point in named.items()
+            if name in ("left_wrist", "right_wrist")
+        ]
+        wrist_near_count = sum(
+            is_pose_point_near_edge(point)
+            for point in wrists
+        )
+        evidence["one_wrist_near_rail"] = wrist_near_count >= 1
+        evidence["both_wrists_near_rail"] = wrist_near_count >= 2
+        if wrist_near_count == 1:
+            score += 1
+        elif wrist_near_count >= 2:
+            score += 2
+
+        shoulder_center = _average_named_point(
+            named, ("left_shoulder", "right_shoulder")
+        )
+        hip_center = _average_named_point(named, ("left_hip", "right_hip"))
+        nose = (named["nose"][0], named["nose"][1]) if "nose" in named else None
+
+        shoulder_distance = None
+        hip_distance = None
+        if shoulder_center is not None:
+            shoulder_distance = _signed_distance_to_contour(shoulder_center, crib_contour)
+            evidence["shoulders_near_edge"] = is_pose_point_near_edge(shoulder_center)
+            if evidence["shoulders_near_edge"]:
+                score += 2
+
+        if hip_center is not None:
+            hip_distance = _signed_distance_to_contour(hip_center, crib_contour)
+            evidence["hips_near_edge"] = is_pose_point_near_edge(hip_center)
+            if evidence["hips_near_edge"]:
+                score += 1
+
+        if nose is not None:
+            nose_distance = _signed_distance_to_contour(nose, crib_contour)
+            evidence["head_near_edge"] = is_pose_point_near_edge(nose)
+            if evidence["head_near_edge"]:
+                score += 1
+
+        if shoulder_distance is not None and hip_distance is not None:
+            evidence["upper_body_leaning_out"] = (
+                shoulder_distance + lean_margin < hip_distance
+                and evidence["shoulders_near_edge"]
+            )
+            if evidence["upper_body_leaning_out"]:
+                score += 2
+
+        risk_names = (
+            "nose",
+            "left_shoulder",
+            "right_shoulder",
+            "left_wrist",
+            "right_wrist",
+            "left_hip",
+            "right_hip",
+        )
+        outside_count = sum(
+            _signed_distance_to_contour((named[name][0], named[name][1]), crib_contour) < 0
+            for name in risk_names
+            if name in named
+        )
+        evidence["pose_points_outside"] = outside_count
+        if outside_count > 0:
+            score += 2
+
+    mode = "pose_assisted" if pose_available else "bbox_fallback"
+    if mode == "bbox_fallback":
+        if evidence["bbox_outside"]:
+            stage = "DANGEROUS_ACTION"
+            score = max(score, danger_score)
+        elif evidence["bbox_near_edge"]:
+            stage = "WARNING"
+            score = max(score, warning_score)
+        else:
+            stage = "SAFE"
+    elif score >= danger_score:
+        stage = "DANGEROUS_ACTION"
+    elif score >= warning_score:
+        stage = "WARNING"
+    else:
+        stage = "SAFE"
+
+    return {
+        "mode": mode,
+        "stage": stage,
+        "score": min(10, score),
+        "visible_keypoints": visible_count,
+        "evidence": evidence,
+    }
+
+
 def classify_stage(
     det: Optional[Detection],
     geometry: Dict[str, Any],
@@ -327,54 +563,7 @@ def classify_stage(
       但至少有一个不在 safe_contour 内部 → WARNING
     - Danger Zone（黄框外）: 任一关键检查点在 crib_contour 外部 → DANGEROUS_ACTION
     """
-    if det is None:
-        return "SAFE"
-
-    trigger_point = config.get("danger_boundary", {}).get("trigger_point", "bbox_right")
-    trigger_x = get_trigger_x(det, trigger_point)
-    trigger_point_coords = (trigger_x, det.center[1])
-    center = det.center
-
-    if "crib_geometry" in geometry:
-        crib_geometry = geometry["crib_geometry"]
-
-        # 收集多个关键检查点进行综合判断
-        # 1. 边界触发点（如 bbox_right / bbox_left）
-        # 2. 检测框中心
-        # 3. 底部中心（婴儿的脚 / 身体下部，最容易越界）
-        bx, by, bw, bh = det.bbox
-        bottom_center = (int(bx + bw / 2), by + bh)
-
-        check_points: List[Point] = [trigger_point_coords, center, bottom_center]
-
-        # 如果有关键点（YOLO-pose），使用更精确的身体部位
-        pose_points = det.get_body_key_points()
-        if pose_points:
-            # 将关键点加入检查列表（优先级更高）
-            check_points.extend(pose_points)
-
-        # DANGEROUS: 任一关键检查点在 crib_contour（黄框 / 床边界）外部
-        for pt in check_points:
-            if not point_in_polygon(pt, crib_geometry.crib_contour):
-                return "DANGEROUS_ACTION"
-
-        # WARNING: 任一关键检查点不在 safe_contour（绿框）内部，但在 crib_contour 内部
-        for pt in check_points:
-            if not point_in_polygon(pt, crib_geometry.safe_contour):
-                return "WARNING"
-
-        # SAFE: 所有关键检查点都在 safe_contour 内部
-        return "SAFE"
-    else:
-        # 降级到旧版矩形区域逻辑
-        warning_x = geometry["warning_zone"][0]
-        if trigger_x >= geometry["danger_boundary_x"]:
-            return "DANGEROUS_ACTION"
-        if trigger_x >= warning_x or point_in_rect(center, geometry["warning_zone"]):
-            return "WARNING"
-        if point_in_rect(center, geometry["safe_zone"]):
-            return "SAFE"
-        return "WARNING"
+    return str(analyze_pose_risk(det, geometry, config)["stage"])
 
 
 def apply_debounce(

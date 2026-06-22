@@ -467,7 +467,9 @@ def load_crib_config(
     # 规范化路径：统一用正斜杠，消除 Windows 反斜杠 vs 正斜杠差异
     saved_path = os.path.normpath(auto_crib.get("video_path", "")).replace("\\", "/")
     input_path = os.path.normpath(video_path).replace("\\", "/")
-    if saved_path != input_path:
+    # Demo media may be copied between data/ and web_demo/data/. Reuse the
+    # calibrated geometry when the normalized path or filename still matches.
+    if saved_path != input_path and Path(saved_path).name != Path(input_path).name:
         return None
     
     corners_ratio = auto_crib.get("corners_ratio", [])

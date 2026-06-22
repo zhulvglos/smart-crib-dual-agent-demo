@@ -1,7 +1,8 @@
 """
 generate_web_demo_data.py
 
-预计算YOLO检测结果，生成网页端Demo所需的数据文件
+预计算YOLO检测结果，生成网页端Demo所需的数据文件。
+使用 CribDetector 自动检测婴儿床边界（多边形），而非硬编码矩形。
 """
 
 import json
@@ -11,11 +12,16 @@ from typing import Any, Dict, List, Optional, Tuple
 import cv2
 import numpy as np
 
-# 从demo_danger_action_detector导入相关函数
 from demo_danger_action_detector import (
     load_config, load_yolo_model, run_detector, select_target,
-    classify_stage, apply_debounce, get_trigger_x, resolve_geometry,
-    Detection, CONFIG_PATH, DEFAULT_VIDEO_PATH
+    analyze_pose_risk, apply_debounce, get_trigger_x,
+    resolve_geometry, resolve_geometry_from_crib,
+    Detection, CONFIG_PATH, DEFAULT_VIDEO_PATH,
+)
+from crib_detector import (
+    CribDetector,
+    save_crib_config,
+    load_crib_config,
 )
 
 
@@ -48,8 +54,37 @@ def generate_detection_data(
         print("[ERROR] Failed to read first frame.")
         cap.release()
         return {}
-    
-    geometry = resolve_geometry(config, width, height)
+
+    # ── 使用 CribDetector 自动检测婴儿床多边形边界 ──
+    crib_contour_points: Optional[List[List[int]]] = None
+    safe_contour_points: Optional[List[List[int]]] = None
+    detection_method = "config_rect"
+
+    try:
+        saved_geom = load_crib_config(config_path, str(video_path), width, height)
+        if saved_geom is not None:
+            geometry = resolve_geometry_from_crib(saved_geom, width, height)
+            crib_contour_points = saved_geom.crib_contour.reshape(-1, 2).tolist()
+            safe_contour_points = saved_geom.safe_contour.reshape(-1, 2).tolist()
+            detection_method = "saved_crib_polygon"
+            print("[INFO] Using saved crib polygon config")
+        else:
+            detector = CribDetector()
+            result = detector.detect_crib(first_frame, safe_ratio=0.15)
+            if result.success and result.geometry is not None:
+                geometry = resolve_geometry_from_crib(result.geometry, width, height)
+                crib_contour_points = result.geometry.crib_contour.reshape(-1, 2).tolist()
+                safe_contour_points = result.geometry.safe_contour.reshape(-1, 2).tolist()
+                detection_method = f"crib_polygon_{result.method}"
+                save_crib_config(config_path, str(video_path), result.geometry, width, height)
+                print(f"[INFO] Detected crib polygon via {result.method} (conf={result.confidence:.2f})")
+            else:
+                print(f"[WARN] Crib detection failed ({result.message}), falling back to config rect")
+                geometry = resolve_geometry(config, width, height)
+    except Exception as e:
+        print(f"[WARN] CribDetector error: {e}, falling back to config rect")
+        geometry = resolve_geometry(config, width, height)
+
     model_name = config["model"].get("path", "yolo11n.pt")
     
     print(f"Loading YOLO model: {model_name}")
@@ -99,8 +134,9 @@ def generate_detection_data(
                 if lost_frames > lost_keep_frames:
                     current_target = None
         
-        # 分类阶段
-        raw_stage = classify_stage(current_target, geometry, config)
+        # 姿态辅助风险分类；关键点不足时自动降级到 bbox + 区域规则
+        pose_analysis = analyze_pose_risk(current_target, geometry, config)
+        raw_stage = pose_analysis["stage"]
         displayed_stage, warning_count, danger_count = apply_debounce(
             raw_stage, displayed_stage, warning_count, danger_count,
             warning_confirm_frames, danger_confirm_frames,
@@ -124,6 +160,7 @@ def generate_detection_data(
                     "h": current_target.bbox[3],
                 },
                 "confidence": round(current_target.confidence, 4),
+                "pose_analysis": pose_analysis,
             })
         
         # 保存每一帧的数据（网页端需要逐帧平滑显示）
@@ -149,6 +186,16 @@ def generate_detection_data(
                     "confidence": round(current_target.confidence, 4),
                     "class_name": current_target.class_name,
                 }
+                if current_target.keypoints is not None:
+                    frame_data["target"]["keypoints"] = [
+                        {
+                            "x": round(float(point[0]), 2),
+                            "y": round(float(point[1]), 2),
+                            "confidence": round(float(point[2]), 4),
+                        }
+                        for point in current_target.keypoints
+                    ]
+                frame_data["pose_analysis"] = pose_analysis
             
             frames_data.append(frame_data)
         
@@ -161,6 +208,17 @@ def generate_detection_data(
     print(f"\n  Processing complete: {frame_idx} frames processed")
     
     # 构建输出数据
+    geometry_out: Dict[str, Any] = {
+        "safe_zone": geometry["safe_zone"],
+        "warning_zone": geometry["warning_zone"],
+        "danger_boundary_x": geometry.get("danger_boundary_x"),
+        "detection_method": detection_method,
+    }
+    if crib_contour_points:
+        geometry_out["crib_contour"] = crib_contour_points
+    if safe_contour_points:
+        geometry_out["safe_contour"] = safe_contour_points
+
     output_data = {
         "video_info": {
             "filename": video_path.name,
@@ -172,15 +230,13 @@ def generate_detection_data(
         },
         "detection_config": {
             "model": model_name,
+            "task": config["model"].get("task", "detect"),
             "detect_every_n_frames": detect_every_n,
             "warning_confirm_frames": warning_confirm_frames,
             "danger_confirm_frames": danger_confirm_frames,
+            "pose_risk": config.get("pose_risk", {}),
         },
-        "geometry": {
-            "safe_zone": geometry["safe_zone"],
-            "warning_zone": geometry["warning_zone"],
-            "danger_boundary_x": geometry["danger_boundary_x"],
-        },
+        "geometry": geometry_out,
         "frames": frames_data,
         "events": events,
     }
@@ -201,16 +257,33 @@ def generate_detection_data(
 
 def main():
     parser = argparse.ArgumentParser(description="Generate web demo detection data")
-    parser.add_argument("--video", type=str, default="data/dangerous_test1.mp4",
-                        help="Path to input video")
+    parser.add_argument("--video", type=str, default=None,
+                        help="Path to single input video (e.g. data/dangerous_test1.mp4)")
+    parser.add_argument("--all", action="store_true",
+                        help="Process all dangerous_test*.mp4 videos in data/")
     parser.add_argument("--config", type=str, default=str(CONFIG_PATH),
                         help="Path to detector config JSON")
     parser.add_argument("--output-dir", type=str, default="web_demo/data",
                         help="Output directory for detection data")
     args = parser.parse_args()
-    
-    video_path = Path(args.video)
-    generate_detection_data(video_path, Path(args.config), Path(args.output_dir))
+
+    config_path = Path(args.config)
+    output_dir = Path(args.output_dir)
+
+    if args.all:
+        video_dir = Path("data")
+        videos = sorted(video_dir.glob("dangerous_test[0-9]*.mp4"))
+        if not videos:
+            print("[ERROR] No dangerous_test*.mp4 files found in data/")
+            return
+        for vpath in videos:
+            print(f"\n{'='*60}")
+            generate_detection_data(vpath, config_path, output_dir)
+        print(f"\n{'='*60}")
+        print(f"Processed {len(videos)} videos.")
+    else:
+        video_path = Path(args.video or "data/dangerous_test1.mp4")
+        generate_detection_data(video_path, config_path, output_dir)
 
 
 if __name__ == "__main__":

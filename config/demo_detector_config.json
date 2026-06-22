@@ -1,8 +1,8 @@
 {
   "video_path": "data/dangerous_test1.mp4",
   "model": {
-    "path": "yolo11n.pt",
-    "task": "detect",
+    "path": "yolo11n-pose.pt",
+    "task": "pose",
     "target_class_names": [
       "person"
     ],
@@ -45,16 +45,16 @@
     "trigger_point": "bbox_right"
   },
   "safe_zone": {
-    "x1_ratio": 0.16953125,
-    "y1_ratio": 0.4125,
-    "x2_ratio": 0.77421875,
-    "y2_ratio": 0.8583333333333333
+    "x1_ratio": 0.2755741127348643,
+    "y1_ratio": 0.2462962962962963,
+    "x2_ratio": 0.7510438413361169,
+    "y2_ratio": 0.7092592592592593
   },
   "warning_zone": {
-    "x1_ratio": 0.040625,
-    "y1_ratio": 0.31805555555555554,
-    "x2_ratio": 0.90234375,
-    "y2_ratio": 0.9513888888888888
+    "x1_ratio": 0.17379958246346555,
+    "y1_ratio": 0.14814814814814814,
+    "x2_ratio": 0.8522964509394572,
+    "y2_ratio": 0.8064814814814815
   },
   "danger_boundary": {
     "x_ratio": 0.928125,
@@ -64,6 +64,14 @@
     "warning_confirm_frames": 3,
     "danger_confirm_frames": 5
   },
+  "pose_risk": {
+    "min_keypoint_confidence": 0.3,
+    "min_visible_keypoints": 6,
+    "edge_distance_ratio": 0.08,
+    "lean_distance_ratio": 0.025,
+    "warning_score": 3,
+    "danger_score": 6
+  },
   "display": {
     "show_overlay": true,
     "show_debug_text": true,
@@ -71,23 +79,23 @@
   },
   "auto_crib": {
     "enabled": true,
-    "video_path": "data\\dangerous_test5.mp4",
+    "video_path": "web_demo/data/dangerous_test6.mp4",
     "corners_ratio": [
       {
-        "x": 0.040625,
-        "y": 0.37222222222222223
+        "x": 0.2280793319415449,
+        "y": 0.15925925925925927
       },
       {
-        "x": 0.84453125,
-        "y": 0.31805555555555554
+        "x": 0.7693110647181628,
+        "y": 0.14814814814814814
       },
       {
-        "x": 0.90234375,
-        "y": 0.9513888888888888
+        "x": 0.8522964509394572,
+        "y": 0.7953703703703704
       },
       {
-        "x": 0.040625,
-        "y": 0.9513888888888888
+        "x": 0.17379958246346555,
+        "y": 0.8064814814814815
       }
     ],
     "corner_order": "top_left,top_right,bottom_right,bottom_left"

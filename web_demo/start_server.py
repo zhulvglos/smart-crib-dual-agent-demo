@@ -53,13 +53,43 @@ class DemoHandler(BaseHTTPRequestHandler):
 
         try:
             size = file_path.stat().st_size
-            self.send_response(200)
+            range_header = self.headers.get("Range")
+            start = 0
+            end = size - 1
+            status = 200
+
+            if range_header and range_header.startswith("bytes="):
+                byte_range = range_header[len("bytes="):].split(",", 1)[0]
+                start_text, end_text = byte_range.split("-", 1)
+                if start_text:
+                    start = int(start_text)
+                if end_text:
+                    end = min(int(end_text), size - 1)
+                if start >= size or start > end:
+                    self.send_response(416)
+                    self.send_header("Content-Range", f"bytes */{size}")
+                    self.end_headers()
+                    return
+                status = 206
+
+            content_length = end - start + 1
+            self.send_response(status)
             self.send_header('Content-Type', content_type)
-            self.send_header('Content-Length', str(size))
+            self.send_header('Accept-Ranges', 'bytes')
+            self.send_header('Content-Length', str(content_length))
+            if status == 206:
+                self.send_header('Content-Range', f'bytes {start}-{end}/{size}')
             self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
             with open(file_path, 'rb') as f:
-                self.wfile.write(f.read())
+                f.seek(start)
+                remaining = content_length
+                while remaining > 0:
+                    chunk = f.read(min(64 * 1024, remaining))
+                    if not chunk:
+                        break
+                    self.wfile.write(chunk)
+                    remaining -= len(chunk)
         except BrokenPipeError:
             pass
         except Exception as e:
