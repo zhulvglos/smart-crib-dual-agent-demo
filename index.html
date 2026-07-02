@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI婴儿床监护系统 - 双Agent智能Demo</title>
+    <title>AI婴儿床监护系统 - Agent Demo Showcase</title>
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -15,12 +15,37 @@
                 <span class="logo-icon">👶</span>
                 <h1>AI婴儿床监护系统</h1>
             </div>
-            <div class="subtitle">YOLO姿态辅助风险检测 + AI智能预警 + 成长记忆分析 Demo</div>
+            <div class="subtitle">AI 产品经理独立项目 · Agent Demo Showcase</div>
+            <div class="header-tags">
+                <span>双 Agent 架构</span>
+                <span>多级风险分类</span>
+                <span>MiMo 音色克隆</span>
+                <span>长期记忆迭代</span>
+            </div>
             <div class="agent-chain-info">
-                Safety Agent <span class="chain-arrow">→</span> JSONL 事件日志 <span class="chain-arrow">→</span> Growth Memory Agent
+                视频感知 → 智能体决策 → 妈妈音色安抚 → 成长记忆沉淀 ｜
+                技术栈：YOLO · LangGraph · MiMo TTS · Web Audio
             </div>
         </header>
 
+        <nav class="demo-tabs" aria-label="Demo 页面切换">
+            <button class="demo-tab active" type="button" data-tab-target="dangerMemoryTab" aria-selected="true">
+                <span class="demo-tab-icon">🛡️</span>
+                <span>
+                    <strong>危险动作 + 长记忆</strong>
+                    <small>双 Agent Demo</small>
+                </span>
+            </button>
+            <button class="demo-tab" type="button" data-tab-target="voiceCompanionTab" aria-selected="false">
+                <span class="demo-tab-icon">🎙️</span>
+                <span>
+                    <strong>语音陪伴 / 父母音色</strong>
+                    <small>Voice Companion Demo</small>
+                </span>
+            </button>
+        </nav>
+
+        <section id="dangerMemoryTab" class="demo-tab-panel active">
         <!-- 主内容区 -->
         <main class="main-content">
             <!-- 左侧：视频播放区 -->
@@ -157,11 +182,11 @@
             <div class="section-heading">
                 <div>
                     <h2>🧠 Growth Memory Agent｜成长记忆分析</h2>
-                    <p>读取 Safety Agent 事件日志，聚合频率、时段与位置分布，再生成面向家长的摘要。</p>
+                    <p>读取 Dangerous Action Agent 事件日志，聚合频率、时段与位置分布，再生成面向家长的规则模板摘要。</p>
                 </div>
                 <div class="data-badges">
                     <span class="data-badge">演示历史数据</span>
-                    <span id="llmBadge" class="data-badge">AI 生成摘要</span>
+                    <span id="llmBadge" class="data-badge">规则模板摘要</span>
                     <span class="data-badge caution">非医疗建议</span>
                 </div>
             </div>
@@ -203,18 +228,331 @@
             </div>
         </section>
 
-        <section class="info-card tech-card showcase-section">
+        <section class="info-card tech-card showcase-section dual-agent-flow-card">
             <div class="section-heading">
                 <div>
-                    <h2>🔗 双 Agent 数据流</h2>
-                    <p>Safety Agent 负责实时风险闭环，Growth Memory Agent 通过 JSONL 事件契约完成长期分析。</p>
+                    <h2>🔗 危险动作 + 长记忆双 Agent 数据流</h2>
+                    <p>Dangerous Action Agent 生成结构化危险事件，Growth Memory Agent 读取历史日志并形成趋势与家长建议。</p>
                 </div>
             </div>
             <div class="agent-flow">
                 <div class="agent-lane safety-lane">
                     <div class="agent-lane-label">
                         <span class="lane-kicker">实时链路 REAL-TIME</span>
-                        <strong>Safety Agent｜安全决策 Agent</strong>
+                        <strong>Dangerous Action Agent｜危险动作决策 Agent</strong>
+                        <span>逐帧感知、风险确认、告警决策与事件去重</span>
+                    </div>
+                    <div class="agent-lane-nodes">
+                        <div class="flow-node input-node">
+                            <span class="flow-icon">🎥</span>
+                            <strong>监控视频</strong>
+                            <small>Video Input</small>
+                            <div class="flow-tags"><span>frame</span><span>timestamp</span></div>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-node perception-node">
+                            <span class="flow-icon">🦴</span>
+                            <strong>YOLO 姿态感知</strong>
+                            <small>Pose Perception</small>
+                            <div class="flow-tags"><span>bbox</span><span>17 keypoints</span><span>confidence</span></div>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-node rule-node">
+                            <span class="flow-icon">📐</span>
+                            <strong>姿态风险判断</strong>
+                            <small>Pose Risk Scoring</small>
+                            <div class="flow-tags"><span>床体区域</span><span>风险分</span><span>多帧确认</span></div>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-node agent-node safety-agent-node">
+                            <span class="flow-icon">🛡️</span>
+                            <strong>Dangerous Action Agent</strong>
+                            <small>LangGraph Decision</small>
+                            <div class="flow-tags"><span>告警策略</span><span>事件去重</span><span>TTS</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="event-bus">
+                    <div class="event-bus-line"></div>
+                    <div class="event-node">
+                        <span class="flow-icon">📄</span>
+                        <div>
+                            <strong>JSONL 危险事件日志</strong>
+                            <small>Agent Interface / Event Contract</small>
+                        </div>
+                        <div class="flow-tags"><span>timestamp</span><span>risk</span><span>position</span><span>trigger</span></div>
+                    </div>
+                    <div class="event-bus-line"></div>
+                </div>
+
+                <div class="agent-lane memory-lane">
+                    <div class="agent-lane-label">
+                        <span class="lane-kicker">长期链路 LONG-TERM</span>
+                        <strong>Growth Memory Agent｜成长记忆 Agent</strong>
+                        <span>读取历史事件，聚合行为趋势并生成可解释摘要</span>
+                    </div>
+                    <div class="agent-lane-nodes memory-nodes">
+                        <div class="flow-node memory-input-node">
+                            <span class="flow-icon">🗂️</span>
+                            <strong>事件读取与清洗</strong>
+                            <small>Load & Normalize</small>
+                            <div class="flow-tags"><span>JSONL</span><span>日期范围</span><span>风险来源</span></div>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-node analysis-node">
+                            <span class="flow-icon">📊</span>
+                            <strong>趋势聚合分析</strong>
+                            <small>Trend Aggregation</small>
+                            <div class="flow-tags"><span>频率</span><span>高发时段</span><span>位置分布</span></div>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-node agent-node memory-agent-node">
+                            <span class="flow-icon">🧠</span>
+                            <strong>Growth Memory Agent</strong>
+                            <small>Rule-based Insight Generation</small>
+                            <div class="flow-tags"><span>规则模板摘要</span><span>边界约束</span></div>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-node output-node">
+                            <span class="flow-icon">📝</span>
+                            <strong>成长分析输出</strong>
+                            <small>Memory Output</small>
+                            <div class="flow-tags"><span>趋势图</span><span>记忆卡片</span><span>家长建议</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tech-details">
+                <p><strong>检测模型：</strong>YOLO11n-pose 通用人体姿态模型</p>
+                <p><strong>危险判断：</strong>检测框、床体区域、姿态关键点与多帧确认联合判断</p>
+                <p><strong>当前能力：</strong>已完成 17 点姿态提取、姿态风险评分与关键点缺失降级机制</p>
+                <p><strong>当前边界：</strong>尚未进行婴儿专用数据微调、真实硬件接入及大规模真实场景验证</p>
+            </div>
+        </section>
+        </section>
+
+        <section id="voiceCompanionTab" class="demo-tab-panel">
+        <section id="cryingSimulationSection" class="crying-simulation-card showcase-section">
+            <div class="section-heading">
+                <div>
+                    <h2>🎙️ Voice Companion Agent｜语音陪伴 / 父母音色</h2>
+                    <p>通过测试传感器数据演示哭闹分级、记忆检索、策略选择、效果复核与升级响应。当前不代表真实音频识别结果。</p>
+                </div>
+                <div class="data-badges">
+                    <span class="data-badge">哭声音频已接入</span>
+                    <span class="data-badge">规则驱动决策</span>
+                    <span class="data-badge success">MiMo TTS voiceclone</span>
+                    <span class="data-badge success">MiMo TTS 已接入</span>
+                </div>
+            </div>
+
+            <div class="simulation-toolbar">
+                <label>测试场景
+                    <select id="cryScenarioSelect">
+                        <option value="level1">轻微哼唧｜哭闹 1 级</option>
+                        <option value="level2" selected>夜间困倦｜哭闹 2 级</option>
+                        <option value="success">安抚有效｜自动闭环</option>
+                        <option value="escalation">安抚无效｜升级至 3 级</option>
+                    </select>
+                </label>
+                <button id="runCrySimulationBtn" class="voice-primary-btn" type="button">注入测试场景并自动执行</button>
+                <button id="resetCrySimulationBtn" class="voice-secondary-btn" type="button">重置</button>
+            </div>
+            <div class="simulation-disclosure"><strong>演示边界：</strong>哭声分贝、动作、置信度和安抚效果均为预设测试数据；规则判断与流程编排在浏览器中真实运行。</div>
+
+            <div class="simulation-grid">
+                <article class="simulation-panel perception-panel">
+                    <header><span class="voice-step">1</span><div><h3>测试输入与状态判断</h3><small>Simulated Perception</small></div><b id="simulationStateBadge">等待输入</b></header>
+                    <div class="sensor-grid">
+                        <div><span>声音强度</span><strong id="simDecibel">-- dB</strong></div>
+                        <div><span>哭声节奏</span><strong id="simRhythm">--</strong></div>
+                        <div><span>视觉动作</span><strong id="simMotion">--</strong></div>
+                        <div><span>雷达活动量</span><strong id="simActivity">--</strong></div>
+                    </div>
+                    <div class="classification-result"><div><span>规则判断</span><strong id="simCryLevel">等待测试数据</strong></div><div><span>仿真置信度</span><strong id="simConfidence">--</strong></div></div>
+                    <div class="evidence-box"><span>判断依据</span><ul id="simEvidenceList"><li>等待注入测试场景</li></ul></div>
+                    <div class="need-box"><span>可能需求（仿真推断）</span><div id="simNeedBars"></div></div>
+                </article>
+
+                <article class="simulation-panel decision-panel">
+                    <header><span class="voice-step">2</span><div><h3>记忆检索与自动决策</h3><small>Memory & Strategy</small></div></header>
+                    <div id="simDecisionEmpty" class="voice-empty-state">等待状态判断完成</div>
+                    <div id="simDecisionContent" class="hidden">
+                        <div class="recommendation-card"><span>AI 推荐方案</span><strong id="simStrategy">--</strong><p id="simStrategyReason">--</p></div>
+                        <div class="memory-metrics"><span>相似历史记录<strong id="simHistoryCount">--</strong></span><span>历史成功率<strong id="simSuccessRate">--</strong></span></div>
+                        <div class="voice-routing">
+                            <button class="voice-route selected" type="button" data-sim-voice="mother"><span>妈妈音色</span><strong>系统推荐</strong><small>MiMo voiceclone 已接入</small></button>
+                            <button class="voice-route" type="button" data-sim-voice="father"><span>爸爸音色</span><strong>备选方案</strong><small>可人工接管</small></button>
+                        </div>
+                        <div class="generated-script"><span>待生成安抚语</span><p id="simComfortScript">--</p></div>
+                    </div>
+                </article>
+
+                <article class="simulation-panel execution-panel">
+                    <header><span class="voice-step">3</span><div><h3>策略执行与持续观察</h3><small>Execution Timeline</small></div></header>
+                    <div id="simMonitorWindow" class="monitor-window hidden">
+                        <div class="monitor-feed">
+                            <div class="monitor-static"></div>
+                            <div class="monitor-overlay">
+                                <span class="monitor-badge">LIVE</span>
+                                <span class="monitor-time" id="monitorTime">00:00</span>
+                            </div>
+                            <div class="monitor-message" id="monitorMessage">宝宝可能饿了 / 要抱抱</div>
+                        </div>
+                    </div>
+                    <div class="audio-slot"><div><span>哭声测试输入</span><strong id="cryingSlotStatus">baby_crying.wav 已接入</strong></div><div><span>父母克隆音色</span><strong>MiMo voiceclone 已接入</strong></div></div>
+                    <ol id="simTimeline" class="simulation-timeline"><li><time>--:--</time><span>等待执行</span></li></ol>
+                    <div class="integration-contract"><span>预留事件接口</span><code>cry.level · cry.db · cry.confidence · playback.voice_id · playback.completed</code></div>
+                </article>
+
+                <article class="simulation-panel outcome-panel">
+                    <header><span class="voice-step">4</span><div><h3>效果复核与记忆更新</h3><small>Outcome & Memory</small></div></header>
+                    <div id="simChartBars" class="cry-chart-bars"><span></span><span></span><span></span><span></span><span></span></div>
+                    <div id="simOutcome" class="comfort-result pending">等待系统自动评估</div>
+                    <div class="outcome-metrics"><div><span>状态变化</span><strong id="simStateChange">--</strong></div><div><span>响应耗时</span><strong id="simResponseTime">--</strong></div><div><span>家长通知</span><strong id="simNotification">--</strong></div></div>
+                    <div id="simMemoryUpdate" class="memory-update">尚未生成新的安抚记忆</div>
+                    <div class="human-feedback"><span>人工反馈（可选）</span><button type="button" data-feedback="accurate" disabled>判断准确</button><button type="button" data-feedback="correct" disabled>人工纠正</button></div>
+                </article>
+            </div>
+        </section>
+        <section id="voiceCompanionSection" class="voice-companion-card showcase-section">
+            <div class="section-heading">
+                <div>
+                    <h2>🎙️ Voice Companion Agent｜语音陪伴 Agent</h2>
+                    <p>模拟哭闹事件，查询成长记忆中的安抚偏好，选择角色音色策略并记录模拟安抚结果。</p>
+                </div>
+                <div class="data-badges">
+                    <span class="data-badge caution">模拟哭闹事件</span>
+                    <span class="data-badge">浏览器 TTS</span>
+                    <span class="data-badge success">MiMo TTS 克隆音色已接入</span>
+                </div>
+            </div>
+
+            <div class="voice-demo-grid">
+                <div class="voice-panel cry-panel">
+                    <div class="voice-panel-heading">
+                        <span class="voice-step">1</span>
+                        <div>
+                            <h3>哭闹事件模拟</h3>
+                            <small>Crying Event Simulation</small>
+                        </div>
+                    </div>
+                    <div class="voice-status-row">
+                        <span>当前场景</span>
+                        <strong id="voiceScene">夜间入睡</strong>
+                    </div>
+                    <div class="voice-status-row">
+                        <span>当前状态</span>
+                        <strong id="cryingStatus" class="voice-idle">等待模拟</strong>
+                    </div>
+                    <div class="voice-status-row">
+                        <span>哭闹强度</span>
+                        <strong id="cryIntensity">中等 MEDIUM</strong>
+                    </div>
+                    <button id="simulateCryingBtn" class="voice-primary-btn" type="button" disabled>模拟哭闹事件</button>
+                </div>
+
+                <div class="voice-panel memory-hit-panel">
+                    <div class="voice-panel-heading">
+                        <span class="voice-step">2</span>
+                        <div>
+                            <h3>长记忆偏好检索</h3>
+                            <small>Comfort Memory Retrieval</small>
+                        </div>
+                    </div>
+                    <div id="comfortMemoryState" class="voice-empty-state">等待哭闹事件触发</div>
+                    <div id="comfortMemoryContent" class="comfort-memory-content hidden">
+                        <p id="comfortMemorySummary"></p>
+                        <div class="memory-metrics">
+                            <span>历史成功率 <strong id="comfortSuccessRate">--</strong></span>
+                            <span>历史样本数 <strong id="comfortEvidenceCount">--</strong></span>
+                        </div>
+                        <div class="selected-strategy">
+                            <span>命中策略</span>
+                            <strong id="memoryStrategy">--</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="voice-panel voice-strategy-panel">
+                    <div class="voice-panel-heading">
+                        <span class="voice-step">3</span>
+                        <div>
+                            <h3>父母音色策略</h3>
+                            <small>Voice Strategy Selection</small>
+                        </div>
+                    </div>
+                    <div class="voice-option-grid">
+                        <button class="voice-option" data-voice="mother" type="button">
+                            <span class="voice-option-icon">👩</span>
+                            <strong>妈妈音色</strong>
+                            <small>柔和、较慢</small>
+                        </button>
+                        <button class="voice-option" data-voice="father" type="button">
+                            <span class="voice-option-icon">👨</span>
+                            <strong>爸爸音色</strong>
+                            <small>较低音高</small>
+                        </button>
+                        <button class="voice-option" data-voice="default" type="button">
+                            <span class="voice-option-icon">🔊</span>
+                            <strong>默认音色</strong>
+                            <small>浏览器默认</small>
+                        </button>
+                    </div>
+                    <p class="voice-simulation-note">
+                        当前为模拟音色策略展示；真实产品中将调用外部语音克隆服务返回的 <code>voice_id</code>。
+                    </p>
+                </div>
+
+                <div class="voice-panel playback-panel">
+                    <div class="voice-panel-heading">
+                        <span class="voice-step">4</span>
+                        <div>
+                            <h3>安抚播放与结果</h3>
+                            <small>Playback & Result Recording</small>
+                        </div>
+                    </div>
+                    <div class="comfort-script-box">
+                        <span>规则模板安抚语</span>
+                        <p id="comfortScript">请先模拟哭闹事件。</p>
+                    </div>
+                    <div class="voice-playback-controls">
+                        <button id="playComfortBtn" class="voice-secondary-btn" type="button" disabled>播放安抚语</button>
+                        <button id="stopComfortBtn" class="voice-secondary-btn" type="button" disabled>停止播放</button>
+                        <label class="white-noise-toggle">
+                            <input id="whiteNoiseToggle" type="checkbox" disabled>
+                            <span>低音量白噪音</span>
+                        </label>
+                    </div>
+                    <button id="recordComfortBtn" class="voice-primary-btn" type="button" disabled>
+                        模拟安抚完成并写入记录
+                    </button>
+                    <div id="comfortResult" class="comfort-result pending">
+                        本次安抚结果：等待执行
+                    </div>
+                    <div id="comfortLogStatus" class="comfort-log-status">尚未写入安抚记录</div>
+                </div>
+            </div>
+            <div class="voice-capability-notice">
+                <strong>能力说明：</strong>
+                当前实现哭闹事件模拟、偏好检索、角色音色策略、浏览器 TTS 和 JSONL 回写；
+                未接入真实 ASR、Pipecat、父母声纹训练或语音克隆服务。
+            </div>
+        </section>
+
+        <section class="info-card tech-card showcase-section voice-only-flow">
+            <div class="section-heading">
+                <div>
+                    <h2>🔗 语音陪伴 Agent 数据流</h2>
+                    <p>模拟哭闹事件触发独立安抚链路，并从 Growth Memory 查询长期安抚偏好。</p>
+                </div>
+            </div>
+            <div class="agent-flow">
+                <div class="agent-lane safety-lane">
+                    <div class="agent-lane-label">
+                        <span class="lane-kicker">实时链路 REAL-TIME</span>
+                        <strong>Dangerous Action Agent｜危险动作决策 Agent</strong>
                         <span>逐帧感知、风险确认、告警决策与事件去重</span>
                     </div>
                     <div class="agent-lane-nodes">
@@ -247,7 +585,7 @@
                         <div class="flow-arrow" aria-hidden="true">→</div>
                         <div class="flow-node agent-node safety-agent-node">
                             <span class="flow-icon">🛡️</span>
-                            <strong>Safety Agent</strong>
+                            <strong>Dangerous Action Agent</strong>
                             <small>LangGraph Decision</small>
                             <div class="flow-tags">
                                 <span>告警策略</span><span>事件去重</span><span>TTS</span>
@@ -299,9 +637,9 @@
                         <div class="flow-node agent-node memory-agent-node">
                             <span class="flow-icon">🧠</span>
                             <strong>Growth Memory Agent</strong>
-                            <small>LLM Insight Generation</small>
+                            <small>Rule-based Insight Generation</small>
                             <div class="flow-tags">
-                                <span>结构化摘要</span><span>边界约束</span>
+                                <span>规则模板摘要</span><span>边界约束</span>
                             </div>
                         </div>
                         <div class="flow-arrow" aria-hidden="true">→</div>
@@ -315,6 +653,66 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="memory-share-bus">
+                    <div class="memory-share-line"></div>
+                    <div class="memory-share-node">
+                        <span class="flow-icon">💾</span>
+                        <div>
+                            <strong>共享安抚偏好记忆</strong>
+                            <small>Comfort Preference Memory</small>
+                        </div>
+                        <div class="flow-tags">
+                            <span>scene</span><span>preferred_voice</span><span>success_rate</span>
+                        </div>
+                    </div>
+                    <div class="memory-share-line"></div>
+                </div>
+
+                <div class="agent-lane voice-lane">
+                    <div class="agent-lane-label">
+                        <span class="lane-kicker">陪伴分支 COMPANION</span>
+                        <strong>Voice Companion Agent｜语音陪伴 Agent</strong>
+                        <span>响应模拟哭闹事件，查询安抚偏好并执行模拟播放与结果回写</span>
+                    </div>
+                    <div class="agent-lane-nodes voice-nodes">
+                        <div class="flow-node crying-node">
+                            <span class="flow-icon">👶</span>
+                            <strong>模拟哭闹事件</strong>
+                            <small>Simulated Crying Event</small>
+                            <div class="flow-tags">
+                                <span>scene</span><span>intensity</span><span>duration</span>
+                            </div>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-node agent-node voice-agent-node">
+                            <span class="flow-icon">🎙️</span>
+                            <strong>Voice Companion Agent</strong>
+                            <small>Comfort Strategy</small>
+                            <div class="flow-tags">
+                                <span>偏好查询</span><span>音色选择</span><span>规则话术</span>
+                            </div>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-node playback-node">
+                            <span class="flow-icon">🔊</span>
+                            <strong>模拟 TTS 播放</strong>
+                            <small>Browser Speech Playback</small>
+                            <div class="flow-tags">
+                                <span>mother</span><span>father</span><span>default</span>
+                            </div>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-node voice-log-node">
+                            <span class="flow-icon">📄</span>
+                            <strong>JSONL 安抚记录</strong>
+                            <small>Comfort Result Log</small>
+                            <div class="flow-tags">
+                                <span>voice</span><span>outcome</span><span>simulated</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="tech-details">
                 <p><strong>检测模型：</strong>YOLO11n-pose 通用人体姿态模型</p>
@@ -323,11 +721,12 @@
                 <p><strong>当前边界：</strong>尚未进行婴儿专用数据微调、真实硬件接入及大规模真实场景验证</p>
             </div>
         </section>
+        </section>
 
         <!-- 底部说明 -->
         <footer class="footer">
-            <p>💡 本Demo用于技术展示：Safety Agent（YOLO-pose感知 + LangGraph决策）生成事件日志，Growth Memory Agent 分析趋势并生成成长记忆</p>
-            <p>当前为 PoC 阶段，TTS / 推送通知 / 真实硬件均为模拟实现</p>
+            <p>💡 两个 Demo 是独立业务场景，通过顶部 Tab 分开展示；Growth Memory 可作为跨场景长期记忆能力扩展。</p>
+            <p>当前为 PoC 阶段，真实硬件、ASR、推送通知及父母语音克隆服务均未接入。</p>
         </footer>
     </div>
 

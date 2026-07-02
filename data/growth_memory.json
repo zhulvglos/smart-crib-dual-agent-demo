@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-06-21 20:45:01",
+  "generated_at": "2026-06-22 21:33:14",
   "date_range": {
     "start": "2026-05-18",
     "end": "2026-05-21"
   },
   "event_count": 58,
-  "llm_used": true,
+  "llm_used": false,
   "summary_stats": {
     "total_events": 58,
     "days_covered": 4,
@@ -26,39 +26,48 @@
   },
   "memory_cards": [
     {
-      "title": "风险事件趋势",
-      "body": "演示数据中，每日风险事件由20次下降至7次，5月21日是当前观测周期内事件最少的一天。该结果仅反映这4天样本中的频率变化，仍需结合每日监控时长、更长周期和真实场景数据验证。",
-      "icon": "positive",
-      "severity": "positive"
+      "title": "探索行为观察",
+      "body": "在 2026-05-18 至 2026-05-21 期间，宝宝共出现 58 次靠近床沿或护栏边缘的行为。这是一项短周期行为观察，提示床沿区域需要重点关注；是否存在稳定变化仍需结合每日监控时长和更长周期数据验证。",
+      "icon": "exploration",
+      "severity": "info",
+      "date": "2026-05-21",
+      "audio_file": "assets/audio/memory_card_1.wav"
     },
     {
-      "title": "床边风险需关注",
-      "body": "演示数据中的58次高风险事件均记录在靠近婴儿床边缘的位置，说明当前样本的风险位置明显集中于床沿区域。该结果不能判断宝宝靠近床边的具体动机，但提示后续测试和看护应重点关注护栏周边。",
+      "title": "风险时段分析",
+      "body": "系统记录了 58 次高风险事件，平均每天约 14.5 次。高发时段集中在 0点、22点 左右。建议在这些时段增加关注，或调整宝宝的活动安排。",
       "icon": "risk",
-      "severity": "warning"
+      "severity": "warning",
+      "date": "2026-05-21",
+      "audio_file": "assets/audio/memory_card_2.wav"
     },
     {
-      "title": "风险识别结果概览",
-      "body": "当前PoC在4天演示数据中记录了58次高风险事件，其中42次来源于AI人体检测，平均检测置信度为84%。这些数字用于展示事件链路和来源构成，不等同于真实环境准确率或产品安全保障能力。",
+      "title": "感知能力总结",
+      "body": "检测系统通过 5 种方式识别宝宝活动，其中 AI 人体检测 贡献了 72% 的事件触发量。该结果用于说明当前 PoC 的事件来源构成，不代表真实环境准确率或产品可靠性。",
       "icon": "tech",
-      "severity": "info"
+      "severity": "positive",
+      "date": "2026-05-21",
+      "audio_file": "assets/audio/memory_card_3.wav"
     }
   ],
   "parent_suggestions": [
     {
-      "title": "优化睡眠环境",
-      "body": "鉴于宝宝频繁靠近床边，建议检查婴儿床围栏的稳固性与间距，并确保床垫与床框紧贴无缝隙。可以考虑在白天清醒时，用游戏引导宝宝认识婴儿床的中心区域。",
-      "priority": "high"
+      "title": "加强床沿防护",
+      "body": "宝宝频繁靠近床沿，建议检查护栏高度是否足够，或考虑加装防撞软垫。",
+      "priority": "high",
+      "audio_file": "assets/audio/suggestion_1.wav"
     },
     {
-      "title": "建立睡前安抚",
-      "body": "数据提示晚间10点至午夜是活动高峰。建议在这段“敏感期”前，建立固定的、舒缓的睡前程序（如抚触、轻音乐），帮助宝宝从活跃状态平稳过渡到睡眠状态。",
-      "priority": "medium"
+      "title": "高发时段留意",
+      "body": "宝宝在 0 点左右活动最为频繁，建议该时段保持关注。",
+      "priority": "medium",
+      "audio_file": "assets/audio/suggestion_2.wav"
     },
     {
-      "title": "持续观察趋势",
-      "body": "当前样本中的风险事件频率呈下降趋势。建议继续记录每日监控时长和事件数量，在更长周期内确认该趋势是否稳定，避免根据短期变化直接判断宝宝行为或安全状态。",
-      "priority": "medium"
+      "title": "定期检查设备",
+      "body": "建议每周检查一次摄像头角度和婴儿床护栏状态，确保监测系统正常工作。",
+      "priority": "low",
+      "audio_file": "assets/audio/suggestion_3.wav"
     }
   ],
   "trend_data": {

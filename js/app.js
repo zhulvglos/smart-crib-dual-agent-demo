@@ -46,6 +46,22 @@ class BabyMonitorDemo {
         // 事件列表
         this.eventsList = document.getElementById('eventsList');
 
+        // Voice Companion Agent
+        this.simulateCryingBtn = document.getElementById('simulateCryingBtn');
+        this.playComfortBtn = document.getElementById('playComfortBtn');
+        this.stopComfortBtn = document.getElementById('stopComfortBtn');
+        this.recordComfortBtn = document.getElementById('recordComfortBtn');
+        this.whiteNoiseToggle = document.getElementById('whiteNoiseToggle');
+        this.voiceOptionButtons = [...document.querySelectorAll('.voice-option')];
+        this.voiceData = null;
+        this.selectedVoice = null;
+        this.whiteNoiseContext = null;
+        this.whiteNoiseSource = null;
+
+        // 顶部 Demo 导航
+        this.demoTabs = [...document.querySelectorAll('.demo-tab')];
+        this.demoTabPanels = [...document.querySelectorAll('.demo-tab-panel')];
+
         // 数据存储
         this.detectionData = null;  // 预计算的YOLO检测数据
         this.framesByIndex = null;  // 按帧索引索引的Map，加速查找
@@ -54,15 +70,20 @@ class BabyMonitorDemo {
         this.currentVideo = 'dangerous_test6';
         this.events = [];
         this.triggeredEventKeys = new Set();
+        this._warningIndex = 0;
+        this._audioManifest = null;
 
         this.init();
     }
 
     init() {
+        window._demo = this;
         this.setupEventListeners();
+        this.setupDemoTabs();
         this.resizeCanvas();
         window.addEventListener('resize', () => this.resizeCanvas());
         this.loadGrowthMemory();
+        this.loadVoiceCompanion();
         this.videoSelect.value = this.currentVideo;
         this.loadVideo(this.currentVideo);
         // 预加载语音列表（部分浏览器异步加载）
@@ -70,6 +91,33 @@ class BabyMonitorDemo {
             window.speechSynthesis.getVoices();
             window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
         }
+    }
+
+    setupDemoTabs() {
+        for (const tab of this.demoTabs) {
+            tab.addEventListener('click', () => this.activateDemoTab(tab.dataset.tabTarget));
+        }
+    }
+
+    activateDemoTab(targetId) {
+        for (const tab of this.demoTabs) {
+            const isActive = tab.dataset.tabTarget === targetId;
+            tab.classList.toggle('active', isActive);
+            tab.setAttribute('aria-selected', String(isActive));
+        }
+
+        for (const panel of this.demoTabPanels) {
+            panel.classList.toggle('active', panel.id === targetId);
+        }
+
+        if (targetId === 'voiceCompanionTab') {
+            this.videoPlayer.pause();
+        } else {
+            this.stopComfortPlayback();
+            requestAnimationFrame(() => this.resizeCanvas());
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     setupEventListeners() {
@@ -90,6 +138,18 @@ class BabyMonitorDemo {
             this.currentVideo = this.videoSelect.value;
             this.loadVideo(this.currentVideo);
         });
+
+        this.simulateCryingBtn.addEventListener('click', () => this.simulateCryingEvent());
+        this.playComfortBtn.addEventListener('click', () => this.playComfortSpeech());
+        this.stopComfortBtn.addEventListener('click', () => this.stopComfortPlayback());
+        this.recordComfortBtn.addEventListener('click', () => this.recordComfortResult());
+        this.whiteNoiseToggle.addEventListener('change', () => {
+            if (this.whiteNoiseToggle.checked) this.startWhiteNoise();
+            else this.stopWhiteNoise();
+        });
+        for (const button of this.voiceOptionButtons) {
+            button.addEventListener('click', () => this.selectVoiceOption(button.dataset.voice, true));
+        }
     }
 
     resizeCanvas() {
@@ -650,22 +710,42 @@ class BabyMonitorDemo {
     }
 
     /**
-     * Web Speech API 语音播报（真实执行，非模拟）
+     * 语音播报：优先使用预生成的克隆音色音频，降级到 Web Speech API
      */
     speakWarning() {
-        if (!('speechSynthesis' in window)) return;
-        // 避免重复播报
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance('宝贝小心，请往中间来');
-        utterance.lang = 'zh-CN';
-        utterance.rate = 1.0;
-        utterance.pitch = 1.1;
-        utterance.volume = 0.9;
-        // 优先选择中文语音
-        const voices = window.speechSynthesis.getVoices();
-        const zhVoice = voices.find(v => v.lang.startsWith('zh'));
-        if (zhVoice) utterance.voice = zhVoice;
-        window.speechSynthesis.speak(utterance);
+        const warnings = [
+            'assets/audio/danger_warning_1.wav',
+            'assets/audio/danger_warning_2.wav',
+            'assets/audio/danger_warning_3.wav',
+        ];
+        const fallbackText = '宝贝小心，请往中间来';
+        const audioPath = warnings[this._warningIndex % warnings.length];
+        this._warningIndex++;
+        this.playClonedAudio(audioPath, fallbackText);
+    }
+
+    /**
+     * 播放克隆音色音频，失败时降级到 Web Speech API
+     */
+    playClonedAudio(audioPath, fallbackText) {
+        const audio = new Audio(audioPath);
+        audio.volume = 0.9;
+        audio.play().catch(() => {
+            // 文件不存在或格式不支持 → 降级到 Web Speech API
+            if (fallbackText && 'speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(fallbackText);
+                utterance.lang = 'zh-CN';
+                utterance.rate = 1.0;
+                utterance.pitch = 1.1;
+                utterance.volume = 0.9;
+                const voices = window.speechSynthesis.getVoices();
+                const zhVoice = voices.find(v => v.lang.startsWith('zh'));
+                if (zhVoice) utterance.voice = zhVoice;
+                window.speechSynthesis.speak(utterance);
+            }
+        });
+        return audio;
     }
 
     updateStats(warningCount, dangerCount, eventCount) {
@@ -702,6 +782,14 @@ class BabyMonitorDemo {
 
     async loadGrowthMemory() {
         const container = document.getElementById('memoryCardsContainer');
+        // 显示思考状态动画
+        container.innerHTML = `
+            <div class="gm-thinking">
+                <div class="gm-thinking-spinner">
+                    <span></span><span></span><span></span>
+                </div>
+                <div class="gm-thinking-text">AI 正在分析宝宝成长数据...</div>
+            </div>`;
         try {
             const response = await fetch('data/growth_memory.json');
             if (!response.ok) {
@@ -775,6 +863,7 @@ class BabyMonitorDemo {
                     <span class="card-date">${card.date || ''}</span>
                 </div>
                 <div class="card-body">${card.body}</div>
+                ${card.audio_file ? `<button class="voice-play-btn" data-audio="${card.audio_file}" onclick="window._demo.toggleCardAudio(this)">🔊 播放语音</button>` : ''}
             </div>
         `).join('');
     }
@@ -819,12 +908,641 @@ class BabyMonitorDemo {
             <div class="suggestion-item priority-${s.priority || 'low'}">
                 <div class="suggestion-title">${s.title}</div>
                 <div class="suggestion-body">${s.body}</div>
+                ${s.audio_file ? `<button class="voice-play-btn" data-audio="${s.audio_file}" onclick="window._demo.toggleCardAudio(this)">🔊 播放语音</button>` : ''}
             </div>
         `).join('');
+    }
+
+    /**
+     * 切换记忆卡片/建议的语音播放（点击播放/停止）
+     */
+    toggleCardAudio(btn) {
+        const audioPath = btn.dataset.audio;
+        if (!audioPath) return;
+
+        // 停止当前正在播放的音频
+        if (this._currentCardAudio) {
+            this._currentCardAudio.pause();
+            this._currentCardAudio.currentTime = 0;
+            const prevBtn = document.querySelector('.voice-play-btn.playing');
+            if (prevBtn) prevBtn.classList.remove('playing');
+            // 点击同一个按钮 = 停止
+            if (this._currentCardAudio._btn === btn) {
+                this._currentCardAudio = null;
+                btn.textContent = '🔊 播放语音';
+                return;
+            }
+            this._currentCardAudio = null;
+        }
+
+        const audio = new Audio(audioPath);
+        audio._btn = btn;
+        audio.volume = 0.9;
+        btn.classList.add('playing');
+        btn.textContent = '⏸ 播放中...';
+        audio.play().then(() => {
+            audio.onended = () => {
+                btn.classList.remove('playing');
+                btn.textContent = '🔊 播放语音';
+                this._currentCardAudio = null;
+            };
+        }).catch(() => {
+            btn.classList.remove('playing');
+            btn.textContent = '🔊 播放语音';
+            this._currentCardAudio = null;
+        });
+        this._currentCardAudio = audio;
+    }
+
+    // ── Voice Companion Agent ───────────────────────────────
+
+    async loadVoiceCompanion() {
+        try {
+            const response = await fetch('data/voice_companion.json');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            this.voiceData = await response.json();
+            document.getElementById('voiceScene').textContent =
+                this.voiceData.crying_event.scene === 'night_sleep' ? '夜间入睡' : '白天互动';
+            document.getElementById('cryIntensity').textContent =
+                this.voiceData.crying_event.cry_intensity === 'medium' ? '中等 MEDIUM' : this.voiceData.crying_event.cry_intensity;
+            this.simulateCryingBtn.disabled = false;
+        } catch (error) {
+            console.error('Failed to load Voice Companion data:', error);
+            document.getElementById('comfortMemoryState').textContent =
+                '未加载语音陪伴数据，请运行 generate_voice_companion_web_data.py';
+            this.simulateCryingBtn.disabled = true;
+        }
+    }
+
+    simulateCryingEvent() {
+        if (!this.voiceData) return;
+
+        // 播放哭声测试音频
+        this._playCryingAudio();
+
+        document.getElementById('cryingStatus').textContent = '检测到哭闹 CRYING';
+        document.getElementById('cryingStatus').className = 'voice-alert';
+        document.querySelector('.cry-panel').classList.add('completed');
+
+        const memory = this.voiceData.matched_memory;
+        document.getElementById('comfortMemoryState').classList.add('hidden');
+        document.getElementById('comfortMemoryContent').classList.remove('hidden');
+        document.getElementById('comfortMemorySummary').textContent = memory.memory_summary;
+        document.getElementById('comfortSuccessRate').textContent =
+            `${Math.round(memory.historical_success_rate * 100)}%`;
+        document.getElementById('comfortEvidenceCount').textContent =
+            `${memory.evidence_count} 次`;
+        document.getElementById('memoryStrategy').textContent =
+            `${memory.preferred_voice_label} + ${memory.preferred_background === 'white_noise' ? '低音量白噪音' : '无背景声'}`;
+        document.querySelector('.memory-hit-panel').classList.add('completed');
+
+        this.selectVoiceOption(this.voiceData.selected_voice, false);
+        document.getElementById('comfortScript').textContent = this.voiceData.comfort_script;
+        this.whiteNoiseToggle.checked = this.voiceData.background_audio === 'white_noise';
+        this.whiteNoiseToggle.disabled = false;
+        this.playComfortBtn.disabled = false;
+        this.stopComfortBtn.disabled = false;
+        this.recordComfortBtn.disabled = false;
+        document.getElementById('comfortResult').textContent = '本次安抚结果：等待播放与模拟确认';
+        document.getElementById('comfortResult').className = 'comfort-result pending';
+        document.getElementById('comfortLogStatus').textContent = '尚未写入安抚记录';
+        document.getElementById('comfortLogStatus').className = 'comfort-log-status';
+    }
+
+    selectVoiceOption(voiceId, manualSelection) {
+        if (!this.voiceData) return;
+        const option = this.voiceData.voice_options.find(item => item.id === voiceId);
+        if (!option) return;
+
+        this.selectedVoice = voiceId;
+        for (const button of this.voiceOptionButtons) {
+            button.classList.toggle('selected', button.dataset.voice === voiceId);
+        }
+        document.querySelector('.voice-strategy-panel').classList.add('completed');
+
+        if (manualSelection) {
+            const scripts = {
+                mother: '宝宝，妈妈在这里。我们慢慢放松，准备睡觉。',
+                father: '宝宝，爸爸在这里陪着你。我们慢慢安静下来。',
+                default: '宝宝别怕，我在这里陪着你。',
+            };
+            document.getElementById('comfortScript').textContent = scripts[voiceId];
+            this.whiteNoiseToggle.checked =
+                voiceId === 'mother' && this.voiceData.crying_event.scene === 'night_sleep';
+            if (!this.whiteNoiseToggle.checked) this.stopWhiteNoise();
+        }
+    }
+
+    findRoleVoice(role) {
+        const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+        const chinese = voices.filter(voice => voice.lang && voice.lang.toLowerCase().startsWith('zh'));
+        const keywords = role === 'mother'
+            ? ['xiaoxiao', 'huihui', 'yaoyao', 'female', 'woman', '女']
+            : ['yunxi', 'kangkang', 'male', 'man', '男'];
+        return chinese.find(voice =>
+            keywords.some(keyword => voice.name.toLowerCase().includes(keyword))
+        ) || chinese[0] || voices[0] || null;
+    }
+
+    playComfortSpeech() {
+        if (!this.voiceData || !this.selectedVoice) return;
+        const script = document.getElementById('comfortScript').textContent;
+
+        if (this.whiteNoiseToggle.checked) this.startWhiteNoise();
+        if (!('speechSynthesis' in window)) {
+            document.getElementById('comfortResult').textContent =
+                '当前浏览器不支持 Web Speech API，已保留策略展示作为兜底。';
+            document.getElementById('comfortResult').className = 'comfort-result warning';
+            return;
+        }
+
+        window.speechSynthesis.cancel();
+        const profiles = {
+            mother: { rate: 0.82, pitch: 1.12, volume: 0.82 },
+            father: { rate: 0.86, pitch: 0.82, volume: 0.86 },
+            default: { rate: 0.92, pitch: 1.0, volume: 0.85 },
+        };
+        const profile = profiles[this.selectedVoice] || profiles.default;
+        const utterance = new SpeechSynthesisUtterance(script);
+        utterance.lang = 'zh-CN';
+        utterance.rate = profile.rate;
+        utterance.pitch = profile.pitch;
+        utterance.volume = profile.volume;
+        const voice = this.findRoleVoice(this.selectedVoice);
+        if (voice) utterance.voice = voice;
+        document.querySelector('.playback-panel').classList.add('active');
+        document.getElementById('comfortResult').textContent =
+            '已调用本地浏览器 TTS 播放模拟安抚语';
+        document.getElementById('comfortResult').className = 'comfort-result playing';
+        utterance.onstart = () => {
+            document.querySelector('.playback-panel').classList.add('active');
+            document.getElementById('comfortResult').textContent =
+                '正在播放模拟安抚语（本地浏览器 TTS）';
+            document.getElementById('comfortResult').className = 'comfort-result playing';
+        };
+        utterance.onend = () => {
+            document.querySelector('.playback-panel').classList.remove('active');
+            document.getElementById('comfortResult').textContent =
+                '安抚语播放完成，等待模拟结果确认';
+            document.getElementById('comfortResult').className = 'comfort-result pending';
+        };
+        window.speechSynthesis.speak(utterance);
+    }
+
+    stopComfortPlayback() {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        this.stopWhiteNoise();
+        if (this._cryingAudio) {
+            this._cryingAudio.pause();
+            this._cryingAudio.currentTime = 0;
+            this._cryingAudio = null;
+        }
+        document.querySelector('.playback-panel').classList.remove('active');
+        document.getElementById('comfortResult').textContent = '播放已停止';
+        document.getElementById('comfortResult').className = 'comfort-result pending';
+    }
+
+    _playCryingAudio() {
+        if (this._cryingAudio) {
+            this._cryingAudio.pause();
+            this._cryingAudio.currentTime = 0;
+        }
+        const audio = new Audio('assets/audio/baby_crying.wav');
+        audio.volume = 0.7;
+        this._cryingAudio = audio;
+        audio.play().then(() => {
+            // 更新 audio-slot 状态
+            const slots = document.querySelectorAll('.audio-slot strong');
+            if (slots[0]) slots[0].textContent = '正在播放哭声测试';
+        }).catch(() => {
+            const slots = document.querySelectorAll('.audio-slot strong');
+            if (slots[0]) slots[0].textContent = '音频加载失败';
+        });
+        audio.onended = () => {
+            const slots = document.querySelectorAll('.audio-slot strong');
+            if (slots[0]) slots[0].textContent = '哭声播放完毕';
+            this._cryingAudio = null;
+        };
+    }
+
+    startWhiteNoise() {
+        if (this.whiteNoiseSource) return;
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        this.whiteNoiseContext = this.whiteNoiseContext || new AudioContextClass();
+        const bufferSize = this.whiteNoiseContext.sampleRate * 2;
+        const buffer = this.whiteNoiseContext.createBuffer(1, bufferSize, this.whiteNoiseContext.sampleRate);
+        const output = buffer.getChannelData(0);
+        for (let index = 0; index < bufferSize; index += 1) {
+            output[index] = (Math.random() * 2 - 1) * 0.12;
+        }
+        const source = this.whiteNoiseContext.createBufferSource();
+        const gain = this.whiteNoiseContext.createGain();
+        gain.gain.value = 0.055;
+        source.buffer = buffer;
+        source.loop = true;
+        source.connect(gain).connect(this.whiteNoiseContext.destination);
+        source.start();
+        this.whiteNoiseSource = source;
+    }
+
+    stopWhiteNoise() {
+        if (!this.whiteNoiseSource) return;
+        try {
+            this.whiteNoiseSource.stop();
+        } catch (error) {
+            console.debug('White noise source already stopped', error);
+        }
+        this.whiteNoiseSource = null;
+    }
+
+    async recordComfortResult() {
+        if (!this.voiceData || !this.selectedVoice) return;
+        const selectedOption = this.voiceData.voice_options.find(item => item.id === this.selectedVoice);
+        const payload = {
+            event_id: `voice_demo_${Date.now()}`,
+            source_event_id: this.voiceData.crying_event.event_id,
+            baby_id: this.voiceData.crying_event.baby_id,
+            event_type: 'crying_comfort',
+            scene: this.voiceData.crying_event.scene,
+            selected_voice: this.selectedVoice,
+            selected_voice_label: selectedOption.label,
+            comfort_script: document.getElementById('comfortScript').textContent,
+            background_audio: this.whiteNoiseToggle.checked ? 'white_noise' : 'none',
+            selection_reason: this.selectedVoice === this.voiceData.selected_voice
+                ? this.voiceData.selection_reason
+                : '用户在 Web Demo 中手动切换了模拟角色音色。',
+            is_simulated: true,
+            outcome: 'simulated_calmed_after_3min',
+        };
+
+        this.recordComfortBtn.disabled = true;
+        document.getElementById('comfortLogStatus').textContent = '正在写入模拟安抚记录...';
+        try {
+            const response = await fetch('/api/voice-companion/result', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            const result = await response.json();
+            if (!response.ok || !result.ok) throw new Error(result.error || 'Write failed');
+
+            document.getElementById('comfortResult').textContent =
+                '本次安抚结果：3 分钟后情绪平复（演示模拟）';
+            document.getElementById('comfortResult').className = 'comfort-result success';
+            document.getElementById('comfortLogStatus').textContent =
+                `已写入 ${result.log_file}`;
+            document.getElementById('comfortLogStatus').className = 'comfort-log-status success';
+            document.querySelector('.playback-panel').classList.add('completed');
+        } catch (error) {
+            console.error('Failed to write comfort result:', error);
+            document.getElementById('comfortLogStatus').textContent =
+                '写入失败：请使用 web_demo/start_server.py 启动页面';
+            document.getElementById('comfortLogStatus').className = 'comfort-log-status error';
+            this.recordComfortBtn.disabled = false;
+        }
     }
 }
 
 // 初始化应用
 document.addEventListener('DOMContentLoaded', () => {
     new BabyMonitorDemo();
+    new CryingSimulationDemo();
 });
+
+class CryingSimulationDemo {
+    constructor() {
+        this.runButton = document.getElementById('runCrySimulationBtn');
+        this.resetButton = document.getElementById('resetCrySimulationBtn');
+        this.select = document.getElementById('cryScenarioSelect');
+        if (!this.runButton || !this.resetButton || !this.select) return;
+        this.timers = [];
+        this.scenarios = this.buildScenarios();
+        this.bindEvents();
+        this.reset();
+    }
+
+    buildScenarios() {
+        const memory = {
+            count: 6,
+            rate: 82,
+            strategy: '妈妈音色 + 轻柔摇篮曲（35% 音量）',
+            reason: '夜间入睡阶段检测到揉眼；6 次相似历史中，该方案成功率最高。',
+            script: '宝宝乖，我在这里呢。慢慢放松，我们准备睡觉。',
+        };
+        return {
+            level1: {
+                input: [48, '断续哼唧', '轻微皱眉', '平稳'],
+                level: '哭闹 1 级｜轻微呼叫',
+                confidence: 88,
+                evidence: ['声音处于 40–55dB 区间', '断续哼唧，未形成持续大哭', '体征平稳，无剧烈挣扎'],
+                needs: [['陪伴', 58], ['困倦', 30], ['饥饿', 12]],
+                memory: { ...memory, rate: 76, strategy: '妈妈安抚语（音量低于 40dB）', reason: '轻度哭闹优先采用低干扰安抚，并静默通知家长观察。' },
+                curve: [48, 46, 43, 40, 36],
+                result: 'success', state: '1级 → 平静', time: '18 秒', notice: '静默提醒',
+                timeline: ['接收仿真传感器事件', '规则判断为哭闹 1 级', '检索轻度呼叫安抚偏好', '创建妈妈音色播放任务', '分贝降至 36dB，判定恢复平静'],
+            },
+            level2: {
+                input: [63, '哇—停—哇', '揉眼、蹬腿', '中度增加'],
+                level: '哭闹 2 级｜明确需求',
+                confidence: 91,
+                evidence: ['声音处于 55–70dB 区间', '呈有节奏的呼唤模式', '检测到揉眼和蹬腿，活动量中度增加'],
+                needs: [['困倦', 68], ['陪伴', 22], ['饥饿', 10]],
+                memory,
+                curve: [63, 59, 54, 49, 43],
+                result: 'success', state: '2级 → 1级 → 平静', time: '24 秒', notice: '标准推送',
+                timeline: ['接收仿真传感器事件', '规则判断为哭闹 2 级', '推断困倦需求概率为 68%', '命中 6 次相似安抚记忆', '创建妈妈克隆音色播放任务', '哭声降至 54dB，继续观察', '哭声降至 43dB，判定安抚有效'],
+            },
+            success: {
+                input: [66, '持续节奏性哭声', '揉眼、寻求陪伴', '中度增加'],
+                level: '哭闹 2 级｜困倦哭闹',
+                confidence: 93,
+                evidence: ['声音峰值 66dB，属于 2 级区间', '哭声具有稳定节奏', '夜间入睡场景伴随揉眼动作'],
+                needs: [['困倦', 74], ['陪伴', 19], ['饥饿', 7]],
+                memory: { ...memory, rate: 84 },
+                curve: [66, 58, 51, 45, 38],
+                result: 'success', state: '2级 → 平静', time: '22 秒', notice: '已通知，无需升级',
+                timeline: ['接收仿真哭闹事件', '完成多源规则匹配', '历史记忆推荐妈妈音色', '创建安抚播放任务', '哭声下降 8dB，继续执行', '哭声降至 38dB，闭环成功', '生成新的安抚效果记忆'],
+            },
+            escalation: {
+                input: [64, '节奏性哭声转尖锐', '蹬腿、持续挣扎', '快速上升'],
+                level: '哭闹 2 级｜存在升级趋势',
+                confidence: 90,
+                evidence: ['初始声音处于 55–70dB 区间', '活动量持续上升', '测试序列将在 30 秒后超过 75dB'],
+                needs: [['不适', 52], ['陪伴', 28], ['困倦', 20]],
+                memory,
+                curve: [64, 67, 71, 76, 79],
+                result: 'danger', state: '2级 → 3级告警', time: '30 秒', notice: '强提醒家长',
+                timeline: ['接收仿真传感器事件', '初始判断为哭闹 2 级', '执行历史最优安抚方案', '哭声未下降，活动量继续上升', '声音升至 79dB，升级为 3 级', '停止背景音乐并切换父母安慰音', '发送强震动告警并记录时间'],
+            },
+        };
+    }
+
+    bindEvents() {
+        this.runButton.addEventListener('click', () => this.run());
+        this.resetButton.addEventListener('click', () => this.reset());
+        document.querySelectorAll('[data-sim-voice]').forEach(button => button.addEventListener('click', () => {
+            document.querySelectorAll('[data-sim-voice]').forEach(item => item.classList.toggle('selected', item === button));
+            const role = button.dataset.simVoice === 'mother' ? '妈妈' : '爸爸';
+            document.getElementById('simComfortScript').textContent = `${role}音色已设为人工接管；真实 voice_id 接入后将替换当前播放任务。`;
+        }));
+        document.querySelectorAll('[data-feedback]').forEach(button => button.addEventListener('click', () => {
+            document.getElementById('simMemoryUpdate').textContent = button.dataset.feedback === 'accurate'
+                ? '已接收人工反馈：判断准确（本地仿真，不写入生产数据库）。'
+                : '已标记为需要人工纠正（本地仿真，不写入生产数据库）。';
+        }));
+    }
+
+    _playSyntheticLullaby(vol) {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            this._lullabyCtx = ctx;
+            const notes = [
+                { f: 261.6, d: 0.4 }, { f: 261.6, d: 0.4 }, { f: 392.0, d: 0.4 }, { f: 392.0, d: 0.4 },
+                { f: 440.0, d: 0.4 }, { f: 440.0, d: 0.4 }, { f: 392.0, d: 0.8 },
+                { f: 349.2, d: 0.4 }, { f: 349.2, d: 0.4 }, { f: 329.6, d: 0.4 }, { f: 329.6, d: 0.4 },
+                { f: 293.7, d: 0.4 }, { f: 293.7, d: 0.4 }, { f: 261.6, d: 0.8 },
+            ];
+            let t = ctx.currentTime + 0.05;
+            for (let i = 0; i < 3; i++) {
+                notes.forEach(n => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.value = n.f;
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(vol * 0.18, t + 0.08);
+                    gain.gain.linearRampToValueAtTime(vol * 0.14, t + n.d * 0.6);
+                    gain.gain.linearRampToValueAtTime(0, t + n.d);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(t);
+                    osc.stop(t + n.d + 0.01);
+                    t += n.d;
+                });
+                t += 0.3;
+            }
+        } catch (e) { /* Web Audio API 不支持则跳过 */ }
+    }
+
+    clearTimers() {
+        this.timers.forEach(id => clearTimeout(id));
+        this.timers = [];
+    }
+
+    reset() {
+        this.clearTimers();
+        this.runButton.disabled = false;
+        this.select.disabled = false;
+        const values = {
+            simDecibel: '-- dB', simRhythm: '--', simMotion: '--', simActivity: '--',
+            simCryLevel: '等待测试数据', simConfidence: '--', simStateChange: '--',
+            simResponseTime: '--', simNotification: '--',
+        };
+        Object.entries(values).forEach(([id, value]) => { document.getElementById(id).textContent = value; });
+        const badge = document.getElementById('simulationStateBadge');
+        badge.textContent = '等待输入';
+        badge.className = '';
+        document.getElementById('simEvidenceList').innerHTML = '<li>等待注入测试场景</li>';
+        document.getElementById('simNeedBars').innerHTML = '';
+        document.getElementById('simDecisionEmpty').classList.remove('hidden');
+        document.getElementById('simDecisionContent').classList.add('hidden');
+        document.getElementById('simTimeline').innerHTML = '<li><time>--:--</time><span>等待执行</span></li>';
+        document.getElementById('simOutcome').textContent = '等待系统自动评估';
+        document.getElementById('simOutcome').className = 'comfort-result pending';
+        const memoryUpdate = document.getElementById('simMemoryUpdate');
+        memoryUpdate.textContent = '尚未生成新的安抚记忆';
+        memoryUpdate.className = 'memory-update';
+        document.querySelectorAll('#cryingSimulationSection .simulation-panel').forEach(panel => panel.classList.remove('running', 'completed', 'alert'));
+        document.querySelectorAll('#simChartBars span').forEach(bar => { bar.style.height = '8px'; });
+        document.querySelectorAll('[data-feedback]').forEach(button => { button.disabled = true; });
+        // 监控小窗重置
+        const monitor = document.getElementById('simMonitorWindow');
+        if (monitor) monitor.classList.add('hidden');
+        const monitorMsg = document.getElementById('monitorMessage');
+        if (monitorMsg) { monitorMsg.textContent = '宝宝可能饿了 / 要抱抱'; monitorMsg.classList.remove('calm'); }
+        const monitorTime = document.getElementById('monitorTime');
+        if (monitorTime) monitorTime.textContent = '00:00';
+        // 停止所有音频
+        [this._simCrying, this._simLullaby, this._simComfort].forEach(a => {
+            if (a) { try { a.pause(); a.currentTime = 0; } catch(e) {} }
+        });
+        this._simCrying = null;
+        this._simLullaby = null;
+        this._simComfort = null;
+        if (this._lullabyCtx) { try { this._lullabyCtx.close(); } catch(e) {} this._lullabyCtx = null; }
+        if (this._fadeOutInterval) { clearInterval(this._fadeOutInterval); this._fadeOutInterval = null; }
+        if (this._monitorTimer) { clearInterval(this._monitorTimer); this._monitorTimer = null; }
+    }
+
+    renderNeeds(needs) {
+        document.getElementById('simNeedBars').innerHTML = needs.map(([label, value]) =>
+            `<div class="need-row"><span>${label}</span><div class="need-track"><i style="width:${value}%"></i></div><strong>${value}%</strong></div>`
+        ).join('');
+    }
+
+    run() {
+        this.reset();
+        const scenario = this.scenarios[this.select.value];
+        this.runButton.disabled = true;
+        this.select.disabled = true;
+
+        const badge = document.getElementById('simulationStateBadge');
+        const later = (delay, fn) => this.timers.push(setTimeout(fn, delay));
+
+        // ── T=0s：开始播放哭声 ──
+        badge.textContent = '检测中';
+        badge.className = 'running';
+        document.querySelector('.perception-panel').classList.add('running');
+
+        this._simCrying = new Audio('assets/audio/baby_crying.wav');
+        this._simCrying.volume = 0.7;
+        this._simCrying.play().catch(() => {});
+        const statusEl = document.getElementById('cryingSlotStatus');
+        if (statusEl) statusEl.textContent = '正在播放哭闹音频…';
+        this._simCrying.onended = () => { if (statusEl) statusEl.textContent = '播放结束'; };
+
+        // ── T=1s：感知数据填充 ──
+        later(1000, () => {
+            ['simDecibel', 'simRhythm', 'simMotion', 'simActivity'].forEach((id, index) => {
+                document.getElementById(id).textContent = index === 0 ? `${scenario.input[index]} dB` : scenario.input[index];
+            });
+        });
+
+        // ── T=2s：分类完成，badge="哭闹 2 级" ──
+        later(2000, () => {
+            document.getElementById('simCryLevel').textContent = scenario.level;
+            document.getElementById('simConfidence').textContent = `${scenario.confidence}%`;
+            document.getElementById('simEvidenceList').innerHTML = scenario.evidence.map(item => `<li>${item}</li>`).join('');
+            this.renderNeeds(scenario.needs);
+            document.querySelector('.perception-panel').className = 'simulation-panel perception-panel completed';
+            badge.textContent = scenario.level;
+            badge.className = 'success';
+        });
+
+        // ── T=3s：监控小窗弹出 + 摇篮曲 ──
+        later(3000, () => {
+            const monitor = document.getElementById('simMonitorWindow');
+            const monitorMsg = document.getElementById('monitorMessage');
+            const monitorTimeEl = document.getElementById('monitorTime');
+            if (monitor) { monitor.classList.remove('hidden'); monitor.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+            if (monitorMsg) { monitorMsg.textContent = '宝宝可能饿了 / 要抱抱'; monitorMsg.classList.remove('calm'); }
+            let _sec = 0;
+            this._monitorTimer = setInterval(() => {
+                _sec++;
+                const mm = String(Math.floor(_sec / 60)).padStart(2, '0');
+                const ss = String(_sec % 60).padStart(2, '0');
+                if (monitorTimeEl) monitorTimeEl.textContent = `${mm}:${ss}`;
+            }, 1000);
+
+            // 合成摇篮曲旋律（小星星）
+            this._playSyntheticLullaby(0.5);
+            if (this._simCrying) this._simCrying.volume = 0.5;
+        });
+
+        // ── T=5s：决策面板填充 ──
+        later(5000, () => {
+            document.getElementById('simDecisionEmpty').classList.add('hidden');
+            document.getElementById('simDecisionContent').classList.remove('hidden');
+            document.getElementById('simStrategy').textContent = scenario.memory.strategy;
+            document.getElementById('simStrategyReason').textContent = scenario.memory.reason;
+            document.getElementById('simHistoryCount').textContent = `${scenario.memory.count} 次`;
+            document.getElementById('simSuccessRate').textContent = `${scenario.memory.rate}%`;
+            document.getElementById('simComfortScript').textContent = scenario.memory.script;
+            document.querySelector('.decision-panel').classList.add('completed');
+        });
+
+        // ── T=7s：timeline 逐步执行 ──
+        later(7000, () => {
+            document.querySelector('.execution-panel').classList.add('running');
+            document.getElementById('simTimeline').innerHTML = scenario.timeline.map((text, index) =>
+                `<li><time>00:${String(index * 5).padStart(2, '0')}</time><span>${text}</span></li>`
+            ).join('');
+            const items = [...document.querySelectorAll('#simTimeline li')];
+            items.forEach((item, index) => later(index * 800, () => {
+                items.forEach((entry, entryIndex) => {
+                    if (entryIndex < index) entry.className = 'done';
+                    if (entryIndex === index) entry.className = scenario.result === 'danger' && index >= items.length - 3 ? 'danger' : 'active';
+                });
+                const bar = document.querySelectorAll('#simChartBars span')[Math.min(index, 4)];
+                if (bar) bar.style.height = `${Math.max(10, ((scenario.curve[Math.min(index, 4)] - 30) / 50) * 100)}%`;
+            }));
+        });
+
+        // ── T=15s：仍在哭 → 播放妈妈安抚音，哭声再降 ──
+        later(15000, () => {
+            this._simComfort = new Audio('assets/audio/parent_comfort.wav');
+            this._simComfort.volume = 0.8;
+            this._simComfort.play().catch(() => {});
+            if (this._simCrying) this._simCrying.volume = 0.3;
+        });
+
+        // ── T=20s：哭声渐弱 0.3 → 0.1 ──
+        later(20000, () => {
+            if (this._simCrying && !this._simCrying.paused) {
+                let vol = 0.3;
+                this._fadeOutInterval = setInterval(() => {
+                    vol = Math.max(0.1, vol - 0.04);
+                    if (this._simCrying) this._simCrying.volume = vol;
+                    if (vol <= 0.1) {
+                        clearInterval(this._fadeOutInterval);
+                        this._fadeOutInterval = null;
+                    }
+                }, 500);
+            }
+        });
+
+        // ── T=25s：哭声停止，监控小窗平静 ──
+        later(25000, () => {
+            if (this._simCrying) { this._simCrying.pause(); this._simCrying.currentTime = 0; }
+            if (this._fadeOutInterval) { clearInterval(this._fadeOutInterval); this._fadeOutInterval = null; }
+            if (statusEl) statusEl.textContent = '哭闹已停止 — 安抚闭环完成';
+
+            const monitorMsg = document.getElementById('monitorMessage');
+            if (monitorMsg) { monitorMsg.textContent = '宝宝已平静 💤'; monitorMsg.classList.add('calm'); }
+
+            document.querySelector('.execution-panel').className = 'simulation-panel execution-panel completed';
+            badge.textContent = '闭环完成';
+            badge.className = 'success';
+
+            this.finish(scenario);
+            this.runButton.disabled = false;
+            this.select.disabled = false;
+            document.querySelectorAll('[data-feedback]').forEach(button => { button.disabled = false; });
+        });
+    }
+
+    finish(scenario) {
+        document.querySelector('.execution-panel').className = 'simulation-panel execution-panel completed';
+        document.querySelectorAll('#simChartBars span').forEach((bar, index) => {
+            bar.style.height = `${Math.max(10, ((scenario.curve[index] - 30) / 50) * 100)}%`;
+            bar.title = `${scenario.curve[index]}dB`;
+        });
+        document.getElementById('simStateChange').textContent = scenario.state;
+        document.getElementById('simResponseTime').textContent = scenario.time;
+        document.getElementById('simNotification').textContent = scenario.notice;
+        const outcome = document.getElementById('simOutcome');
+        const memoryUpdate = document.getElementById('simMemoryUpdate');
+        const badge = document.getElementById('simulationStateBadge');
+        if (scenario.result === 'danger') {
+            outcome.textContent = '安抚未生效：已自动升级为哭闹 3 级告警';
+            outcome.className = 'comfort-result warning';
+            memoryUpdate.textContent = '已生成失败样本：下次降低当前策略权重，并优先要求家长介入。';
+            memoryUpdate.className = 'memory-update danger';
+            document.querySelector('.outcome-panel').classList.add('alert');
+            badge.textContent = '已升级告警';
+            badge.className = 'danger';
+        } else {
+            outcome.textContent = `安抚有效：哭声由 ${scenario.curve[0]}dB 降至 ${scenario.curve.at(-1)}dB`;
+            outcome.className = 'comfort-result success';
+            memoryUpdate.textContent = `已生成仿真记忆：${scenario.memory.strategy} 有效；成功率 ${scenario.memory.rate}% → ${scenario.memory.rate + 2}%。`;
+            memoryUpdate.className = 'memory-update success';
+            document.querySelector('.outcome-panel').classList.add('completed');
+            badge.textContent = '闭环完成';
+            badge.className = 'success';
+        }
+        document.querySelectorAll('[data-feedback]').forEach(button => { button.disabled = false; });
+        this.runButton.disabled = false;
+        this.select.disabled = false;
+    }
+}
