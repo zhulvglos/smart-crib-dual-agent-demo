@@ -67,7 +67,7 @@ class BabyMonitorDemo {
         this.framesByIndex = null;  // 按帧索引索引的Map，加速查找
         this.videoInfo = null;      // 视频信息（分辨率、fps等）
         this.geometry = null;       // 几何配置（安全区、警告区、危险边界）
-        this.currentVideo = 'dangerous_test6';
+        this.currentVideo = 'dangerous_test1';
         this.events = [];
         this.triggeredEventKeys = new Set();
         this._warningIndex = 0;
