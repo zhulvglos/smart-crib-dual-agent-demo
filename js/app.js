@@ -1176,6 +1176,16 @@ class BabyMonitorDemo {
             outcome: 'simulated_calmed_after_3min',
         };
 
+        const completeComfortRecord = (logFile) => {
+            document.getElementById('comfortResult').textContent =
+                'Comfort result: calmed after 3 minutes (simulated demo).';
+            document.getElementById('comfortResult').className = 'comfort-result success';
+            document.getElementById('comfortLogStatus').textContent =
+                `Saved to ${logFile}`;
+            document.getElementById('comfortLogStatus').className = 'comfort-log-status success';
+            document.querySelector('.playback-panel').classList.add('completed');
+        };
+
         this.recordComfortBtn.disabled = true;
         document.getElementById('comfortLogStatus').textContent = '正在写入模拟安抚记录...';
         try {
@@ -1186,15 +1196,17 @@ class BabyMonitorDemo {
             });
             const result = await response.json();
             if (!response.ok || !result.ok) throw new Error(result.error || 'Write failed');
-
-            document.getElementById('comfortResult').textContent =
-                '本次安抚结果：3 分钟后情绪平复（演示模拟）';
-            document.getElementById('comfortResult').className = 'comfort-result success';
-            document.getElementById('comfortLogStatus').textContent =
-                `已写入 ${result.log_file}`;
-            document.getElementById('comfortLogStatus').className = 'comfort-log-status success';
-            document.querySelector('.playback-panel').classList.add('completed');
+            completeComfortRecord(result.log_file);
         } catch (error) {
+            const isStaticHost = !['localhost', '127.0.0.1'].includes(window.location.hostname);
+            if (isStaticHost) {
+                const records = JSON.parse(localStorage.getItem('voiceCompanionDemoRecords') || '[]');
+                records.push({ ...payload, timestamp: new Date().toISOString() });
+                localStorage.setItem('voiceCompanionDemoRecords', JSON.stringify(records.slice(-20)));
+                completeComfortRecord('browser local demo record');
+                return;
+            }
+
             console.error('Failed to write comfort result:', error);
             document.getElementById('comfortLogStatus').textContent =
                 '写入失败：请使用 web_demo/start_server.py 启动页面';
