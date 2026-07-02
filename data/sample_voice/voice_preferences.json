@@ -1,0 +1,23 @@
+{
+  "baby_id": "demo_baby_001",
+  "comfort_preferences": [
+    {
+      "scene": "night_sleep",
+      "preferred_voice": "mother",
+      "preferred_voice_label": "妈妈音色",
+      "preferred_background": "white_noise",
+      "historical_success_rate": 0.82,
+      "evidence_count": 6,
+      "memory_summary": "宝宝在夜间入睡初期哭闹时，妈妈音色配合低音量白噪音的安抚效果较好。"
+    },
+    {
+      "scene": "daytime_play",
+      "preferred_voice": "father",
+      "preferred_voice_label": "爸爸音色",
+      "preferred_background": "none",
+      "historical_success_rate": 0.67,
+      "evidence_count": 3,
+      "memory_summary": "白天互动时，爸爸音色的回应更容易吸引宝宝注意。"
+    }
+  ]
+}

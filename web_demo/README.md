@@ -1,81 +1,70 @@
-# AI婴儿床监护系统 - 网页端Demo
+# AI 婴儿床监护系统 Web Showcase
 
-基于YOLO目标检测的危险动作预警可视化展示
+## 版本说明
 
-## 功能特性
+### 新增 Growth Memory Agent 双 Agent 完整演示v2.0.0
 
-- 🎥 **视频播放**：支持播放演示视频，带自定义控制栏
-- 🎯 **实时检测可视化**：Canvas叠加显示YOLO检测框、安全区、警告区、危险边界
-- 📊 **状态监控**：实时显示SAFE/WARNING/DANGEROUS_ACTION状态
-- 📋 **事件日志**：记录危险动作触发事件
-- 🎨 **科技感UI**：深色主题，适合面试展示
+- 默认展示 `危险动作 + 长记忆双 Agent Demo`，聚合危险事件、成长记忆、趋势统计与建议卡片。
+- 新增独立的 `语音陪伴 / 父母音色 Demo`，用于模拟哭闹事件后的安抚偏好查询、音色选择、TTS 播放和结果回写。
+- Web 服务新增 Voice Companion 结果写入接口，并配套 `voice_companion.json` 与 `voice_audio_manifest.json` 演示数据。
 
-## 快速开始
+网页使用顶部 Tab 分成两个独立 Demo：
 
-### 1. 启动Demo服务器
+- `危险动作 + 长记忆双 Agent Demo`：Dangerous Action Agent 与 Growth Memory Agent。
+- `语音陪伴 / 父母音色 Demo`：Voice Companion Agent 与安抚偏好记忆。
+
+默认进入危险动作双 Agent Demo。两个页面共享同一个本地服务，但不被描述为同一条业务触发链路。
+
+## 启动
 
 ```bash
 cd web_demo
 python start_server.py
 ```
 
-服务器会自动在浏览器中打开 `http://localhost:8080`
+访问：
 
-### 2. 使用预计算数据（可选）
+```text
+http://localhost:8080/index.html
+```
 
-如果想要展示真实的YOLO检测结果，需要先运行预计算脚本：
+不要直接双击 `index.html`。Voice Companion 的 JSONL 回写依赖本地服务器提供的：
+
+```text
+POST /api/voice-companion/result
+```
+
+## Voice Companion 交互
+
+1. 切换到“语音陪伴 / 父母音色”Tab。
+2. 点击“模拟哭闹事件”。
+3. 页面展示命中的夜间安抚偏好。
+4. 自动选择妈妈音色，可手动切换爸爸音色或默认音色。
+5. 点击“播放安抚语”调用浏览器 TTS。
+6. 可开启本地浏览器生成的低音量白噪音。
+7. 点击“模拟安抚完成并写入记录”。
+8. 结果追加到 `logs/voice_companion_events.jsonl`。
+
+## 模拟能力声明
+
+- 哭闹事件为预置模拟事件。
+- 音色角色通过浏览器 TTS 的语速、音高和可用系统音色模拟。
+- 没有使用真人父母声音。
+- 没有接入真实 ASR、Pipecat 或语音克隆服务。
+- 安抚结果“3 分钟后情绪平复”为演示模拟结果。
+
+## 数据生成
+
+在项目根目录执行：
 
 ```bash
-# 在项目根目录运行
-python generate_web_demo_data.py --video data/dangerous_test1.mp4
-python generate_web_demo_data.py --video data/dangerous_test2.mp4
+python generate_voice_companion_web_data.py
+python generate_growth_memory_web_data.py
 ```
 
-这会在 `web_demo/data/` 目录下生成检测数据文件。
+生成文件：
 
-## 文件结构
-
+```text
+web_demo/data/voice_companion.json
+web_demo/data/growth_memory.json
 ```
-web_demo/
-├── index.html          # 主页面
-├── css/
-│   └── style.css       # 样式文件
-├── js/
-│   └── app.js          # 主程序
-├── data/               # 检测数据（预计算生成）
-│   ├── dangerous_test1_detection.json
-│   └── dangerous_test2_detection.json
-├── start_server.py     # 启动脚本
-└── README.md           # 本文件
-```
-
-## 演示模式
-
-如果没有预计算数据，Demo会自动进入**模拟模式**，根据时间周期模拟检测状态变化：
-
-- 0-50%：SAFE（安全区，绿色）
-- 50-70%：WARNING（警告区，黄色）
-- 70-100%：DANGEROUS_ACTION（危险区，红色）
-
-## 技术架构
-
-```
-视频输入 → YOLO目标检测 → 危险边界判断 → LangGraph决策 → 语音/推送告警
-```
-
-- **检测模型**：YOLO11n预训练模型
-- **危险判断**：基于边界规则的区域检测
-- **防抖机制**：多帧确认策略
-
-## 面试展示建议
-
-1. **开场**：介绍项目背景（婴儿床监护场景）
-2. **技术点**：强调YOLO检测 + 规则判断 + AI决策链
-3. **演示**：播放视频，展示检测框跟随、状态变化、危险告警
-4. **扩展**：提到可以接入真实摄像头、姿态识别、时序分析等
-
-## 注意事项
-
-- 本Demo用于技术展示，检测逻辑基于预训练YOLO模型+规则判断
-- 实际产品需结合姿态识别、时序分析等技术进一步提升准确性
-- 视频文件需要放在 `data/` 目录下才能正常播放

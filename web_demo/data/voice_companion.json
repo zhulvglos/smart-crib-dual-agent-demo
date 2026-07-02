@@ -1,0 +1,70 @@
+{
+  "generated_at": "2026-06-22T22:05:43+08:00",
+  "demo_mode": "simulated_voice_strategy",
+  "is_simulated": true,
+  "agent": "Voice Companion Agent",
+  "agent_label": "语音陪伴 Agent",
+  "workflow_trace": [
+    "load_crying_event",
+    "retrieve_comfort_memory",
+    "select_voice_strategy",
+    "generate_comfort_script",
+    "build_playback_command",
+    "record_comfort_result"
+  ],
+  "crying_event": {
+    "event_id": "cry_demo_001",
+    "event_type": "crying",
+    "scene": "night_sleep",
+    "timestamp": "2026-06-22T22:30:00",
+    "duration_seconds": 120,
+    "cry_intensity": "medium",
+    "baby_id": "demo_baby_001"
+  },
+  "matched_memory": {
+    "scene": "night_sleep",
+    "preferred_voice": "mother",
+    "preferred_voice_label": "妈妈音色",
+    "preferred_background": "white_noise",
+    "historical_success_rate": 0.82,
+    "evidence_count": 6,
+    "memory_summary": "宝宝在夜间入睡初期哭闹时，妈妈音色配合低音量白噪音的安抚效果较好。"
+  },
+  "selected_voice": "mother",
+  "selected_voice_label": "妈妈音色",
+  "comfort_script": "宝宝，妈妈在这里。我们慢慢放松，准备睡觉。",
+  "background_audio": "white_noise",
+  "selection_reason": "命中 night_sleep 场景的长期安抚偏好；基于 6 次演示样本，历史成功率为 82%。",
+  "playback_command": {
+    "engine": "browser_web_speech_api",
+    "voice_role": "mother",
+    "script": "宝宝，妈妈在这里。我们慢慢放松，准备睡觉。",
+    "speech": {
+      "rate": 0.82,
+      "pitch": 1.12,
+      "volume": 0.82
+    },
+    "background_audio": "white_noise",
+    "is_simulated": true,
+    "fallback": "Use the browser default zh-CN voice when role-specific voices are unavailable."
+  },
+  "simulated_outcome": "simulated_calmed_after_3min",
+  "capability_notice": "当前使用预置角色策略和浏览器 TTS 模拟音色；真实产品可连接外部语音克隆服务返回的 voice_id。",
+  "voice_options": [
+    {
+      "id": "mother",
+      "label": "妈妈音色",
+      "description": "柔和、较慢语速"
+    },
+    {
+      "id": "father",
+      "label": "爸爸音色",
+      "description": "较低音高、稳定语速"
+    },
+    {
+      "id": "default",
+      "label": "默认音色",
+      "description": "浏览器中文默认音色"
+    }
+  ]
+}

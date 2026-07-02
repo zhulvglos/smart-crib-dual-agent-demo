@@ -78,6 +78,11 @@ def log_step(state: GrowthMemoryState, message: str) -> GrowthMemoryState:
 
 # ── Node A: load_events ──────────────────────────────────────────────
 
+def get_event_timestamp(event: dict) -> str:
+    """Support both danger-event and shared Agent event timestamps."""
+    return event.get("detected_at") or event.get("timestamp") or ""
+
+
 def load_events_node(state: GrowthMemoryState) -> GrowthMemoryState:
     """Read JSONL events, sort by time, populate metadata."""
     log_step(state, "[Growth Memory] Loading event logs...")
@@ -91,9 +96,9 @@ def load_events_node(state: GrowthMemoryState) -> GrowthMemoryState:
             if line:
                 events.append(json.loads(line))
 
-    events.sort(key=lambda e: e.get("detected_at", ""))
+    events.sort(key=get_event_timestamp)
 
-    dates = [e.get("detected_at", "")[:10] for e in events if e.get("detected_at")]
+    dates = [get_event_timestamp(e)[:10] for e in events if get_event_timestamp(e)]
 
     state["events"] = events
     state["event_count"] = len(events)
@@ -121,7 +126,7 @@ def analyze_trends_node(state: GrowthMemoryState) -> GrowthMemoryState:
     # Daily frequency
     daily: Counter = Counter()
     for e in events:
-        day = e.get("detected_at", "")[:10]
+        day = get_event_timestamp(e)[:10]
         if day:
             daily[day] += 1
 
@@ -129,7 +134,7 @@ def analyze_trends_node(state: GrowthMemoryState) -> GrowthMemoryState:
     hourly: Counter = Counter()
     for e in events:
         try:
-            hour = int(e.get("detected_at", " 00")[11:13])
+            hour = int(get_event_timestamp(e)[11:13])
             hourly[hour] += 1
         except (ValueError, IndexError):
             pass

@@ -22,6 +22,7 @@ conda-env/
 # Local AI assistant/plugin data
 .workbuddy/
 .claude/
+.codebuddy/
 
 # Model weights
 *.pt
@@ -57,6 +58,8 @@ Thumbs.db
 # Stray directories (auto-generated or misplaced)
 .uploads/
 NVIDIA Corporation/
+Pipecat/
+User_Profile_20260615/
 
 # Demo recordings
 assets/videos/*.mp4
@@ -64,3 +67,8 @@ assets/videos/*.mp4
 # Temporary verification scripts
 _verify_tmp.py
 _verify_web.py
+
+# Local downloaded packages and incomplete downloads
+*.zip
+*.whl
+*.crdownload

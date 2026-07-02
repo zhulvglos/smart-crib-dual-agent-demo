@@ -4,12 +4,16 @@
 """
 
 import mimetypes
+import json
 import socket
+from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 PORT = 8080
 WEB_DEMO_DIR = Path(__file__).resolve().parent
+PROJECT_DIR = WEB_DEMO_DIR.parent
+VOICE_EVENT_LOG = PROJECT_DIR / "logs" / "voice_companion_events.jsonl"
 
 
 def get_local_ip():
@@ -25,6 +29,100 @@ def get_local_ip():
 
 
 class DemoHandler(BaseHTTPRequestHandler):
+    def send_json(self, status, payload):
+        body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_OPTIONS(self):
+        self.send_response(204)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.end_headers()
+
+    def do_POST(self):
+        path = self.path.split("?")[0]
+        if path != "/api/voice-companion/result":
+            self.send_json(404, {"ok": False, "error": "Unknown API endpoint"})
+            return
+
+        try:
+            content_length = int(self.headers.get("Content-Length", "0"))
+            if content_length <= 0 or content_length > 32 * 1024:
+                self.send_json(400, {"ok": False, "error": "Invalid request size"})
+                return
+
+            payload = json.loads(self.rfile.read(content_length).decode("utf-8"))
+            required = {
+                "event_id",
+                "event_type",
+                "scene",
+                "selected_voice",
+                "selected_voice_label",
+                "comfort_script",
+                "background_audio",
+                "selection_reason",
+                "is_simulated",
+                "outcome",
+            }
+            missing = sorted(required - payload.keys())
+            if missing:
+                self.send_json(
+                    400,
+                    {"ok": False, "error": f"Missing fields: {', '.join(missing)}"},
+                )
+                return
+            if payload.get("event_type") != "crying_comfort":
+                self.send_json(400, {"ok": False, "error": "Invalid event type"})
+                return
+            if payload.get("is_simulated") is not True:
+                self.send_json(400, {"ok": False, "error": "Demo events must be simulated"})
+                return
+
+            record = {
+                key: payload[key]
+                for key in (
+                    "event_id",
+                    "event_type",
+                    "scene",
+                    "selected_voice",
+                    "selected_voice_label",
+                    "comfort_script",
+                    "background_audio",
+                    "selection_reason",
+                    "is_simulated",
+                    "outcome",
+                )
+            }
+            record["timestamp"] = payload.get("timestamp") or datetime.now().astimezone().isoformat(timespec="seconds")
+            if payload.get("baby_id"):
+                record["baby_id"] = payload["baby_id"]
+            if payload.get("source_event_id"):
+                record["source_event_id"] = payload["source_event_id"]
+
+            VOICE_EVENT_LOG.parent.mkdir(parents=True, exist_ok=True)
+            with VOICE_EVENT_LOG.open("a", encoding="utf-8") as file:
+                file.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+            self.send_json(
+                200,
+                {
+                    "ok": True,
+                    "message": "模拟安抚记录已写入 JSONL",
+                    "log_file": "logs/voice_companion_events.jsonl",
+                    "record": record,
+                },
+            )
+        except json.JSONDecodeError:
+            self.send_json(400, {"ok": False, "error": "Invalid JSON"})
+        except Exception as error:
+            self.send_json(500, {"ok": False, "error": str(error)})
+
     def do_GET(self):
         path = self.path.split('?')[0].lstrip('/')
         file_path = (WEB_DEMO_DIR / path).resolve()

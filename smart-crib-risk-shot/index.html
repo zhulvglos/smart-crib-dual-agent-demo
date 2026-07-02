@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Crib Risk Shot</title>
+</head>
+<body>
+  <div data-hf-id="hf-spoj" id="smart-crib-risk-shot" data-composition-id="smart-crib-risk-shot" data-start="0" data-width="1920" data-height="1080">
+    <div data-hf-id="hf-d9wv" class="frame">
+      <div data-hf-id="hf-2ecc" class="nursery">
+        <div data-hf-id="hf-h3na" class="back-wall"></div>
+        <div data-hf-id="hf-6r44" class="window">
+          <div data-hf-id="hf-hccy" class="curtain curtain-left"></div>
+          <div data-hf-id="hf-hgw1" class="curtain curtain-right"></div>
+          <div data-hf-id="hf-mpg4" class="glass"></div>
+        </div>
+        <div data-hf-id="hf-h444" class="shelf"></div>
+        <div data-hf-id="hf-7hzm" class="crib">
+          <div data-hf-id="hf-2a2c" class="far-rail rail"></div>
+          <div data-hf-id="hf-xex0" class="left-rail rail"></div>
+          <div data-hf-id="hf-5xex" class="right-rail rail"></div>
+          <div data-hf-id="hf-wcu6" class="front-rail rail"></div>
+          <div data-hf-id="hf-i7rb" class="mattress">
+            <div data-hf-id="hf-8asm" class="bumper bumper-back"></div>
+            <div data-hf-id="hf-kp7k" class="bumper bumper-left"></div>
+            <div data-hf-id="hf-coxf" class="pillow"></div>
+            <div data-hf-id="hf-fh8k" class="baby">
+              <div data-hf-id="hf-fpmi" class="leg leg-left"></div>
+              <div data-hf-id="hf-r4w9" class="leg leg-right"></div>
+              <div data-hf-id="hf-2t3w" class="body"></div>
+              <div data-hf-id="hf-amre" class="arm arm-left"></div>
+              <div data-hf-id="hf-71l5" class="arm arm-right"></div>
+              <div data-hf-id="hf-z992" class="head">
+                <div data-hf-id="hf-hx7w" class="hair"></div>
+                <div data-hf-id="hf-ce6r" class="face"></div>
+              </div>
+            </div>
+          </div>
+          <div data-hf-id="hf-owbh" class="right-post">
+            <div data-hf-id="hf-136p" class="camera-stem"></div>
+            <div data-hf-id="hf-vahc" class="camera-head"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <audio data-hf-id="hf-2ojm" id="room-audio" data-start="0" data-duration="15" data-track-index="2" src="ambient_baby_room.wav" data-volume="0.75"></audio>
+    <style>
+      #smart-crib-risk-shot {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #f2eadf;
+        font-family: Arial, sans-serif;
+      }
+
+      .frame {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        background: #eadfce;
+      }
+
+      .nursery {
+        position: absolute;
+        inset: 0;
+        transform-origin: 70% 38%;
+        background: linear-gradient(180deg, #f6efe5 0%, #efe3d4 60%, #d8c6b5 100%);
+      }
+
+      .back-wall {
+        position: absolute;
+        inset: 0 0 36%;
+        background: #f2eadf;
+      }
+
+      .window {
+        position: absolute;
+        right: 120px;
+        top: 0;
+        width: 560px;
+        height: 760px;
+        background: #dce7e4;
+        box-shadow: inset 0 0 0 18px rgba(156, 118, 78, 0.28);
+        overflow: hidden;
+      }
+
+      .glass {
+        position: absolute;
+        inset: 28px;
+        background:
+          radial-gradient(circle at 70% 44%, rgba(77, 126, 61, 0.35), transparent 18%),
+          linear-gradient(100deg, rgba(255,255,255,0.78), rgba(255,255,255,0.18));
+      }
+
+      .curtain {
+        position: absolute;
+        top: 0;
+        width: 170px;
+        height: 100%;
+        background: repeating-linear-gradient(90deg, rgba(246,246,241,0.88) 0 22px, rgba(220,214,206,0.9) 22px 44px);
+        z-index: 2;
+      }
+
+      .curtain-left { left: -45px; }
+      .curtain-right { right: -60px; }
+
+      .shelf {
+        position: absolute;
+        left: 0;
+        top: 190px;
+        width: 430px;
+        height: 480px;
+        background:
+          linear-gradient(180deg, transparent 0 26%, rgba(220,210,195,0.9) 26% 31%, transparent 31% 57%, rgba(220,210,195,0.9) 57% 62%, transparent 62%),
+          #efe7dc;
+        opacity: 0.82;
+      }
+
+      .crib {
+        position: absolute;
+        left: 84px;
+        right: 130px;
+        bottom: 92px;
+        height: 690px;
+        perspective: 1200px;
+        transform: skewY(-2deg);
+      }
+
+      .mattress {
+        position: absolute;
+        left: 270px;
+        right: 140px;
+        bottom: 104px;
+        height: 410px;
+        border-radius: 28px;
+        background:
+          repeating-linear-gradient(0deg, rgba(226,184,71,0.0) 0 54px, rgba(226,184,71,0.24) 55px 60px),
+          #f8f6f1;
+        box-shadow: inset 0 8px 28px rgba(112, 96, 76, 0.13), 0 18px 24px rgba(87, 68, 45, 0.11);
+      }
+
+      .bumper {
+        position: absolute;
+        background:
+          radial-gradient(circle at 24px 26px, #e2b847 0 9px, transparent 10px),
+          radial-gradient(circle at 58px 44px, #e2b847 0 7px, transparent 8px),
+          #f6f1e8;
+        background-size: 132px 96px;
+        box-shadow: 0 6px 16px rgba(96, 76, 52, 0.13);
+      }
+
+      .bumper-back {
+        left: -30px;
+        right: 10px;
+        top: -82px;
+        height: 120px;
+        border-radius: 20px 20px 8px 8px;
+      }
+
+      .bumper-left {
+        left: -112px;
+        top: -74px;
+        width: 132px;
+        height: 402px;
+        border-radius: 20px;
+      }
+
+      .pillow {
+        position: absolute;
+        left: 56px;
+        top: 70px;
+        width: 300px;
+        height: 175px;
+        border-radius: 42%;
+        background:
+          radial-gradient(circle at 54px 44px, #e2b847 0 8px, transparent 9px),
+          #f3eee3;
+        box-shadow: 0 12px 18px rgba(90, 72, 51, 0.12);
+      }
+
+      .rail {
+        position: absolute;
+        background: #f6f1e8;
+        box-shadow: 0 6px 18px rgba(78, 60, 42, 0.16);
+      }
+
+      .far-rail {
+        left: 160px;
+        right: 90px;
+        top: 95px;
+        height: 38px;
+        border-radius: 24px;
+      }
+
+      .front-rail {
+        left: 74px;
+        right: 10px;
+        bottom: 72px;
+        height: 58px;
+        border-radius: 30px;
+        opacity: 0.72;
+      }
+
+      .left-rail {
+        left: 88px;
+        top: 98px;
+        width: 54px;
+        bottom: 74px;
+        border-radius: 28px;
+      }
+
+      .right-rail {
+        right: 14px;
+        top: 90px;
+        width: 72px;
+        bottom: 78px;
+        border-radius: 34px;
+      }
+
+      .right-post {
+        position: absolute;
+        right: 0;
+        top: -130px;
+        width: 86px;
+        height: 770px;
+      }
+
+      .camera-stem {
+        position: absolute;
+        left: 30px;
+        top: 0;
+        width: 32px;
+        height: 285px;
+        border-radius: 18px;
+        background: #f6f1e8;
+        box-shadow: 0 8px 18px rgba(76, 58, 40, 0.12);
+      }
+
+      .camera-head {
+        position: absolute;
+        left: 18px;
+        top: -18px;
+        width: 80px;
+        height: 56px;
+        border-radius: 28px 28px 18px 18px;
+        background:
+          radial-gradient(ellipse at 58% 60%, #161717 0 14px, #47463f 15px 20px, transparent 21px),
+          #f6f1e8;
+        transform: rotate(18deg);
+      }
+
+      .baby {
+        position: absolute;
+        left: 430px;
+        top: 132px;
+        width: 430px;
+        height: 190px;
+        transform-origin: 70% 60%;
+      }
+
+      .body {
+        position: absolute;
+        left: 94px;
+        top: 50px;
+        width: 230px;
+        height: 104px;
+        border-radius: 52% 44% 48% 44%;
+        background: #f1eee8;
+        box-shadow: inset -10px -8px 18px rgba(164, 151, 134, 0.22);
+      }
+
+      .head {
+        position: absolute;
+        right: 20px;
+        top: 38px;
+        width: 112px;
+        height: 104px;
+        border-radius: 54% 48% 52% 50%;
+        background: #d8a584;
+        box-shadow: inset -9px -8px 12px rgba(113, 68, 43, 0.17);
+      }
+
+      .hair {
+        position: absolute;
+        left: 28px;
+        top: -4px;
+        width: 64px;
+        height: 22px;
+        border-radius: 50%;
+        background: rgba(72, 48, 34, 0.34);
+      }
+
+      .face {
+        position: absolute;
+        right: 18px;
+        top: 42px;
+        width: 18px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(80, 39, 30, 0.52);
+      }
+
+      .arm,
+      .leg {
+        position: absolute;
+        background: #d7a082;
+        border-radius: 999px;
+      }
+
+      .arm-left {
+        left: 250px;
+        top: 118px;
+        width: 125px;
+        height: 30px;
+        transform: rotate(8deg);
+      }
+
+      .arm-right {
+        left: 292px;
+        top: 78px;
+        width: 124px;
+        height: 28px;
+        transform: rotate(-16deg);
+      }
+
+      .leg-left {
+        left: 36px;
+        top: 104px;
+        width: 130px;
+        height: 36px;
+        transform: rotate(18deg);
+      }
+
+      .leg-right {
+        left: 58px;
+        top: 54px;
+        width: 118px;
+        height: 34px;
+        transform: rotate(-20deg);
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      tl.from(".nursery", { opacity: 0, duration: 0.2, ease: "power1.out" }, 0.1);
+
+      tl.to(".baby", { x: 0, y: 0, rotation: 0, duration: 3, ease: "sine.inOut" }, 0);
+      tl.to(".head", { rotation: 3, duration: 0.9, repeat: 2, yoyo: true, ease: "sine.inOut" }, 0.4);
+      tl.to(".arm-left", { rotation: 20, x: -8, duration: 0.65, repeat: 3, yoyo: true, ease: "sine.inOut" }, 1.2);
+
+      tl.to(".baby", { rotation: 8, y: 12, duration: 3, ease: "power1.inOut" }, 3);
+      tl.to(".leg-left", { rotation: 32, x: -10, duration: 0.55, repeat: 4, yoyo: true, ease: "sine.inOut" }, 3.2);
+      tl.to(".arm-right", { rotation: -28, x: 18, duration: 0.52, repeat: 4, yoyo: true, ease: "sine.inOut" }, 3.25);
+
+      tl.to(".baby", { x: 255, y: -6, rotation: -2, duration: 3, ease: "none" }, 6);
+      tl.to(".arm-left", { rotation: -4, x: 18, duration: 0.45, repeat: 6, yoyo: true, ease: "sine.inOut" }, 6.1);
+      tl.to(".leg-right", { rotation: -4, x: 24, duration: 0.45, repeat: 6, yoyo: true, ease: "sine.inOut" }, 6.18);
+
+      tl.to(".baby", { x: 500, y: -24, rotation: -7, duration: 3, ease: "none" }, 9);
+      tl.to(".arm-right", { rotation: -44, x: 54, y: -8, duration: 0.46, repeat: 5, yoyo: true, ease: "sine.inOut" }, 9.1);
+      tl.to(".leg-left", { rotation: 16, x: 20, duration: 0.5, repeat: 5, yoyo: true, ease: "sine.inOut" }, 9.2);
+
+      tl.to(".baby", { x: 620, y: -48, rotation: -16, scale: 1.02, duration: 3, ease: "power1.inOut" }, 12);
+      tl.to(".body", { rotation: -10, y: -20, duration: 3, ease: "power1.inOut" }, 12);
+      tl.to(".head", { x: 34, y: -24, rotation: -12, duration: 3, ease: "power1.inOut" }, 12);
+      tl.to(".arm-left", { x: 98, y: -40, rotation: -52, duration: 3, ease: "power1.inOut" }, 12);
+      tl.to(".arm-right", { x: 102, y: -42, rotation: -62, duration: 3, ease: "power1.inOut" }, 12);
+
+      window.__timelines["smart-crib-risk-shot"] = tl;
+    </script>
+  </div>
+</body>
+</html>
