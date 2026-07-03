@@ -5,6 +5,10 @@
  * 使用预计算的YOLO检测数据，检测框精确跟随婴儿身体移动
  */
 
+// Web-accessible copy of data/442655__josephvm__baby-girl-crying.wav.
+const CRYING_TEST_AUDIO = 'assets/audio/baby_crying.wav';
+const CRYING_TRIGGER_THRESHOLD_DB = 55;
+
 class BabyMonitorDemo {
     constructor() {
         this.videoPlayer = document.getElementById('videoPlayer');
@@ -67,7 +71,7 @@ class BabyMonitorDemo {
         this.framesByIndex = null;  // 按帧索引索引的Map，加速查找
         this.videoInfo = null;      // 视频信息（分辨率、fps等）
         this.geometry = null;       // 几何配置（安全区、警告区、危险边界）
-        this.currentVideo = 'dangerous_test1';
+        this.currentVideo = 'dangerous_test6';
         this.events = [];
         this.triggeredEventKeys = new Set();
         this._warningIndex = 0;
@@ -1107,7 +1111,7 @@ class BabyMonitorDemo {
             this._cryingAudio.pause();
             this._cryingAudio.currentTime = 0;
         }
-        const audio = new Audio('assets/audio/baby_crying.wav');
+        const audio = new Audio(CRYING_TEST_AUDIO);
         audio.volume = 0.7;
         this._cryingAudio = audio;
         audio.play().then(() => {
@@ -1407,11 +1411,20 @@ class CryingSimulationDemo {
         badge.className = 'running';
         document.querySelector('.perception-panel').classList.add('running');
 
-        this._simCrying = new Audio('assets/audio/baby_crying.wav');
+        this._simCrying = new Audio(CRYING_TEST_AUDIO);
         this._simCrying.volume = 0.7;
-        this._simCrying.play().catch(() => {});
+        this._simCrying.loop = true;
+        this._simCrying.play()
+            .then(() => {
+                const statusEl = document.getElementById('cryingSlotStatus');
+                if (statusEl) statusEl.textContent = '婴儿哭声播放中，正在检测声强阈值';
+            })
+            .catch(() => {
+                const statusEl = document.getElementById('cryingSlotStatus');
+                if (statusEl) statusEl.textContent = '浏览器阻止自动播放，请再次点击注入测试场景';
+            });
         const statusEl = document.getElementById('cryingSlotStatus');
-        if (statusEl) statusEl.textContent = '正在播放哭闹音频…';
+        if (statusEl) statusEl.textContent = '播放 442655__josephvm__baby-girl-crying.wav，等待哭声阈值';
         this._simCrying.onended = () => { if (statusEl) statusEl.textContent = '播放结束'; };
 
         // ── T=1s：感知数据填充 ──
@@ -1428,11 +1441,17 @@ class CryingSimulationDemo {
             document.getElementById('simEvidenceList').innerHTML = scenario.evidence.map(item => `<li>${item}</li>`).join('');
             this.renderNeeds(scenario.needs);
             document.querySelector('.perception-panel').className = 'simulation-panel perception-panel completed';
-            badge.textContent = scenario.level;
+            const thresholdReached = scenario.input[0] >= CRYING_TRIGGER_THRESHOLD_DB;
+            badge.textContent = thresholdReached ? `${scenario.level} / 阈值已触发` : scenario.level;
             badge.className = 'success';
+            if (statusEl) {
+                statusEl.textContent = thresholdReached
+                    ? `哭声 ${scenario.input[0]}dB >= ${CRYING_TRIGGER_THRESHOLD_DB}dB，触发安抚决策`
+                    : `哭声 ${scenario.input[0]}dB，未达到强安抚阈值，继续观察`;
+            }
         });
 
-        // ── T=3s：监控小窗弹出 + 摇篮曲 ──
+        // ── T=3s：监控小窗弹出，继续监听哭声 ──
         later(3000, () => {
             const monitor = document.getElementById('simMonitorWindow');
             const monitorMsg = document.getElementById('monitorMessage');
@@ -1447,9 +1466,7 @@ class CryingSimulationDemo {
                 if (monitorTimeEl) monitorTimeEl.textContent = `${mm}:${ss}`;
             }, 1000);
 
-            // 合成摇篮曲旋律（小星星）
-            this._playSyntheticLullaby(0.5);
-            if (this._simCrying) this._simCrying.volume = 0.5;
+            if (this._simCrying) this._simCrying.volume = 0.65;
         });
 
         // ── T=5s：决策面板填充 ──
@@ -1481,12 +1498,14 @@ class CryingSimulationDemo {
             }));
         });
 
-        // ── T=15s：仍在哭 → 播放妈妈安抚音，哭声再降 ──
-        later(15000, () => {
+        // ── T=8.5s：阈值触发后播放父母音色安抚与背景摇篮曲 ──
+        later(8500, () => {
+            this._playSyntheticLullaby(0.35);
             this._simComfort = new Audio('assets/audio/parent_comfort.wav');
             this._simComfort.volume = 0.8;
             this._simComfort.play().catch(() => {});
             if (this._simCrying) this._simCrying.volume = 0.3;
+            if (statusEl) statusEl.textContent = '阈值触发后开始父母音色安抚，哭声逐步降低';
         });
 
         // ── T=20s：哭声渐弱 0.3 → 0.1 ──
