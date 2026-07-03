@@ -1414,6 +1414,9 @@ class CryingSimulationDemo {
         this._simCrying = new Audio(CRYING_TEST_AUDIO);
         this._simCrying.volume = 0.7;
         this._simCrying.loop = true;
+        this._simComfort = new Audio('assets/audio/parent_comfort.wav');
+        this._simComfort.preload = 'auto';
+        this._simComfort.load();
         this._simCrying.play()
             .then(() => {
                 const statusEl = document.getElementById('cryingSlotStatus');
@@ -1502,8 +1505,9 @@ class CryingSimulationDemo {
         later(8500, () => {
             if (statusEl) statusEl.textContent = '阈值触发后开始父母音色安抚，哭声逐步降低';
             this._playSyntheticLullaby(0.35);
-            this._simComfort = new Audio('assets/audio/parent_comfort.wav');
+            if (!this._simComfort) this._simComfort = new Audio('assets/audio/parent_comfort.wav');
             this._simComfort.volume = 0.8;
+            this._simComfort.currentTime = 0;
             this._simComfort.play().catch(() => {});
             if (this._simCrying) this._simCrying.volume = 0.3;
         });
