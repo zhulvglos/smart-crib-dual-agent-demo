@@ -92,18 +92,18 @@
                 <div class="video-selector">
                     <label>选择演示视频：</label>
                     <select id="videoSelect" class="video-select">
-                        <option value="dangerous_test1" selected>床沿行为测试1（关注样例）</option>
+                        <option value="dangerous_test1">床沿行为测试1（关注样例）</option>
                         <option value="dangerous_test2">床沿行为测试2（观察样例）</option>
                         <option value="dangerous_test3">危险动作测试3</option>
                         <option value="dangerous_test4">危险动作测试4</option>
                         <option value="dangerous_test5">危险动作测试5</option>
-                        <option value="dangerous_test6">危险动作测试6（AI合成场景，高清）</option>
+                        <option value="dangerous_test6" selected>危险动作测试6（AI合成场景，高清）</option>
                     </select>
                     <button id="loadVideoBtn" class="load-btn">加载视频</button>
                 </div>
                 <div id="videoDisclosure" class="source-disclosure">
-                    <span class="disclosure-badge">本地测试素材</span>
-                    <span>检测框与姿态关键点由 YOLO11n-pose 预计算，用于稳定复现风险判断链路。</span>
+                    <span class="disclosure-badge synthetic">AI 合成场景素材</span>
+                    <span>检测框、姿态关键点与状态数据由 YOLO11n-pose 离线推理生成，不代表真实环境准确率。</span>
                 </div>
             </div>
 
@@ -401,7 +401,7 @@
                             <div class="monitor-message" id="monitorMessage">宝宝可能饿了 / 要抱抱</div>
                         </div>
                     </div>
-                    <div class="audio-slot"><div><span>哭声测试输入</span><strong id="cryingSlotStatus">baby_crying.wav 已接入</strong></div><div><span>父母克隆音色</span><strong>MiMo voiceclone 已接入</strong></div></div>
+                    <div class="audio-slot"><div><span>哭声测试输入</span><strong id="cryingSlotStatus">442655__josephvm__baby-girl-crying.wav 已接入</strong></div><div><span>父母克隆音色</span><strong>MiMo voiceclone 已接入</strong></div></div>
                     <ol id="simTimeline" class="simulation-timeline"><li><time>--:--</time><span>等待执行</span></li></ol>
                     <div class="integration-contract"><span>预留事件接口</span><code>cry.level · cry.db · cry.confidence · playback.voice_id · playback.completed</code></div>
                 </article>
